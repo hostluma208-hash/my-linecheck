@@ -1,0 +1,5825 @@
+{
+  "sections": [
+    {
+      "name": "DATA VALIDATION",
+      "title": "GILBERT",
+      "items": []
+    },
+    {
+      "name": "BAR",
+      "title": "BAR LINE CHECKLIST",
+      "items": [
+        {
+          "name": "A & W Cream Soda",
+          "group": "Chiller Temperature:",
+          "quality": "FIFO, with receiving date, no rust and dents visible",
+          "shelf": "By Expiration",
+          "container": "Can"
+        },
+        {
+          "name": "Pineapple Leaf",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below, washed",
+          "shelf": "7 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Green Lemon Soda",
+          "group": "Chiller Temperature:",
+          "quality": "FIFO, with receiving date, no rust and dents visible",
+          "shelf": "By Expiration",
+          "container": "Can"
+        },
+        {
+          "name": "Green Cherry Soda",
+          "group": "Chiller Temperature:",
+          "quality": "FIFO, with receiving date, no rust and dents visible",
+          "shelf": "By Expiration",
+          "container": "Can"
+        },
+        {
+          "name": "Italian Spritz",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "60 Days",
+          "container": "Bottle"
+        },
+        {
+          "name": "Smoked American Malt",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "60 Days",
+          "container": "Bottle"
+        },
+        {
+          "name": "London Dry",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "60 Days",
+          "container": "Bottle"
+        },
+        {
+          "name": "Cola Six",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "60 Days",
+          "container": "Bottle"
+        },
+        {
+          "name": "Coffee Originale",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "60 Days",
+          "container": "Bottle"
+        },
+        {
+          "name": "Lemon Juice",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "2 Days",
+          "container": "Store & Pour"
+        },
+        {
+          "name": "Lime Juice",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "2 Days",
+          "container": "Store & Pour"
+        },
+        {
+          "name": "Pineapple Juice",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "Store & Pour"
+        },
+        {
+          "name": "Fresh Orange Juice",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "18 Hours",
+          "container": "Store & Pour"
+        },
+        {
+          "name": "Cranberry -Open",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "Shiftly",
+          "container": "Bottle"
+        },
+        {
+          "name": "Soda Water",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below- Home Made",
+          "shelf": "Shiftly",
+          "container": "Bottle"
+        },
+        {
+          "name": "Monin Hazelnut Syrup",
+          "group": "SPEED RAIL",
+          "quality": "FIFO, with receiving date",
+          "shelf": "60 Days",
+          "container": "Bottle"
+        },
+        {
+          "name": "Monin Almond Syrup",
+          "group": "SPEED RAIL",
+          "quality": "FIFO, with receiving date",
+          "shelf": "60 Days",
+          "container": "Bottle"
+        },
+        {
+          "name": "Monin Coconut Syrup",
+          "group": "SPEED RAIL",
+          "quality": "FIFO, with receiving date",
+          "shelf": "60 Days",
+          "container": "Bottle"
+        },
+        {
+          "name": "Monin Watermelon Syrup",
+          "group": "SPEED RAIL",
+          "quality": "FIFO, with receiving date",
+          "shelf": "60 Days",
+          "container": "Bottle"
+        },
+        {
+          "name": "Monin Agave Syrup",
+          "group": "SPEED RAIL",
+          "quality": "FIFO, with receiving date",
+          "shelf": "60 Days",
+          "container": "Bottle"
+        },
+        {
+          "name": "Margarita Syrup",
+          "group": "SPEED RAIL",
+          "quality": "FIFO, with receiving date",
+          "shelf": "60 Days",
+          "container": "Bottle"
+        },
+        {
+          "name": "Monin Green Apple Syrup",
+          "group": "SPEED RAIL",
+          "quality": "FIFO, with receiving date",
+          "shelf": "60 Days",
+          "container": "Bottle"
+        },
+        {
+          "name": "Monin Blue Lagoon syrup",
+          "group": "SPEED RAIL",
+          "quality": "FIFO, with receiving date",
+          "shelf": "60 Days",
+          "container": "Bottle"
+        },
+        {
+          "name": "Monin Blackberry Syrup",
+          "group": "SPEED RAIL",
+          "quality": "FIFO, with receiving date",
+          "shelf": "60 Days",
+          "container": "Bottle"
+        },
+        {
+          "name": "Monin Wild Mint Syrup",
+          "group": "SPEED RAIL",
+          "quality": "FIFO, with receiving date",
+          "shelf": "60 Days",
+          "container": "Bottle"
+        },
+        {
+          "name": "Monin Peach Syrup",
+          "group": "SPEED RAIL",
+          "quality": "FIFO, with receiving date",
+          "shelf": "60 Days",
+          "container": "Bottle"
+        },
+        {
+          "name": "Monin Grenadine Syrup",
+          "group": "SPEED RAIL",
+          "quality": "FIFO, with receiving date",
+          "shelf": "60 Days",
+          "container": "Bottle"
+        },
+        {
+          "name": "Monin Passionfruit Syrup",
+          "group": "SPEED RAIL",
+          "quality": "FIFO, with receiving date",
+          "shelf": "60 Days",
+          "container": "Bottle"
+        },
+        {
+          "name": "Large Water Still",
+          "group": "BOTTOM CHILLER 1",
+          "quality": "41\u00b0F and below",
+          "shelf": "By Expiration",
+          "container": "Bottle"
+        },
+        {
+          "name": "Small Water Still",
+          "group": "BOTTOM CHILLER 1",
+          "quality": "41\u00b0F and below",
+          "shelf": "By Expiration",
+          "container": "Bottle"
+        },
+        {
+          "name": "Large Water Carbonated",
+          "group": "BOTTOM CHILLER 1",
+          "quality": "41\u00b0F and below",
+          "shelf": "By Expiration",
+          "container": "Bottle"
+        },
+        {
+          "name": "Small Water Carbonated",
+          "group": "BOTTOM CHILLER 1",
+          "quality": "41\u00b0F and below",
+          "shelf": "By Expiration",
+          "container": "Bottle"
+        },
+        {
+          "name": "Fruit Garnish",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below, Fresh",
+          "shelf": "Shiftly",
+          "container": "Tray"
+        },
+        {
+          "name": "Mint Leaves",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below, Fresh",
+          "shelf": "Shiftly",
+          "container": "1/4 Pan"
+        },
+        {
+          "name": "Mint Sprig",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below, Fresh",
+          "shelf": "Shiftly",
+          "container": "1/4 Pan"
+        },
+        {
+          "name": "Raspberries",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below, Fresh",
+          "shelf": "Shiftly",
+          "container": "Packet"
+        },
+        {
+          "name": "Blueberries",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below, Fresh",
+          "shelf": "Shiftly",
+          "container": "Packet"
+        },
+        {
+          "name": "Blackberries",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below, Fresh",
+          "shelf": "Shiftly",
+          "container": "Packet"
+        },
+        {
+          "name": "Fresh Lemon",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below, Fresh",
+          "shelf": "7 Days",
+          "container": "Full Pan"
+        },
+        {
+          "name": "Fresh Lime",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below, Fresh",
+          "shelf": "7 Days",
+          "container": "Full Pan"
+        },
+        {
+          "name": "Passion Fruit",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below, Fresh",
+          "shelf": "5 Days",
+          "container": "1/2 Pan"
+        },
+        {
+          "name": "Fresh Basil",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below, Fresh",
+          "shelf": "3 Days",
+          "container": "1/6 Pan"
+        },
+        {
+          "name": "Fresh Thyme",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below, Fresh",
+          "shelf": "3 Days",
+          "container": "1/6 Pan"
+        },
+        {
+          "name": "Banana Leaves (Pre-cut)",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "7 Days",
+          "container": "Tub"
+        },
+        {
+          "name": "Back up Berries",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below, Fresh",
+          "shelf": "5 Days",
+          "container": "Tub"
+        },
+        {
+          "name": "Icing Sugar",
+          "group": "ROOM TEMPERATURE",
+          "quality": "Shaker, no lumps",
+          "shelf": "7 Days",
+          "container": "Shaker"
+        },
+        {
+          "name": "Cinnamon",
+          "group": "ROOM TEMPERATURE",
+          "quality": "Shaker, no lumps",
+          "shelf": "7 Days",
+          "container": "Shaker"
+        },
+        {
+          "name": "Ginger Beer",
+          "group": "ROOM TEMPERATURE",
+          "quality": "FIFO, with receiving date, no rust and dents visible",
+          "shelf": "By Expiration",
+          "container": "Can"
+        },
+        {
+          "name": "Ginger Ale",
+          "group": "ROOM TEMPERATURE",
+          "quality": "FIFO, with receiving date, no rust and dents visible",
+          "shelf": "By Expiration",
+          "container": "Can"
+        },
+        {
+          "name": "Coca Cola",
+          "group": "ROOM TEMPERATURE",
+          "quality": "FIFO, no rust visible",
+          "shelf": "By Expiration",
+          "container": "Bottle"
+        },
+        {
+          "name": "Coca Cola Light",
+          "group": "ROOM TEMPERATURE",
+          "quality": "FIFO, no rust visible",
+          "shelf": "By Expiration",
+          "container": "Bottle"
+        },
+        {
+          "name": "Sprite",
+          "group": "ROOM TEMPERATURE",
+          "quality": "FIFO, no rust visible",
+          "shelf": "By Expiration",
+          "container": "Bottle"
+        },
+        {
+          "name": "Ginger Syrup",
+          "group": "SECOND SPEED RAIL",
+          "quality": "FIFO, Homemade Syrup with label",
+          "shelf": "7 Days",
+          "container": "Drizzle Bottle"
+        },
+        {
+          "name": "Monin Lavander Syrup",
+          "group": "SECOND SPEED RAIL",
+          "quality": "FIFO, with receiving date",
+          "shelf": "60 Days",
+          "container": "Bottle"
+        },
+        {
+          "name": "Monin Sugar Cane Syrup",
+          "group": "SECOND SPEED RAIL",
+          "quality": "FIFO, with receiving date",
+          "shelf": "60 Days",
+          "container": "Bottle"
+        },
+        {
+          "name": "Monin Pomegranate Syrup",
+          "group": "SECOND SPEED RAIL",
+          "quality": "FIFO, with receiving date",
+          "shelf": "60 Days",
+          "container": "Bottle"
+        },
+        {
+          "name": "Monin Tangerine Syrup",
+          "group": "SECOND SPEED RAIL",
+          "quality": "FIFO, with receiving date",
+          "shelf": "60 Days",
+          "container": "Bottle"
+        },
+        {
+          "name": "Monin Vanilla Syrup",
+          "group": "SECOND SPEED RAIL",
+          "quality": "FIFO, with receiving date",
+          "shelf": "60 Days",
+          "container": "Bottle"
+        },
+        {
+          "name": "Monin Popcorn Syrup",
+          "group": "SECOND SPEED RAIL",
+          "quality": "FIFO, with receiving date",
+          "shelf": "60 Days",
+          "container": "Bottle"
+        },
+        {
+          "name": "183 Chocolate Syrup",
+          "group": "SECOND SPEED RAIL",
+          "quality": "FIFO, with receiving date",
+          "shelf": "60 Days",
+          "container": "Bottle"
+        },
+        {
+          "name": "Monin Strawberry Syrup",
+          "group": "SECOND SPEED RAIL",
+          "quality": "FIFO, with receiving date",
+          "shelf": "60 Days",
+          "container": "Bottle"
+        },
+        {
+          "name": "Red Bell Pepper",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below, Fresh",
+          "shelf": "5 Days",
+          "container": "1/6 Pan"
+        },
+        {
+          "name": "Pineapple Fresh",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below, Fresh",
+          "shelf": "5 Days",
+          "container": "Pan"
+        },
+        {
+          "name": "Orange Fanta",
+          "group": "Chiller Temperature:",
+          "quality": "FIFO, with receiving date, no rust visible",
+          "shelf": "By Expiration",
+          "container": "Bottle"
+        },
+        {
+          "name": "Strawberry Fanta",
+          "group": "Chiller Temperature:",
+          "quality": "FIFO, with receiving date, no rust visible",
+          "shelf": "By Expiration",
+          "container": "Bottle"
+        },
+        {
+          "name": "Lychee Juice",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below, FIFO and  with receiving date",
+          "shelf": "3 Days",
+          "container": "Pack"
+        },
+        {
+          "name": "Coconut Water",
+          "group": "Chiller Temperature:",
+          "quality": "FIFO, with receiving date",
+          "shelf": "By Expiration",
+          "container": "Pack"
+        },
+        {
+          "name": "Fresh Mint",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below, Fresh",
+          "shelf": "3 Days",
+          "container": "Tub"
+        },
+        {
+          "name": "Beetroot",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below, Fresh",
+          "shelf": "7 Days",
+          "container": "1/6 Pan"
+        },
+        {
+          "name": "Fresh Apple",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below, Fresh",
+          "shelf": "5 Days",
+          "container": "Pan"
+        },
+        {
+          "name": "Thyme Syrup",
+          "group": "Chiller Temperature:",
+          "quality": "FIFO, Homemade Syrup with label",
+          "shelf": "7 Days",
+          "container": "Drizzle Bottle"
+        },
+        {
+          "name": "Beetroot Infused (back up)",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "60 Days",
+          "container": "Bottle"
+        },
+        {
+          "name": "Inah Wine",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "60 Days",
+          "container": "Bottle"
+        },
+        {
+          "name": "JSBC Syrup",
+          "group": "Chiller Temperature:",
+          "quality": "FIFO, Homemade Syrup with label",
+          "shelf": "7 Days",
+          "container": "Drizzle Bottle"
+        },
+        {
+          "name": "Coco Pina Mix",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "7 Days",
+          "container": "Store & Pour"
+        },
+        {
+          "name": "Fresh Orange Juice ( Back Up)",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "18 Hours",
+          "container": "Store & Pour"
+        },
+        {
+          "name": "Fresh Orange",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "7 Days",
+          "container": "1/2 Pan"
+        },
+        {
+          "name": "Ice and Glasses",
+          "group": "Freezer Temperature:",
+          "quality": "(0 \u00b0F or -17.8 \u00b0C)",
+          "shelf": "",
+          "container": ""
+        },
+        {
+          "name": "White Choco Coated Glass",
+          "group": "Freezer Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "1 Month",
+          "container": "Crystal Glass"
+        },
+        {
+          "name": "Chocolate Coated Glass",
+          "group": "Freezer Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "1 Month",
+          "container": "Crystal Glass"
+        },
+        {
+          "name": "Mango Puree",
+          "group": "Freezer Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "1 Month",
+          "container": "Crystal Glass"
+        },
+        {
+          "name": "Cardamom",
+          "group": "DRY SHELF",
+          "quality": "Well covered",
+          "shelf": "60 Days",
+          "container": "Jar"
+        },
+        {
+          "name": "Oatmeal",
+          "group": "DRY SHELF",
+          "quality": "Well covered",
+          "shelf": "30 Days",
+          "container": "Jar"
+        },
+        {
+          "name": "Nescafe",
+          "group": "DRY SHELF",
+          "quality": "FIFO, with receiving date, and label",
+          "shelf": "By Expiration",
+          "container": "Jar"
+        },
+        {
+          "name": "Green Tea",
+          "group": "DRY SHELF",
+          "quality": "FIFO, with receiving date, and label",
+          "shelf": "By Expiration",
+          "container": "Pack"
+        },
+        {
+          "name": "English Tea",
+          "group": "DRY SHELF",
+          "quality": "FIFO, with receiving date, and label",
+          "shelf": "By Expiration",
+          "container": "Pack"
+        },
+        {
+          "name": "Blue Tea",
+          "group": "DRY SHELF",
+          "quality": "FIFO, with receiving date, and label",
+          "shelf": "By Expiration",
+          "container": "Pack"
+        },
+        {
+          "name": "Himalayan Salt",
+          "group": "DRY SHELF",
+          "quality": "FIFO, with receiving date, and label",
+          "shelf": "30 Days",
+          "container": "Jar"
+        },
+        {
+          "name": "Coconut Flakes",
+          "group": "DRY SHELF",
+          "quality": "No moisture present",
+          "shelf": "7 Days",
+          "container": "Bottle"
+        },
+        {
+          "name": "Turmeric Powder",
+          "group": "DRY SHELF",
+          "quality": "No moisture present",
+          "shelf": "7 Days",
+          "container": "Shaker"
+        },
+        {
+          "name": "Coco Pina Mix",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "7 Days",
+          "container": "Store & Pour"
+        },
+        {
+          "name": "Cranberry Juice",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "By Expiration",
+          "container": "Pack"
+        },
+        {
+          "name": "Coconut Water",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below, FIFO and  with receiving date",
+          "shelf": "3 Days",
+          "container": "Pack"
+        },
+        {
+          "name": "Lychee Juice",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below, FIFO and  with receiving date",
+          "shelf": "3 Days",
+          "container": "Pack"
+        },
+        {
+          "name": "Mango Juice",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "Store & Pour"
+        },
+        {
+          "name": "Tomato Juice",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "Store & Pour"
+        },
+        {
+          "name": "Full Cream Milk",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below, FIFO and  with receiving date",
+          "shelf": "3 Days",
+          "container": "Pack"
+        },
+        {
+          "name": "Skimmed Milk",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below, FIFO and  with receiving date",
+          "shelf": "3 Days",
+          "container": "Pack"
+        },
+        {
+          "name": "KDD Liquid Cream",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below, FIFO and  with receiving date",
+          "shelf": "3 Days",
+          "container": "Pack"
+        },
+        {
+          "name": "Camelicious Camel Milk",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below, FIFO and  with receiving date",
+          "shelf": "3 Days",
+          "container": "Bottle"
+        },
+        {
+          "name": "Brewed Blue Tea",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "2 Days",
+          "container": "Store & Pour"
+        },
+        {
+          "name": "Brewed English Tea",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "2 Days",
+          "container": "Store & Pour"
+        },
+        {
+          "name": "Pasteurized Egg White",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "Pack"
+        },
+        {
+          "name": "Orange Marmalade",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "30 Days",
+          "container": "Jar"
+        },
+        {
+          "name": "Maraschino Cherry",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "30 Days",
+          "container": "Jar"
+        },
+        {
+          "name": "Food Coloring Drops",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "30 Days",
+          "container": "Bottle"
+        },
+        {
+          "name": "Fresh Orange Juice ( Back Up)",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "18 Hours",
+          "container": "Store & Pour"
+        },
+        {
+          "name": "Lemon Juice (Back Up)",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "2 Days",
+          "container": "Store & Pour"
+        },
+        {
+          "name": "Lime Juice (Back Up)",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "2 Days",
+          "container": "Store & Pour"
+        },
+        {
+          "name": "Butter Syrup",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "6 Days",
+          "container": "Bottle"
+        },
+        {
+          "name": "Kombucha",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "7 Days",
+          "container": "Bottle"
+        },
+        {
+          "name": "Beetroot Infused",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "60 Days",
+          "container": "Bottle"
+        },
+        {
+          "name": "Sea Arch London Dry Infused",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "60 Days",
+          "container": "Bottle"
+        },
+        {
+          "name": "Dark Cane",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "6 Days",
+          "container": "Bottle"
+        },
+        {
+          "name": "Whipped Cream",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "Whip Canister"
+        },
+        {
+          "name": "Blender",
+          "group": "BARISTA SECTION",
+          "quality": "Working well, clean and no stains.",
+          "shelf": "",
+          "container": ""
+        },
+        {
+          "name": "Coffee Grinder",
+          "group": "BARISTA SECTION",
+          "quality": "Working well, clean and no stains.",
+          "shelf": "",
+          "container": ""
+        },
+        {
+          "name": "Espresso Machine",
+          "group": "BARISTA SECTION",
+          "quality": "Working well, clean and no stains.",
+          "shelf": "",
+          "container": ""
+        },
+        {
+          "name": "Rose Water",
+          "group": "BARISTA SECTION",
+          "quality": "FIFO, with receiving date, and label",
+          "shelf": "60 Days",
+          "container": "Bottle"
+        },
+        {
+          "name": "Crossip",
+          "group": "BARISTA SECTION",
+          "quality": "FIFO, with receiving date, and label",
+          "shelf": "60 Days",
+          "container": "Bottle"
+        },
+        {
+          "name": "Aromatic Bitter",
+          "group": "BARISTA SECTION",
+          "quality": "FIFO, with receiving date, and label",
+          "shelf": "30 Days",
+          "container": "Bottle"
+        },
+        {
+          "name": "Dehydrated Fruit",
+          "group": "BARISTA SECTION",
+          "quality": "FIFO, with receiving date, and label",
+          "shelf": "60 Days",
+          "container": "Jar"
+        },
+        {
+          "name": "Caramel Sauce",
+          "group": "BARISTA SECTION",
+          "quality": "FIFO, with receiving date, and label",
+          "shelf": "30 Days",
+          "container": "Bottle"
+        },
+        {
+          "name": "Chocolate Sauce",
+          "group": "BARISTA SECTION",
+          "quality": "FIFO, with receiving date, and label",
+          "shelf": "30 Days",
+          "container": "Bottle"
+        },
+        {
+          "name": "Coffee Beans",
+          "group": "BARISTA SECTION",
+          "quality": "FIFO, with receiving date, and label",
+          "shelf": "7 Days",
+          "container": "Grinder"
+        }
+      ]
+    },
+    {
+      "name": "NIKKEI",
+      "title": "NIKKEI SECTION LINE CHECKLIST",
+      "items": [
+        {
+          "name": "Taco Cone",
+          "group": "ROOM TEMPERATURE",
+          "quality": "Room Temperature, crispy",
+          "shelf": "7 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Black Tuille",
+          "group": "ROOM TEMPERATURE",
+          "quality": "Room Temperature, crispy",
+          "shelf": "7 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Banana Chips",
+          "group": "ROOM TEMPERATURE",
+          "quality": "Room Temperature, crispy",
+          "shelf": "7 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Olive Oil",
+          "group": "ROOM TEMPERATURE",
+          "quality": "Room Temperature",
+          "shelf": "3 Day",
+          "container": "Drizzle Bottle"
+        },
+        {
+          "name": "Light Soy Sauce",
+          "group": "ROOM TEMPERATURE",
+          "quality": "Room Temperature",
+          "shelf": "30 Day",
+          "container": "Bottle"
+        },
+        {
+          "name": "Fish Sauce",
+          "group": "ROOM TEMPERATURE",
+          "quality": "Room Temperature",
+          "shelf": "3 Day",
+          "container": "Drizzle Bottle"
+        },
+        {
+          "name": "Sesame Oil",
+          "group": "ROOM TEMPERATURE",
+          "quality": "Room Temperature",
+          "shelf": "3 Day",
+          "container": "Drizzle Bottle"
+        },
+        {
+          "name": "Salt",
+          "group": "ROOM TEMPERATURE",
+          "quality": "Room Temperature",
+          "shelf": "7 Days",
+          "container": "Shaker"
+        },
+        {
+          "name": "Black Pepper",
+          "group": "ROOM TEMPERATURE",
+          "quality": "Room Temperature",
+          "shelf": "7 Days",
+          "container": "Shaker"
+        },
+        {
+          "name": "Tabasco",
+          "group": "ROOM TEMPERATURE",
+          "quality": "Room Temperature",
+          "shelf": "7 Days",
+          "container": "Shaker"
+        },
+        {
+          "name": "Tajin Spice",
+          "group": "ROOM TEMPERATURE TOP SHELF",
+          "quality": "Room Temperature",
+          "shelf": "7 Days",
+          "container": "Shaker"
+        },
+        {
+          "name": "Cut Nori",
+          "group": "ROOM TEMPERATURE TOP SHELF",
+          "quality": "Room Temperature",
+          "shelf": "7 Days",
+          "container": "Shaker"
+        },
+        {
+          "name": "Shredded Chili Pepper",
+          "group": "ROOM TEMPERATURE TOP SHELF",
+          "quality": "Room Temperature, no visible moisture",
+          "shelf": "7 Days",
+          "container": "1/9 Pan"
+        },
+        {
+          "name": "Togarashi",
+          "group": "ROOM TEMPERATURE TOP SHELF",
+          "quality": "Room Temperature",
+          "shelf": "7 Days",
+          "container": "Shaker"
+        },
+        {
+          "name": "Cashew nuts",
+          "group": "ROOM TEMPERATURE TOP SHELF",
+          "quality": "Room Temperature, no visible moisture",
+          "shelf": "7 Days",
+          "container": "1/9 Pan"
+        },
+        {
+          "name": "Chopped Cilantro",
+          "group": "TOP CHILLER",
+          "quality": "Fresh daily",
+          "shelf": "Shiftly",
+          "container": "1/6 Pan"
+        },
+        {
+          "name": "Rocca",
+          "group": "TOP CHILLER",
+          "quality": "Fresh daily",
+          "shelf": "Shiftly",
+          "container": "1/6 Pan"
+        },
+        {
+          "name": "Chopped Red Bell Pepper",
+          "group": "TOP CHILLER",
+          "quality": "Fresh daily",
+          "shelf": "Shiftly",
+          "container": "1/6 Pan"
+        },
+        {
+          "name": "Red Chili",
+          "group": "TOP CHILLER",
+          "quality": "41\u00b0F and below, fresh",
+          "shelf": "5 Days",
+          "container": "1/6 Pan"
+        },
+        {
+          "name": "Diced Mango",
+          "group": "TOP CHILLER",
+          "quality": "41\u00b0F and below, fresh",
+          "shelf": "7 Days",
+          "container": "1/6 Pan"
+        },
+        {
+          "name": "Diced Pineapple",
+          "group": "TOP CHILLER",
+          "quality": "41\u00b0F and below, fresh",
+          "shelf": "7 Days",
+          "container": "1/6 Pan"
+        },
+        {
+          "name": "Fresh Micro Greens",
+          "group": "TOP CHILLER",
+          "quality": "Fresh",
+          "shelf": "3 Days",
+          "container": "1/3 Pan Shallow"
+        },
+        {
+          "name": "Playa Del Carmen Sauce",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "1 Day",
+          "container": "Drizzle Bottle"
+        },
+        {
+          "name": "Yellow Sauce",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/6 Pan Shallow"
+        },
+        {
+          "name": "Orange Sauce",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/6 Pan Shallow"
+        },
+        {
+          "name": "Agua Chili Sauce",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/6 Pan Shallow"
+        },
+        {
+          "name": "Coconut Cream",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/6 Pan Shallow"
+        },
+        {
+          "name": "Caramel Sauce",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/6 Pan Shallow"
+        },
+        {
+          "name": "Mango Sphere",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/6 Pan Shallow"
+        },
+        {
+          "name": "Lychee Sphere",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/6 Pan Shallow"
+        },
+        {
+          "name": "Huancaina Sauce",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "1 Day",
+          "container": "Drizzle Bottle"
+        },
+        {
+          "name": "Teriyaki Sauce (Back Up)",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/6 Pan"
+        },
+        {
+          "name": "Lima Sauce (Back Up)",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/6 Pan"
+        },
+        {
+          "name": "Spicy Mayo (Back Up)",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/6 Pan"
+        },
+        {
+          "name": "Parmesan Cheese",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/3 Pan Shallow"
+        },
+        {
+          "name": "Chili Garlic",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "Jar"
+        },
+        {
+          "name": "Tuna",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "2 Days",
+          "container": "1/6 Pan"
+        },
+        {
+          "name": "Hamachi",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "2 Days",
+          "container": "1/6 Pan"
+        },
+        {
+          "name": "Salmon",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "2 Days",
+          "container": "1/6 Pan"
+        },
+        {
+          "name": "Tempura shrimp -raw",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "2 Days",
+          "container": "1/6 Pan"
+        },
+        {
+          "name": "Boiled Shrimps",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "2 Days",
+          "container": "1/6 Pan"
+        },
+        {
+          "name": "Black Tobiko",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "2 Days",
+          "container": "1/6 Pan"
+        },
+        {
+          "name": "Tobiko",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "2 Days",
+          "container": "1/6 Pan"
+        },
+        {
+          "name": "Crispy (Panko Breading)",
+          "group": "ROOM TEMPERATURE TOP SHELF",
+          "quality": "Room Temperature, no visible moisture",
+          "shelf": "Shiftly",
+          "container": "1/6 Pan"
+        },
+        {
+          "name": "Crispy Tempura",
+          "group": "ROOM TEMPERATURE TOP SHELF",
+          "quality": "Room Temperature, no visible moisture",
+          "shelf": "Shiftly",
+          "container": "1/6 Pan"
+        },
+        {
+          "name": "Shrimp Tempura",
+          "group": "ROOM TEMPERATURE TOP SHELF",
+          "quality": "Warm, Crispy",
+          "shelf": "Shiftly",
+          "container": "1/6 Pan"
+        },
+        {
+          "name": "Fried Quinoa",
+          "group": "ROOM TEMPERATURE TOP SHELF",
+          "quality": "Room Temperature, no visible moisture",
+          "shelf": "7 Days",
+          "container": "1/9 Pan"
+        },
+        {
+          "name": "Mixed Sesame",
+          "group": "ROOM TEMPERATURE TOP SHELF",
+          "quality": "Room Temperature, no visible moisture",
+          "shelf": "7 Days",
+          "container": "1/9 Pan"
+        },
+        {
+          "name": "Mixed Crispy",
+          "group": "ROOM TEMPERATURE TOP SHELF",
+          "quality": "Room Temperature, no visible moisture",
+          "shelf": "7 Days",
+          "container": "1/9 Pan"
+        },
+        {
+          "name": "Garlic Furikake",
+          "group": "ROOM TEMPERATURE TOP SHELF",
+          "quality": "Room Temperature, no visible moisture",
+          "shelf": "7 Days",
+          "container": "1/9 Pan"
+        },
+        {
+          "name": "Veggie Furikake",
+          "group": "ROOM TEMPERATURE TOP SHELF",
+          "quality": "Room Temperature, no visible moisture",
+          "shelf": "7 Days",
+          "container": "1/9 Pan"
+        },
+        {
+          "name": "Furikake",
+          "group": "ROOM TEMPERATURE TOP SHELF",
+          "quality": "Room Temperature, no visible moisture",
+          "shelf": "7 Days",
+          "container": "1/9 Pan"
+        },
+        {
+          "name": "Carrots Chopped",
+          "group": "Chiller Temperature:",
+          "quality": "Fresh, no brown edges",
+          "shelf": "Shiftly",
+          "container": "1/6 Pan Shallow"
+        },
+        {
+          "name": "Cucumber Chopped",
+          "group": "Chiller Temperature:",
+          "quality": "Fresh, no brown edges",
+          "shelf": "Shiftly",
+          "container": "1/6 Pan Shallow"
+        },
+        {
+          "name": "Crabsticks",
+          "group": "Chiller Temperature:",
+          "quality": "Fresh, no moisture",
+          "shelf": "Shiftly",
+          "container": "1/6 Pan Shallow"
+        },
+        {
+          "name": "Avocado",
+          "group": "Chiller Temperature:",
+          "quality": "Fresh, no brown edges",
+          "shelf": "Shiftly",
+          "container": "1/6 Pan Shallow"
+        },
+        {
+          "name": "Lolorosso Lettuce",
+          "group": "Chiller Temperature:",
+          "quality": "Fresh, crisp",
+          "shelf": "Shiftly",
+          "container": "1/6 Pan Shallow"
+        },
+        {
+          "name": "Onion Chives Chopped",
+          "group": "Chiller Temperature:",
+          "quality": "Fresh daily",
+          "shelf": "Shiftly",
+          "container": "1/6 Pan Shallow"
+        },
+        {
+          "name": "Sushi Rice",
+          "group": "CHILLER 2",
+          "quality": "41\u00b0F and below",
+          "shelf": "Shiftly",
+          "container": "1/6 Pan"
+        },
+        {
+          "name": "Mango",
+          "group": "CHILLER 2",
+          "quality": "41\u00b0F and below",
+          "shelf": "5 Days",
+          "container": "1/6 Pan"
+        },
+        {
+          "name": "Pineapple",
+          "group": "CHILLER 2",
+          "quality": "41\u00b0F and below",
+          "shelf": "5 Days",
+          "container": "1/6 Pan"
+        },
+        {
+          "name": "Star Fruit",
+          "group": "CHILLER 2",
+          "quality": "41\u00b0F and below",
+          "shelf": "5 Days",
+          "container": "1/6 Pan"
+        },
+        {
+          "name": "Grapefruit",
+          "group": "CHILLER 2",
+          "quality": "41\u00b0F and below",
+          "shelf": "5 Days",
+          "container": "1/6 Pan"
+        },
+        {
+          "name": "Avodado",
+          "group": "CHILLER 2",
+          "quality": "41\u00b0F and below",
+          "shelf": "5 Days",
+          "container": "1/6 Pan"
+        },
+        {
+          "name": "Red Radish",
+          "group": "CHILLER 2",
+          "quality": "41\u00b0F and below",
+          "shelf": "5 Days",
+          "container": "1/6 Pan"
+        },
+        {
+          "name": "Cucumber",
+          "group": "CHILLER 2",
+          "quality": "41\u00b0F and below",
+          "shelf": "5 Days",
+          "container": "1/6 Pan"
+        },
+        {
+          "name": "Banana Plantain",
+          "group": "CHILLER 2",
+          "quality": "41\u00b0F and below",
+          "shelf": "5 Days",
+          "container": "1/6 Pan"
+        },
+        {
+          "name": "Carrots",
+          "group": "CHILLER 2",
+          "quality": "41\u00b0F and below",
+          "shelf": "5 Days",
+          "container": "1/6 Pan"
+        },
+        {
+          "name": "Lettuce",
+          "group": "CHILLER 2",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/6 Pan"
+        },
+        {
+          "name": "Sakura Leaves",
+          "group": "CHILLER 2",
+          "quality": "41\u00b0F and below",
+          "shelf": "7 Days",
+          "container": "1/6 Pan"
+        },
+        {
+          "name": "Zattar Leaves",
+          "group": "CHILLER 2",
+          "quality": "41\u00b0F and below",
+          "shelf": "7 Days",
+          "container": "1/6 Pan"
+        },
+        {
+          "name": "Bamboo Leaf",
+          "group": "CHILLER 2",
+          "quality": "41\u00b0F and below",
+          "shelf": "7 Days",
+          "container": "1/6 Pan"
+        },
+        {
+          "name": "Japanese Mayonnaise",
+          "group": "CHILLER 2",
+          "quality": "41\u00b0F and below",
+          "shelf": "1 Day",
+          "container": "Drizzle Bottle"
+        },
+        {
+          "name": "Spicy Mayo",
+          "group": "CHILLER 2",
+          "quality": "41\u00b0F and below",
+          "shelf": "1 Day",
+          "container": "Drizzle Bottle"
+        },
+        {
+          "name": "Volcano Sauce",
+          "group": "CHILLER 2",
+          "quality": "41\u00b0F and below",
+          "shelf": "1 Day",
+          "container": "Drizzle Bottle"
+        },
+        {
+          "name": "Jazzy Sauce",
+          "group": "CHILLER 2",
+          "quality": "41\u00b0F and below",
+          "shelf": "1 Day",
+          "container": "Drizzle Bottle"
+        },
+        {
+          "name": "Teriyaki Sauce",
+          "group": "CHILLER 2",
+          "quality": "41\u00b0F and below",
+          "shelf": "1 Day",
+          "container": "Drizzle Bottle"
+        },
+        {
+          "name": "Lima Sauce",
+          "group": "CHILLER 2",
+          "quality": "41\u00b0F and below",
+          "shelf": "1 Day",
+          "container": "Drizzle Bottle"
+        },
+        {
+          "name": "Kindu Sauce",
+          "group": "CHILLER 2",
+          "quality": "41\u00b0F and below",
+          "shelf": "1 Day",
+          "container": "Drizzle Bottle"
+        },
+        {
+          "name": "Caramel Sauce",
+          "group": "CHILLER 2",
+          "quality": "41\u00b0F and below",
+          "shelf": "1 Day",
+          "container": "Drizzle Bottle"
+        },
+        {
+          "name": "Carne Ceviche Sauce",
+          "group": "CHILLER 2",
+          "quality": "41\u00b0F and below",
+          "shelf": "1 Day",
+          "container": "Drizzle Bottle"
+        },
+        {
+          "name": "Sesame Sauce",
+          "group": "CHILLER 2",
+          "quality": "41\u00b0F and below",
+          "shelf": "1 Day",
+          "container": "Drizzle Bottle"
+        },
+        {
+          "name": "Tiger Sauce",
+          "group": "CHILLER 2",
+          "quality": "41\u00b0F and below",
+          "shelf": "1 Day",
+          "container": "Drizzle Bottle"
+        },
+        {
+          "name": "Passion Fruit Sauce",
+          "group": "CHILLER 2",
+          "quality": "41\u00b0F and below",
+          "shelf": "1 Day",
+          "container": "Drizzle Bottle"
+        },
+        {
+          "name": "Pomegranate/Tacna Sauce",
+          "group": "CHILLER 2",
+          "quality": "41\u00b0F and below",
+          "shelf": "1 Day",
+          "container": "Drizzle Bottle"
+        },
+        {
+          "name": "Puntarenas Sauce",
+          "group": "CHILLER 2",
+          "quality": "41\u00b0F and below",
+          "shelf": "1 Day",
+          "container": "Drizzle Bottle"
+        },
+        {
+          "name": "Sriracha Sauce",
+          "group": "CHILLER 2",
+          "quality": "41\u00b0F and below",
+          "shelf": "30 Days",
+          "container": "Bottle"
+        },
+        {
+          "name": "Kimchi Sauce",
+          "group": "CHILLER 2",
+          "quality": "41\u00b0F and below",
+          "shelf": "30 Days",
+          "container": "Bottle"
+        },
+        {
+          "name": "Philadelphia Cheese",
+          "group": "CHILLER 2",
+          "quality": "41\u00b0F and below",
+          "shelf": "5 Days",
+          "container": "Container"
+        },
+        {
+          "name": "Sweet Chili",
+          "group": "CHILLER 2",
+          "quality": "41\u00b0F and below",
+          "shelf": "5 Days",
+          "container": "Container"
+        },
+        {
+          "name": "Crunchy Garlic",
+          "group": "CHILLER 2",
+          "quality": "41\u00b0F and below",
+          "shelf": "5 Days",
+          "container": "Container"
+        },
+        {
+          "name": "Dijon Mustard",
+          "group": "CHILLER 2",
+          "quality": "41\u00b0F and below",
+          "shelf": "5 Days",
+          "container": "Container"
+        },
+        {
+          "name": "Wasabi",
+          "group": "CHILLER 2",
+          "quality": "41\u00b0F and below",
+          "shelf": "30 Days",
+          "container": "Bottle"
+        },
+        {
+          "name": "Back up Mango Sphere",
+          "group": "Freezer Temperature:",
+          "quality": "Frozen, no ice crystals",
+          "shelf": "30 Days",
+          "container": "1/6 Pan"
+        },
+        {
+          "name": "Back up Lychee Sphere",
+          "group": "Freezer Temperature:",
+          "quality": "Frozen, no ice crystals",
+          "shelf": "30 Days",
+          "container": "1/6 Pan"
+        },
+        {
+          "name": "Boiled Quinoa",
+          "group": "Freezer Temperature:",
+          "quality": "Frozen, no ice crystals",
+          "shelf": "30 Days",
+          "container": "Vaccum Packed"
+        },
+        {
+          "name": "Inari",
+          "group": "Freezer Temperature:",
+          "quality": "Frozen, no ice crystals",
+          "shelf": "30 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Huancaina Sauce",
+          "group": "Freezer Temperature:",
+          "quality": "Frozen, no ice crystals",
+          "shelf": "30 Days",
+          "container": "Vaccum Packed"
+        },
+        {
+          "name": "Ancho Paste",
+          "group": "Freezer Temperature:",
+          "quality": "Frozen, no ice crystals",
+          "shelf": "30 Days",
+          "container": "Vaccum Packed"
+        },
+        {
+          "name": "Passion Fruit Juice",
+          "group": "Freezer Temperature:",
+          "quality": "Frozen, no ice crystals",
+          "shelf": "30 Days",
+          "container": "Vaccum Packed"
+        },
+        {
+          "name": "Pomegranate Juice",
+          "group": "Freezer Temperature:",
+          "quality": "Frozen, no ice crystals",
+          "shelf": "30 Days",
+          "container": "Vaccum Packed"
+        },
+        {
+          "name": "Orange Sauce",
+          "group": "Freezer Temperature:",
+          "quality": "Frozen, no ice crystals",
+          "shelf": "30 Days",
+          "container": "Vaccum Packed"
+        },
+        {
+          "name": "Yellow Sauce",
+          "group": "Freezer Temperature:",
+          "quality": "Frozen, no ice crystals",
+          "shelf": "30 Days",
+          "container": "Vaccum Packed"
+        },
+        {
+          "name": "Hamachi",
+          "group": "Freezer Temperature:",
+          "quality": "Frozen, no ice crystals",
+          "shelf": "30 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Tuna",
+          "group": "Freezer Temperature:",
+          "quality": "Frozen, no ice crystals",
+          "shelf": "30 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Salmon",
+          "group": "Freezer Temperature:",
+          "quality": "Frozen, no ice crystals",
+          "shelf": "30 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Seabass",
+          "group": "Freezer Temperature:",
+          "quality": "Frozen, no ice crystals",
+          "shelf": "30 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Crabstick",
+          "group": "Freezer Temperature:",
+          "quality": "Frozen, no ice crystals",
+          "shelf": "30 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "11/15 Shrimps (Tempura shrimp)",
+          "group": "Freezer Temperature:",
+          "quality": "Frozen, no ice crystals",
+          "shelf": "30 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "U15 Shrimps (Puntarenas shrimp)",
+          "group": "Freezer Temperature:",
+          "quality": "Frozen, no ice crystals",
+          "shelf": "30 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Black Tobikko",
+          "group": "Freezer Temperature:",
+          "quality": "Frozen, no ice crystals",
+          "shelf": "By Expiration",
+          "container": "Pan"
+        },
+        {
+          "name": "Orange Tobikko",
+          "group": "Freezer Temperature:",
+          "quality": "Frozen, no ice crystals",
+          "shelf": "By Expiration",
+          "container": "Pan"
+        }
+      ]
+    },
+    {
+      "name": "BAR INVENTORY",
+      "title": "BAR LINE CHECKLIST",
+      "items": []
+    },
+    {
+      "name": "SALAD",
+      "title": "SALAD SECTION LINE CHECKLIST",
+      "items": [
+        {
+          "name": "Corn Crackers",
+          "group": "ROOM TEMPERATURE (TOP SHELF)",
+          "quality": "Room Temperature, crispy",
+          "shelf": "1 Day",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Parmesan Tuille",
+          "group": "ROOM TEMPERATURE (TOP SHELF)",
+          "quality": "Room Temperature, no visible moisture",
+          "shelf": "1 Day",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Enchilada Tortilla",
+          "group": "ROOM TEMPERATURE (TOP SHELF)",
+          "quality": "Room Temperature, no visible moisture",
+          "shelf": "1 Day",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Taco Chips",
+          "group": "ROOM TEMPERATURE (TOP SHELF)",
+          "quality": "Room Temperature, crispy",
+          "shelf": "1 Day",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Crispy Sweet Potato",
+          "group": "ROOM TEMPERATURE (TOP SHELF)",
+          "quality": "Room Temperature",
+          "shelf": "1 Day",
+          "container": "1/2 Pan"
+        },
+        {
+          "name": "Crispy Leeks",
+          "group": "ROOM TEMPERATURE (TOP SHELF)",
+          "quality": "Room Temperature",
+          "shelf": "1 Day",
+          "container": "1/2 Pan"
+        },
+        {
+          "name": "Tortilla Strips",
+          "group": "ROOM TEMPERATURE (TOP SHELF)",
+          "quality": "Room Temperature",
+          "shelf": "1 Day",
+          "container": "1/2 Pan"
+        },
+        {
+          "name": "Caramelized  Nuts",
+          "group": "ROOM TEMPERATURE (TOP SHELF)",
+          "quality": "Room Temperature",
+          "shelf": "1 Day",
+          "container": "1/9 Pan"
+        },
+        {
+          "name": "Japanese dried chilli",
+          "group": "ROOM TEMPERATURE (TOP SHELF)",
+          "quality": "Room Temperature",
+          "shelf": "30 Days",
+          "container": "1/9 Pan"
+        },
+        {
+          "name": "Cress & Micro Leaves",
+          "group": "EXPO STATION",
+          "quality": "41\u00b0F and below, fresh",
+          "shelf": "1 Day",
+          "container": "Garnish Tray"
+        },
+        {
+          "name": "Coriander leaves",
+          "group": "EXPO STATION",
+          "quality": "41\u00b0F and below, fresh",
+          "shelf": "1 Day",
+          "container": "Garnish Tray"
+        },
+        {
+          "name": "Chopped Spring Onion",
+          "group": "EXPO STATION",
+          "quality": "41\u00b0F and below, fresh",
+          "shelf": "1 Day",
+          "container": "Garnish Tray"
+        },
+        {
+          "name": "Green Onion Sliced",
+          "group": "EXPO STATION",
+          "quality": "41\u00b0F and below, fresh",
+          "shelf": "1 Day",
+          "container": "Garnish Tray"
+        },
+        {
+          "name": "Slice Green Jalapeno",
+          "group": "EXPO STATION",
+          "quality": "41\u00b0F and below, fresh",
+          "shelf": "1 Day",
+          "container": "Garnish Tray"
+        },
+        {
+          "name": "Julienne Cut Onion",
+          "group": "EXPO STATION",
+          "quality": "41\u00b0F and below, fresh",
+          "shelf": "1 Day",
+          "container": "Garnish Tray"
+        },
+        {
+          "name": "Shredded Red Jalapeno",
+          "group": "EXPO STATION",
+          "quality": "41\u00b0F and below, fresh",
+          "shelf": "1 Day",
+          "container": "Garnish Tray"
+        },
+        {
+          "name": "Chopped Chives",
+          "group": "EXPO STATION",
+          "quality": "41\u00b0F and below, fresh",
+          "shelf": "1 Day",
+          "container": "Garnish Tray"
+        },
+        {
+          "name": "White Onion Sliced",
+          "group": "EXPO STATION",
+          "quality": "41\u00b0F and below, fresh",
+          "shelf": "1 Day",
+          "container": "Garnish Tray"
+        },
+        {
+          "name": "Caesar Dressing",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "1 Day",
+          "container": "Squeeze Bottle"
+        },
+        {
+          "name": "Passion Fruit Sauce",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "1 Day",
+          "container": "Squeeze Bottle"
+        },
+        {
+          "name": "Apple Cider Dressing",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "1 Day",
+          "container": "Squeeze Bottle"
+        },
+        {
+          "name": "Barbeque Mayo",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "1 Day",
+          "container": "Squeeze Bottle"
+        },
+        {
+          "name": "Balsamic Sauce",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "1 Day",
+          "container": "Squeeze Bottle"
+        },
+        {
+          "name": "Chipotle Ranch",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "1 Day",
+          "container": "Squeeze Bottle"
+        },
+        {
+          "name": "Tamarillo Gel",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "Pipping Bag"
+        },
+        {
+          "name": "Lemon Emulsion",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "Pipping Bag"
+        },
+        {
+          "name": "Corn Salsa",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/6 Pan"
+        },
+        {
+          "name": "Pico de Gallo",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/6 Pan"
+        },
+        {
+          "name": "Guacamole",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/6 Pan"
+        },
+        {
+          "name": "Pepperoncini",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/9 Pan"
+        },
+        {
+          "name": "Coriander",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "Shiftly",
+          "container": "1/9 Pan"
+        },
+        {
+          "name": "Mixed Cheese",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/6 Pan"
+        },
+        {
+          "name": "BBQ Grilled Corn",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below, with visible char",
+          "shelf": "Shiftly",
+          "container": "1/9 Pan"
+        },
+        {
+          "name": "Parmesan Cheese",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "7 Days",
+          "container": "1/6 Pan"
+        },
+        {
+          "name": "Gem Lettuce",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Cooked Beetroot Sliced",
+          "group": "Garnish Tray",
+          "quality": "41\u00b0F and below",
+          "shelf": "Shiftly",
+          "container": "Garnish Tray"
+        },
+        {
+          "name": "Grapefruit Sliced",
+          "group": "Garnish Tray",
+          "quality": "41\u00b0F and below",
+          "shelf": "Shiftly",
+          "container": "Garnish Tray"
+        },
+        {
+          "name": "Pineapple Sliced",
+          "group": "Garnish Tray",
+          "quality": "41\u00b0F and below",
+          "shelf": "Shiftly",
+          "container": "Garnish Tray"
+        },
+        {
+          "name": "Orange Sliced",
+          "group": "Garnish Tray",
+          "quality": "41\u00b0F and below",
+          "shelf": "Shiftly",
+          "container": "Garnish Tray"
+        },
+        {
+          "name": "Starfruit Sliced",
+          "group": "Garnish Tray",
+          "quality": "41\u00b0F and below",
+          "shelf": "Shiftly",
+          "container": "Garnish Tray"
+        },
+        {
+          "name": "Green & Red Grapes Sliced",
+          "group": "Garnish Tray",
+          "quality": "41\u00b0F and below",
+          "shelf": "Shiftly",
+          "container": "Garnish Tray"
+        },
+        {
+          "name": "Radish Sliced",
+          "group": "Garnish Tray",
+          "quality": "41\u00b0F and below",
+          "shelf": "Shiftly",
+          "container": "Garnish Tray"
+        },
+        {
+          "name": "Grapefruit Caviar",
+          "group": "Garnish Tray",
+          "quality": "41\u00b0F and below",
+          "shelf": "Shiftly",
+          "container": "Garnish Tray"
+        },
+        {
+          "name": "Lemon Caviar",
+          "group": "Garnish Tray",
+          "quality": "41\u00b0F and below",
+          "shelf": "Shiftly",
+          "container": "Garnish Tray"
+        },
+        {
+          "name": "Orange Caviar",
+          "group": "Garnish Tray",
+          "quality": "41\u00b0F and below",
+          "shelf": "Shiftly",
+          "container": "Garnish Tray"
+        },
+        {
+          "name": "Corn Salsa Back Up",
+          "group": "CHILLER 2 (BOTTOM)",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/6 Pan"
+        },
+        {
+          "name": "Blackbeans Back Up",
+          "group": "CHILLER 2 (BOTTOM)",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/6 Pan"
+        },
+        {
+          "name": "Pico Back Up",
+          "group": "CHILLER 2 (BOTTOM)",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/6 Pan"
+        },
+        {
+          "name": "Boiled Corn",
+          "group": "CHILLER 2 (BOTTOM)",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/2 Pan"
+        },
+        {
+          "name": "Oyster Mushroom",
+          "group": "CHILLER 2 (BOTTOM)",
+          "quality": "41\u00b0F & below, fresh and washed",
+          "shelf": "3 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Salad Pea",
+          "group": "CHILLER 2 (BOTTOM)",
+          "quality": "41\u00b0F & below, fresh and washed",
+          "shelf": "3 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Rocca Leaves",
+          "group": "CHILLER 2 (BOTTOM)",
+          "quality": "41\u00b0F & below, fresh and washed",
+          "shelf": "3 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Cashew Mayo",
+          "group": "CHILLER 2 (BOTTOM)",
+          "quality": "41\u00b0F and below",
+          "shelf": "1 Day",
+          "container": "Squeeze Bottle"
+        },
+        {
+          "name": "Papaya Sauce",
+          "group": "CHILLER 2 (BOTTOM)",
+          "quality": "41\u00b0F and below",
+          "shelf": "1 Day",
+          "container": "Squeeze Bottle"
+        },
+        {
+          "name": "Green Goddess Sauce",
+          "group": "CHILLER 2 (BOTTOM)",
+          "quality": "41\u00b0F and below",
+          "shelf": "1 Day",
+          "container": "Squeeze Bottle"
+        },
+        {
+          "name": "Caesar Dressing (Back- up)",
+          "group": "CHILLER 2 (BOTTOM)",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/6 Pan"
+        },
+        {
+          "name": "Apple cider Dressing (Back- up)",
+          "group": "CHILLER 2 (BOTTOM)",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/6 Pan"
+        },
+        {
+          "name": "Balsamic Dressing (Back- up)",
+          "group": "CHILLER 2 (BOTTOM)",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/6 Pan"
+        },
+        {
+          "name": "Chip Ranch (Back- up)",
+          "group": "CHILLER 2 (BOTTOM)",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/6 Pan"
+        },
+        {
+          "name": "Coriander Pesto",
+          "group": "CHILLER 2 (BOTTOM)",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/9 Pan"
+        },
+        {
+          "name": "Edible Flower",
+          "group": "CHILLER 2 (BOTTOM)",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "Pckt"
+        },
+        {
+          "name": "Avocado Grilled",
+          "group": "CHILLER 2 (BOTTOM)",
+          "quality": "41\u00b0F & below, ripe",
+          "shelf": "1 Day",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Mixed Quinoa",
+          "group": "CHILLER 2 (BOTTOM)",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Parm. shredded",
+          "group": "CHILLER 2 (BOTTOM)",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/3 Pan"
+        }
+      ]
+    },
+    {
+      "name": "QA LINE",
+      "title": "QA SECTION LINE CHECKLIST",
+      "items": [
+        {
+          "name": "Salad Crumbs",
+          "group": null,
+          "quality": "Room Temperature",
+          "shelf": "3 Days",
+          "container": "1/6 Pan"
+        },
+        {
+          "name": "Farofa",
+          "group": null,
+          "quality": "Room Temperature",
+          "shelf": "3 Days",
+          "container": "1/6 Pan"
+        },
+        {
+          "name": "Mexican Spice",
+          "group": null,
+          "quality": "Room Temperature",
+          "shelf": "7 Days",
+          "container": "Shaker"
+        },
+        {
+          "name": "Barbeque Spice",
+          "group": null,
+          "quality": "Room Temperature",
+          "shelf": "7 Days",
+          "container": "Shaker"
+        },
+        {
+          "name": "Fajita Spice",
+          "group": null,
+          "quality": "Room Temperature",
+          "shelf": "7 Days",
+          "container": "Shaker"
+        },
+        {
+          "name": "Micro Greens",
+          "group": "GARNISH TRAY",
+          "quality": "Fresh, not wilted",
+          "shelf": "3 Days",
+          "container": "Garnish Tray"
+        },
+        {
+          "name": "Sliced Jalapeno Green & Red",
+          "group": "GARNISH TRAY",
+          "quality": "41\u00b0F and below",
+          "shelf": "Shiftly",
+          "container": "Garnish Tray"
+        },
+        {
+          "name": "Shredded Jalapeno",
+          "group": "GARNISH TRAY",
+          "quality": "41\u00b0F and below",
+          "shelf": "Shiftly",
+          "container": "Garnish Tray"
+        },
+        {
+          "name": "Shredded Spring Onion",
+          "group": "GARNISH TRAY",
+          "quality": "41\u00b0F and below",
+          "shelf": "Shiftly",
+          "container": "Garnish Tray"
+        },
+        {
+          "name": "Chopped Parsley",
+          "group": "GARNISH TRAY",
+          "quality": "41\u00b0F and below",
+          "shelf": "Shiftly",
+          "container": "Garnish Tray"
+        },
+        {
+          "name": "Aji Berde",
+          "group": "Salsa Creola",
+          "quality": "41\u00b0F and below",
+          "shelf": "1/6 Pan",
+          "container": "1 Day"
+        },
+        {
+          "name": "Aji Amarillo",
+          "group": "Salsa Creola",
+          "quality": "41\u00b0F and below",
+          "shelf": "1/6 Pan",
+          "container": "1 Day"
+        },
+        {
+          "name": "Green Emulsion",
+          "group": "Salsa Creola",
+          "quality": "41\u00b0F and below",
+          "shelf": "1/6 Pan",
+          "container": "1 Day"
+        },
+        {
+          "name": "Red Emulsion",
+          "group": "Salsa Creola",
+          "quality": "41\u00b0F and below",
+          "shelf": "1/6 Pan",
+          "container": "1 Day"
+        },
+        {
+          "name": "Black Beans",
+          "group": "Salsa Creola",
+          "quality": "41\u00b0F and below",
+          "shelf": "1/6 Pan",
+          "container": "1 Day"
+        },
+        {
+          "name": "Alitas Sauce",
+          "group": "Salsa Creola",
+          "quality": "41\u00b0F and below",
+          "shelf": "1/6 Pan",
+          "container": "1 Day"
+        },
+        {
+          "name": "Peruvian Sauce",
+          "group": "Salsa Creola",
+          "quality": "41\u00b0F and below",
+          "shelf": "1/6 Pan",
+          "container": "1 Day"
+        },
+        {
+          "name": "Avocado Ranch",
+          "group": "Salsa Creola",
+          "quality": "41\u00b0F and below",
+          "shelf": "1/6 Pan",
+          "container": "1 Day"
+        },
+        {
+          "name": "Green Chimichurri",
+          "group": "Salsa Creola",
+          "quality": "41\u00b0F and below",
+          "shelf": "1/6 Pan",
+          "container": "1 Day"
+        },
+        {
+          "name": "Red Chimichurri Sauce",
+          "group": "Salsa Creola",
+          "quality": "41\u00b0F and below",
+          "shelf": "1/6 Pan",
+          "container": "1 Day"
+        },
+        {
+          "name": "Apple Bbq Sauce",
+          "group": "Salsa Creola",
+          "quality": "41\u00b0F and below",
+          "shelf": "Drizzle Bottle",
+          "container": "1 Day"
+        },
+        {
+          "name": "Orange Bbq Sauce",
+          "group": "Salsa Creola",
+          "quality": "41\u00b0F and below",
+          "shelf": "Drizzle Bottle",
+          "container": "1 Day"
+        },
+        {
+          "name": "Hawaian Bbq Sauce",
+          "group": "Salsa Creola",
+          "quality": "41\u00b0F and below",
+          "shelf": "Drizzle Bottle",
+          "container": "1 Day"
+        },
+        {
+          "name": "Korean Bbq Sauce",
+          "group": "Salsa Creola",
+          "quality": "41\u00b0F and below",
+          "shelf": "Drizzle Bottle",
+          "container": "1 Day"
+        },
+        {
+          "name": "Barbeque Sauce",
+          "group": "Salsa Creola",
+          "quality": "41\u00b0F and below",
+          "shelf": "Drizzle Bottle",
+          "container": "1 Day"
+        },
+        {
+          "name": "Umami Dressing",
+          "group": "Salsa Creola",
+          "quality": "41\u00b0F and below",
+          "shelf": "Drizzle Bottle",
+          "container": "1 Day"
+        },
+        {
+          "name": "Pickled Mushroom",
+          "group": "Salsa Creola",
+          "quality": "41\u00b0F and below",
+          "shelf": "1/6 Pan",
+          "container": "7 Days"
+        },
+        {
+          "name": "Pickled Potato",
+          "group": "Salsa Creola",
+          "quality": "41\u00b0F and below",
+          "shelf": "1/6 Pan",
+          "container": "7 Days"
+        },
+        {
+          "name": "Mixed Pickles",
+          "group": "Salsa Creola",
+          "quality": "41\u00b0F and below",
+          "shelf": "1/6 Pan",
+          "container": "7 Days"
+        },
+        {
+          "name": "Mango Salsa",
+          "group": "Salsa Creola",
+          "quality": "41\u00b0F and below",
+          "shelf": "1/6 Pan",
+          "container": "3 Days"
+        },
+        {
+          "name": "Sambal",
+          "group": "Salsa Creola",
+          "quality": "41\u00b0F and below",
+          "shelf": "1/6 Pan",
+          "container": "1 Day"
+        },
+        {
+          "name": "Jack Cheese",
+          "group": "Salsa Creola",
+          "quality": "41\u00b0F and below",
+          "shelf": "1/6 Pan",
+          "container": "3 Days"
+        },
+        {
+          "name": "Halloumi Foam",
+          "group": "Salsa Creola",
+          "quality": "41\u00b0F and below",
+          "shelf": "Whip Canister",
+          "container": "3 Days"
+        },
+        {
+          "name": "Banana Leaves",
+          "group": "Salsa Creola",
+          "quality": "41\u00b0F and below",
+          "shelf": "IOC,1/3 Pan",
+          "container": "30 Days"
+        },
+        {
+          "name": "Bamboo Leaves",
+          "group": "Salsa Creola",
+          "quality": "41\u00b0F and below",
+          "shelf": "IOC,1/3 Pan",
+          "container": "30 Days"
+        },
+        {
+          "name": "Lobster Sauce",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "1 Day",
+          "container": "Drizzle Bottle"
+        },
+        {
+          "name": "Taco Seafood Sauce",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "1 Day",
+          "container": "Drizzle Bottle"
+        },
+        {
+          "name": "Fry Noodle Sauce",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "1 Day",
+          "container": "Drizzle Bottle"
+        },
+        {
+          "name": "Aurenthius Sauce",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "1 Day",
+          "container": "Drizzle Bottle"
+        },
+        {
+          "name": "Spicy Sauce ( Back Up)",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "1 Day",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Creamy Pepper Sauce (Back Up)",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Black Pepper Sauce (Back Up)",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Cherry Tomato",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/2 Pan"
+        },
+        {
+          "name": "Peeled Garlic",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/2 Pan"
+        },
+        {
+          "name": "Onion Shallot",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/2 Pan"
+        }
+      ]
+    },
+    {
+      "name": "SOLTADO",
+      "title": "FIRE SECTION LINE CHECKLIST",
+      "items": [
+        {
+          "name": "Soft Taco",
+          "group": "Low Bouy 1 Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "2 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Fajita Veg.",
+          "group": "Low Bouy 1 Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "1 Day",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Boiled Potatoes",
+          "group": "Low Bouy 1 Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Crunchy Garlic",
+          "group": "Low Bouy 1 Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/9 Pan"
+        },
+        {
+          "name": "Chopped Chives",
+          "group": "Low Bouy 1 Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/6 Pan"
+        },
+        {
+          "name": "Butter",
+          "group": "Low Bouy 1 Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/6 Pan"
+        },
+        {
+          "name": "Mushroom Sauce",
+          "group": "Low Bouy 1 Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/6 Pan"
+        },
+        {
+          "name": "Chicken Anticucho",
+          "group": "Low Bouy 1 Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "2 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Salmon Anticucho",
+          "group": "Low Bouy 1 Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "2 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Chiclayo Chicken",
+          "group": "Low Bouy 1 Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "2 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Salmon",
+          "group": "Low Bouy 1 Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "2 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Onion Shells",
+          "group": "Low Bouy 1 Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "2 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Fry Noodle Sauce",
+          "group": "Low Bouy 1 Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "2 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Taco Seafood Sauce",
+          "group": "Low Bouy 1 Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Spring Onion Cut",
+          "group": "Low Bouy 1 Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "2 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Pineapple Cut",
+          "group": "Low Bouy 1 Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "2 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Cut Mango",
+          "group": "Low Bouy 1 Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "2 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Cherry Tomatoes",
+          "group": "Low Bouy 1 Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "5 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Churrasco Beef",
+          "group": "Low Bouy 1 Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Cut Chicken Breast",
+          "group": "Low Bouy 1 Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/2 Pan"
+        },
+        {
+          "name": "Cajun Shrimp",
+          "group": "Low Bouy 1 Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/2 Pan"
+        },
+        {
+          "name": "Shrimp",
+          "group": "Low Bouy 1 Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/2 Pan"
+        },
+        {
+          "name": "Corn Oil",
+          "group": "ROOM TEMPERATURE",
+          "quality": "Room Temperature",
+          "shelf": "3 Day",
+          "container": "Drizzle Bottle"
+        },
+        {
+          "name": "Peanut Oil",
+          "group": "ROOM TEMPERATURE",
+          "quality": "Room Temperature",
+          "shelf": "3 Day",
+          "container": "Drizzle Bottle"
+        },
+        {
+          "name": "Light Soya",
+          "group": "ROOM TEMPERATURE",
+          "quality": "Room Temperature",
+          "shelf": "3 Day",
+          "container": "Drizzle Bottle"
+        },
+        {
+          "name": "Salt",
+          "group": "ROOM TEMPERATURE",
+          "quality": "Room Temperature",
+          "shelf": "7 Days",
+          "container": "Shaker"
+        },
+        {
+          "name": "Black Pepper",
+          "group": "ROOM TEMPERATURE",
+          "quality": "Room Temperature",
+          "shelf": "7 Days",
+          "container": "Shaker"
+        },
+        {
+          "name": "Tajin Spice",
+          "group": "ROOM TEMPERATURE",
+          "quality": "Room Temperature",
+          "shelf": "7 Days",
+          "container": "Shaker"
+        },
+        {
+          "name": "Fajita Spice",
+          "group": "ROOM TEMPERATURE",
+          "quality": "Room Temperature",
+          "shelf": "7 Days",
+          "container": "Shaker"
+        },
+        {
+          "name": "Nutmeg",
+          "group": "ROOM TEMPERATURE",
+          "quality": "Room Temperature",
+          "shelf": "7 Days",
+          "container": "Shaker"
+        },
+        {
+          "name": "French Fries",
+          "group": "Freezer Temperature:",
+          "quality": "Frozen, no ice crystals",
+          "shelf": "30 Days",
+          "container": "Full Pan"
+        },
+        {
+          "name": "Cassava Cut",
+          "group": "Freezer Temperature:",
+          "quality": "Frozen, no ice crystals",
+          "shelf": "30 Days",
+          "container": "Full Pan"
+        },
+        {
+          "name": "Empanada",
+          "group": "Freezer Temperature:",
+          "quality": "Frozen, no ice crystals",
+          "shelf": "30 Days",
+          "container": "Full Pan"
+        },
+        {
+          "name": "Egg Noodles",
+          "group": "Freezer Temperature:",
+          "quality": "Frozen, no ice crystals",
+          "shelf": "30 Days",
+          "container": "Portion"
+        },
+        {
+          "name": "Black Noodles",
+          "group": "Freezer Temperature:",
+          "quality": "Frozen, no ice crystals",
+          "shelf": "30 Days",
+          "container": "Portion"
+        },
+        {
+          "name": "Potato Pave",
+          "group": "Freezer Temperature:",
+          "quality": "Frozen, no ice crystals",
+          "shelf": "30 Days",
+          "container": "1/2 Pan"
+        },
+        {
+          "name": "Green Peas",
+          "group": "Freezer Temperature:",
+          "quality": "Frozen, no ice crystals",
+          "shelf": "30 Days",
+          "container": "Pack"
+        },
+        {
+          "name": "Edamame",
+          "group": "Freezer Temperature:",
+          "quality": "Frozen, no ice crystals",
+          "shelf": "30 Days",
+          "container": "Pack"
+        },
+        {
+          "name": "Beef Anticucho",
+          "group": "Freezer Temperature:",
+          "quality": "Frozen, no ice crystals",
+          "shelf": "30 Days",
+          "container": "Pack"
+        },
+        {
+          "name": "Beef Churasco",
+          "group": "Freezer Temperature:",
+          "quality": "Frozen, no ice crystals",
+          "shelf": "30 Days",
+          "container": "Pack"
+        },
+        {
+          "name": "Quesa meat",
+          "group": "Freezer Temperature:",
+          "quality": "Frozen, no ice crystals",
+          "shelf": "30 Days",
+          "container": "Pack"
+        },
+        {
+          "name": "Seabass",
+          "group": "Freezer Temperature:",
+          "quality": "Frozen, no ice crystals",
+          "shelf": "30 Days",
+          "container": "Pack"
+        },
+        {
+          "name": "Mussle",
+          "group": "Freezer Temperature:",
+          "quality": "Frozen, no ice crystals",
+          "shelf": "30 Days",
+          "container": "Pack"
+        },
+        {
+          "name": "Shrimp 11/15",
+          "group": "Freezer Temperature:",
+          "quality": "Frozen, no ice crystals",
+          "shelf": "30 Days",
+          "container": "Pack"
+        },
+        {
+          "name": "Lobster",
+          "group": "Freezer Temperature:",
+          "quality": "Frozen, no ice crystals",
+          "shelf": "30 Days",
+          "container": "Pack"
+        }
+      ]
+    },
+    {
+      "name": "GRILL",
+      "title": "FIRE SECTION LINE CHECKLIST",
+      "items": [
+        {
+          "name": "Egg Noodles",
+          "group": "Low Bouy 2 Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Mixed Cheese",
+          "group": "Low Bouy 2 Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "2 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Steamed Potato",
+          "group": "Low Bouy 2 Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "2 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Onion Garnish",
+          "group": "Low Bouy 2 Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Chili Garnish",
+          "group": "Low Bouy 2 Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Pineapple Round Cut",
+          "group": "Low Bouy 2 Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "2 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Chicken Churrasco",
+          "group": "Low Bouy 2 Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "2 Days",
+          "container": "1/2 Pan"
+        },
+        {
+          "name": "Brisket Top",
+          "group": "Low Bouy 2 Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "2 Days",
+          "container": "1/2 Pan"
+        },
+        {
+          "name": "Brisket Back",
+          "group": "Low Bouy 2 Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "2 Days",
+          "container": "1/2 Pan"
+        },
+        {
+          "name": "Blanched Mixed Vegetables",
+          "group": "Low Bouy 2 Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "2 Days",
+          "container": "Full Pan"
+        },
+        {
+          "name": "Striploin Steaks +9",
+          "group": "Low Bouy 2 Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "2 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Ribeye Steak +9",
+          "group": "Low Bouy 2 Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "2 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Striploin Steaks +8",
+          "group": "Low Bouy 2 Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "2 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Ribeye Steak +8",
+          "group": "Low Bouy 2 Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "2 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Tenderloin Steak",
+          "group": "Low Bouy 2 Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "2 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Striploin +5",
+          "group": "Low Bouy 2 Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "2 Days",
+          "container": "1/2 Pan"
+        },
+        {
+          "name": "Ribeye +5",
+          "group": "Low Bouy 2 Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "2 Days",
+          "container": "1/2 Pan"
+        },
+        {
+          "name": "Fajita Spice",
+          "group": "GRILL CHILLER -TOP",
+          "quality": "41\u00b0F and below",
+          "shelf": "1 Day",
+          "container": "Drizzle Bottle"
+        },
+        {
+          "name": "Salt",
+          "group": "GRILL CHILLER -TOP",
+          "quality": "41\u00b0F and below",
+          "shelf": "1 Day",
+          "container": "Drizzle Bottle"
+        },
+        {
+          "name": "Black Pepper",
+          "group": "GRILL CHILLER -TOP",
+          "quality": "41\u00b0F and below",
+          "shelf": "1 Day",
+          "container": "Drizzle Bottle"
+        },
+        {
+          "name": "Turmeric",
+          "group": "GRILL CHILLER -TOP",
+          "quality": "41\u00b0F and below",
+          "shelf": "1 Day",
+          "container": "Drizzle Bottle"
+        },
+        {
+          "name": "Parmesan Cheese",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/6 Pan"
+        },
+        {
+          "name": "Bechamel Sauce",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/6 Pan"
+        },
+        {
+          "name": "Pineapple Cut",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/6 Pan"
+        },
+        {
+          "name": "Tarragon Sauce",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/6 Pan"
+        },
+        {
+          "name": "Butter",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/6 Pan"
+        },
+        {
+          "name": "Carrot Puree",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/6 Pan"
+        },
+        {
+          "name": "Pistachio Puree",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/6 Pan"
+        },
+        {
+          "name": "Mustard Sauce",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/6 Pan"
+        },
+        {
+          "name": "Brocolli Puree",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/6 Pan"
+        },
+        {
+          "name": "White Beans",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/6 Pan"
+        },
+        {
+          "name": "Pomegranate Seeds",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/6 Pan"
+        },
+        {
+          "name": "Chili Con Carne",
+          "group": "BOTTOM",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/2 Pan"
+        },
+        {
+          "name": "Mixed Cheese",
+          "group": "BOTTOM",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/2 Pan"
+        },
+        {
+          "name": "Banana Puree",
+          "group": "BOTTOM",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/6 Pan"
+        },
+        {
+          "name": "Zatar Leaves",
+          "group": "BOTTOM",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/6 Pan"
+        },
+        {
+          "name": "Porcini Mushroom",
+          "group": "BOTTOM",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/6 Pan"
+        },
+        {
+          "name": "Herb Butter",
+          "group": "BOTTOM",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/6 Pan"
+        },
+        {
+          "name": "Rosemary Leaves",
+          "group": "BOTTOM",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/6 Pan"
+        },
+        {
+          "name": "Mashed Potato",
+          "group": "BOTTOM",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/6 Pan"
+        },
+        {
+          "name": "White Rice",
+          "group": "BOTTOM",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/6 Pan"
+        },
+        {
+          "name": "Pumpkin ( Round)",
+          "group": "BOTTOM",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/6 Pan"
+        },
+        {
+          "name": "Baby Corn",
+          "group": "BOTTOM",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/6 Pan"
+        },
+        {
+          "name": "Beef Fajita",
+          "group": "BOTTOM",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Pollo Ala Brasa",
+          "group": "BOTTOM",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Chicken Fajita",
+          "group": "BOTTOM",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Pollo Gracia",
+          "group": "BOTTOM",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Duck",
+          "group": "BOTTOM",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Alitas Ck wings",
+          "group": "BOTTOM",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Peruvian Chicken",
+          "group": "BOTTOM",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Churrasco Spicy Sauce",
+          "group": "BOTTOM",
+          "quality": "41\u00b0F and below",
+          "shelf": "1 Day",
+          "container": "Drizzle Bottle"
+        },
+        {
+          "name": "Churrasco Creamy Pepper Sauce",
+          "group": "BOTTOM",
+          "quality": "41\u00b0F and below",
+          "shelf": "1 Day",
+          "container": "Drizzle Bottle"
+        },
+        {
+          "name": "Churrasco Black Pepper Sauce",
+          "group": "BOTTOM",
+          "quality": "41\u00b0F and below",
+          "shelf": "1 Day",
+          "container": "Drizzle Bottle"
+        },
+        {
+          "name": "Chipotle Sauce",
+          "group": "BOTTOM",
+          "quality": "41\u00b0F and below",
+          "shelf": "1 Day",
+          "container": "Drizzle Bottle"
+        },
+        {
+          "name": "Korean Bbq",
+          "group": "BOTTOM",
+          "quality": "41\u00b0F and below",
+          "shelf": "1 Day",
+          "container": "Drizzle Bottle"
+        },
+        {
+          "name": "Dune Sauce",
+          "group": "BOTTOM",
+          "quality": "41\u00b0F and below",
+          "shelf": "1 Day",
+          "container": "Drizzle Bottle"
+        },
+        {
+          "name": "Lemon Juice",
+          "group": "BOTTOM",
+          "quality": "41\u00b0F and below",
+          "shelf": "1 Day",
+          "container": "Drizzle Bottle"
+        },
+        {
+          "name": "Soft Taco bread",
+          "group": "BOTTOM",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Baby Capsicum",
+          "group": "BOTTOM",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Black Noodles",
+          "group": "BOTTOM",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Steamed Potato Whole",
+          "group": "BOTTOM",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/3 Pan"
+        }
+      ]
+    },
+    {
+      "name": "SAUTEE",
+      "title": "FIRE SECTION LINE CHECKLIST",
+      "items": [
+        {
+          "name": "Smoked Meat/Pastrami",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "1 Day",
+          "container": "1/2 Pan"
+        },
+        {
+          "name": "Smoked Striploin",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "1 Day",
+          "container": "1/2 Pan"
+        },
+        {
+          "name": "Smoked Tenderloin",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "1 Day",
+          "container": "1/2 Pan"
+        },
+        {
+          "name": "Smoked Ribeye",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "1 Day",
+          "container": "1/2 Pan"
+        },
+        {
+          "name": "Empanada",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/2 Pan"
+        },
+        {
+          "name": "Leeks",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/2 Pan"
+        },
+        {
+          "name": "Sweet Potato",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/2 Pan"
+        },
+        {
+          "name": "Boiled Potato",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/2 Pan"
+        },
+        {
+          "name": "Camarones shrimp",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "2 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Salmon Santiago",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "2 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Mixed Chopped capsicum",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Mixed chopped Zucchini",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "fresh mushroom",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "parm cheese",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "beech mushrooms",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "White Rice",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Soup",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Chopped Onion",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Chopped Garlic",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Chopped Broccoli",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/9 Pan"
+        },
+        {
+          "name": "Cream Corn",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "mozzarella cheese",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "yoghurt",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Aji chicken",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Beef Marinated",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Shrimp Buffalo",
+          "group": "Freezer",
+          "quality": "Frozen, no ice crystals",
+          "shelf": "30 Days",
+          "container": "Pack"
+        },
+        {
+          "name": "Chicken buffalo",
+          "group": "Freezer",
+          "quality": "Frozen, no ice crystals",
+          "shelf": "30 Days",
+          "container": "Pack"
+        },
+        {
+          "name": "Rancher roll",
+          "group": "Freezer",
+          "quality": "Frozen, no ice crystals",
+          "shelf": "30 Days",
+          "container": "Pack"
+        },
+        {
+          "name": "Potato Fries",
+          "group": "Freezer",
+          "quality": "Frozen, no ice crystals",
+          "shelf": "30 Days",
+          "container": "Pack"
+        },
+        {
+          "name": "Cassava Fries",
+          "group": "Freezer",
+          "quality": "Frozen, no ice crystals",
+          "shelf": "30 Days",
+          "container": "Pack"
+        }
+      ]
+    },
+    {
+      "name": "FRYER",
+      "title": "EARTH - MAIN SECTION LINE CHECKLIST",
+      "items": [
+        {
+          "name": "Bread Crumbs",
+          "group": "CHILLER 1 (TOP)",
+          "quality": "41\u00b0F and below",
+          "shelf": "1 Day",
+          "container": "Drizzle Bottle"
+        },
+        {
+          "name": "Coconut Powder",
+          "group": "CHILLER 1 (TOP)",
+          "quality": "41\u00b0F and below",
+          "shelf": "1 Day",
+          "container": "Drizzle Bottle"
+        },
+        {
+          "name": "Caramelized Nut",
+          "group": "CHILLER 1 (TOP)",
+          "quality": "41\u00b0F and below",
+          "shelf": "1 Day",
+          "container": "Drizzle Bottle"
+        },
+        {
+          "name": "Cajun Spice",
+          "group": "CHILLER 1 (TOP)",
+          "quality": "41\u00b0F and below",
+          "shelf": "1 Day",
+          "container": "Drizzle Bottle"
+        },
+        {
+          "name": "Spices",
+          "group": "CHILLER 1 (TOP)",
+          "quality": "41\u00b0F and below",
+          "shelf": "1 Day",
+          "container": "Drizzle Bottle"
+        },
+        {
+          "name": "Dark Soya",
+          "group": "CHILLER 1 (TOP)",
+          "quality": "41\u00b0F and below",
+          "shelf": "1 Day",
+          "container": "Drizzle Bottle"
+        },
+        {
+          "name": "Ranch",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "1 Day",
+          "container": "Drizzle Bottle"
+        },
+        {
+          "name": "Lemon Dew",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "1 Day",
+          "container": "Drizzle Bottle"
+        },
+        {
+          "name": "Playa Shrimp Sauce- Plating",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "1 Day",
+          "container": "Drizzle Bottle"
+        },
+        {
+          "name": "Playa Sauce- Shrimp",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "1 Day",
+          "container": "Drizzle Bottle"
+        },
+        {
+          "name": "Playa Sauce- Mild",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "2 Days",
+          "container": "Drizzle Bottle"
+        },
+        {
+          "name": "Sesame Oil",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "Drizzle Bottle"
+        },
+        {
+          "name": "Coriander Oil",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Taco Corn",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Lamb Carnitas",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "1 Day",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Taco Shrimp",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Taco Chicken",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Beef Tartare",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "1 Day",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Creamy Lemon Sauce",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/6 Pan"
+        },
+        {
+          "name": "Lemon Butter",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/6 Pan"
+        },
+        {
+          "name": "Mexican Dip",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/9 Pan"
+        },
+        {
+          "name": "Parm. Tuile Mixed",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/9 Pan"
+        },
+        {
+          "name": "Marinara Sauce",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Bufallo Sauce",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Empanada Sauce",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Cheddar Sauce",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "1 DAY",
+          "container": "Bottle"
+        },
+        {
+          "name": "Avocado Ranch",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/9 Pan"
+        },
+        {
+          "name": "Green Chimichurri Sauce",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/6 Pan"
+        },
+        {
+          "name": "Pickles",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "1 DAY",
+          "container": "Bottle"
+        },
+        {
+          "name": "Veggie Stocks",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/9 Pan"
+        },
+        {
+          "name": "Beef stocks",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/9 Pan"
+        },
+        {
+          "name": "Chopped Black Olives",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/9 Pan"
+        },
+        {
+          "name": "Green Tahina",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/9 Pan"
+        },
+        {
+          "name": "Black bean",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/9 Pan"
+        },
+        {
+          "name": "Sour Cream",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/9 Pan"
+        },
+        {
+          "name": "Enchilada",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/9 Pan"
+        },
+        {
+          "name": "Grilled Corn",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "1 Day",
+          "container": "1/6 Pan"
+        },
+        {
+          "name": "Grilled chicken",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "2 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Playa Shrimps",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "2 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Mussel",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "2 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Mariscos Shrimps",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "2 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Boiled Shrimp",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/6 Pan"
+        },
+        {
+          "name": "Ck Encha marinated",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "2 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Lamb",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "2 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Seafood Sauce",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/6 Pan"
+        },
+        {
+          "name": "Mustard Sauce",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/6 Pan"
+        },
+        {
+          "name": "Broccoli Puree",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/6 Pan"
+        },
+        {
+          "name": "Carrot Puree",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/6 Pan"
+        },
+        {
+          "name": "Pistachio Puree",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/6 Pan"
+        },
+        {
+          "name": "Tarragon Sauce",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/6 Pan"
+        },
+        {
+          "name": "Salmon Sauce",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/6 Pan"
+        },
+        {
+          "name": "Tomato Sauce",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/6 Pan"
+        },
+        {
+          "name": "Ala Brasa Potato",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/6 Pan"
+        },
+        {
+          "name": "Potato Pave",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/6 Pan"
+        },
+        {
+          "name": "Eggplant Cooked",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "2 Days",
+          "container": "1/6 Pan"
+        },
+        {
+          "name": "Pumpkin Cooked",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/6 Pan"
+        },
+        {
+          "name": "Chili Con Carne",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/2 Pan"
+        },
+        {
+          "name": "Mixed Cheese",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/2 Pan"
+        },
+        {
+          "name": "Pollo de Gracia Sauce",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "1 Day",
+          "container": "drizzle"
+        },
+        {
+          "name": "Orange Robata sauce",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "1 Day",
+          "container": "drizzle"
+        },
+        {
+          "name": "Seafood Sauce",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "1 Day",
+          "container": "drizzle"
+        },
+        {
+          "name": "Salmon Sauce",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "1 Day",
+          "container": "drizzle"
+        },
+        {
+          "name": "Mexican Sauce",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "1 Day",
+          "container": "drizzle"
+        }
+      ]
+    },
+    {
+      "name": "STANDING CHILLER",
+      "title": "FIRE - STANDING CHILLER LINE CHECKLIST",
+      "items": [
+        {
+          "name": "Soft Tacos",
+          "group": "LEFT SIDE",
+          "quality": "41\u00b0F and below, Fresh",
+          "shelf": "5 Days",
+          "container": "1/2 Pan"
+        },
+        {
+          "name": "Mixed Veggie",
+          "group": "LEFT SIDE",
+          "quality": "41\u00b0F and below, Fresh",
+          "shelf": "5 Days",
+          "container": "1/2 Pan"
+        },
+        {
+          "name": "Fresh Micro Greens (Back Up)",
+          "group": "LEFT SIDE",
+          "quality": "41\u00b0F and below, Fresh",
+          "shelf": "3 Days",
+          "container": "Pack"
+        },
+        {
+          "name": "Parsley",
+          "group": "LEFT SIDE",
+          "quality": "41\u00b0F and below, Fresh",
+          "shelf": "3 Days",
+          "container": "1/2 Pan"
+        },
+        {
+          "name": "Peach",
+          "group": "LEFT SIDE",
+          "quality": "41\u00b0F and below, Fresh",
+          "shelf": "5 Days",
+          "container": "1/2 Pan"
+        },
+        {
+          "name": "Strawberries",
+          "group": "LEFT SIDE",
+          "quality": "41\u00b0F and below, Fresh",
+          "shelf": "5 Days",
+          "container": "1/2 Pan"
+        },
+        {
+          "name": "Tomatillo",
+          "group": "LEFT SIDE",
+          "quality": "41\u00b0F and below, Fresh",
+          "shelf": "5 Days",
+          "container": "1/2 Pan"
+        },
+        {
+          "name": "Sage",
+          "group": "LEFT SIDE",
+          "quality": "41\u00b0F and below, Fresh",
+          "shelf": "5 Days",
+          "container": "Full Pan"
+        },
+        {
+          "name": "Cherry Tomatoes",
+          "group": "LEFT SIDE",
+          "quality": "41\u00b0F and below, Fresh",
+          "shelf": "5 Days",
+          "container": "1/2 Pan"
+        },
+        {
+          "name": "Coriander",
+          "group": "LEFT SIDE",
+          "quality": "41\u00b0F and below, Fresh",
+          "shelf": "3 Days",
+          "container": "1/2 Pan"
+        },
+        {
+          "name": "Shreded S. Potato",
+          "group": "LEFT SIDE",
+          "quality": "41\u00b0F and below, Fresh",
+          "shelf": "3 Days",
+          "container": "1/2 Pan"
+        },
+        {
+          "name": "Rocca Leaves",
+          "group": "LEFT SIDE",
+          "quality": "41\u00b0F and below, Fresh",
+          "shelf": "3 Days",
+          "container": "1/2 Pan"
+        },
+        {
+          "name": "Green Beans",
+          "group": "LEFT SIDE",
+          "quality": "41\u00b0F and below, Fresh",
+          "shelf": "3 Days",
+          "container": "1/2 Pan"
+        },
+        {
+          "name": "Eggplant",
+          "group": "LEFT SIDE",
+          "quality": "41\u00b0F and below, Fresh",
+          "shelf": "5 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Papaya",
+          "group": "LEFT SIDE",
+          "quality": "41\u00b0F and below, Fresh",
+          "shelf": "5 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Boiled Corn",
+          "group": "LEFT SIDE",
+          "quality": "41\u00b0F and below, Fresh",
+          "shelf": "5 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Mixed Cheese Block",
+          "group": "RIGHT SIDE",
+          "quality": "41\u00b0F and below, Chilled",
+          "shelf": "3 Days",
+          "container": "Tub"
+        },
+        {
+          "name": "Yoghurt",
+          "group": "RIGHT SIDE",
+          "quality": "41\u00b0F and below, Chilled",
+          "shelf": "3 Days",
+          "container": "Tub"
+        },
+        {
+          "name": "Sour Cream",
+          "group": "RIGHT SIDE",
+          "quality": "41\u00b0F and below, Chilled",
+          "shelf": "3 Days",
+          "container": "Tub"
+        },
+        {
+          "name": "Milk",
+          "group": "RIGHT SIDE",
+          "quality": "41\u00b0F and below, Chilled",
+          "shelf": "3 Days",
+          "container": "Pack"
+        },
+        {
+          "name": "Whipping Cream",
+          "group": "RIGHT SIDE",
+          "quality": "41\u00b0F and below, Chilled",
+          "shelf": "3 Days",
+          "container": "Pack"
+        },
+        {
+          "name": "Ketchup",
+          "group": "RIGHT SIDE",
+          "quality": "41\u00b0F and below, Chilled",
+          "shelf": "7 Days",
+          "container": "Bottle"
+        },
+        {
+          "name": "Mayonnaise",
+          "group": "RIGHT SIDE",
+          "quality": "41\u00b0F and below, Chilled",
+          "shelf": "7 Days",
+          "container": "Bottle"
+        },
+        {
+          "name": "Beech Mushroom",
+          "group": "RIGHT SIDE",
+          "quality": "41\u00b0F and below, Fresh",
+          "shelf": "5 Days",
+          "container": "Pack"
+        },
+        {
+          "name": "Fresh Micro Greens (Back Up)",
+          "group": "RIGHT SIDE",
+          "quality": "41\u00b0F and below, Fresh",
+          "shelf": "3 Days",
+          "container": "Pack"
+        },
+        {
+          "name": "Pickle Jalapeno",
+          "group": "RIGHT SIDE",
+          "quality": "41\u00b0F and below, Fresh",
+          "shelf": "5 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Polo Chicken Sauce",
+          "group": "RIGHT SIDE",
+          "quality": "41\u00b0F and below, Fresh",
+          "shelf": "5 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Taragon Sauce",
+          "group": "RIGHT SIDE",
+          "quality": "41\u00b0F and below, Fresh",
+          "shelf": "5 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Mexican Sauce",
+          "group": "RIGHT SIDE",
+          "quality": "41\u00b0F and below, Fresh",
+          "shelf": "30 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Seafood Sauce",
+          "group": "RIGHT SIDE",
+          "quality": "41\u00b0F and below, Fresh",
+          "shelf": "30 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Ranch",
+          "group": "RIGHT SIDE",
+          "quality": "41\u00b0F and below, Fresh",
+          "shelf": "5 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "chipotle Sauce",
+          "group": "RIGHT SIDE",
+          "quality": "41\u00b0F and below, Fresh",
+          "shelf": "5 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Tartar Sauce",
+          "group": "RIGHT SIDE",
+          "quality": "41\u00b0F and below, Fresh",
+          "shelf": "5 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Lemon Emulsion",
+          "group": "RIGHT SIDE",
+          "quality": "41\u00b0F and below, Fresh",
+          "shelf": "5 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Balsamic Sauce",
+          "group": "RIGHT SIDE",
+          "quality": "41\u00b0F and below, Fresh",
+          "shelf": "5 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Empanada Sauce",
+          "group": "RIGHT SIDE",
+          "quality": "41\u00b0F and below, Fresh",
+          "shelf": "5 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Gem Lettuce",
+          "group": "RIGHT SIDE",
+          "quality": "41\u00b0F and below, Fresh",
+          "shelf": "5 Days",
+          "container": "1/2 Pan"
+        },
+        {
+          "name": "Mixed Cheese",
+          "group": "RIGHT SIDE",
+          "quality": "41\u00b0F and below, Fresh",
+          "shelf": "5 Days",
+          "container": "1/2 Pan"
+        }
+      ]
+    },
+    {
+      "name": "DRY STORAGE",
+      "title": "DRY SECTION LINE CHECKLIST",
+      "items": [
+        {
+          "name": "Staff Tea",
+          "group": "Dry Storage",
+          "quality": "Room Temperature",
+          "shelf": "30 days",
+          "container": "container"
+        },
+        {
+          "name": "Pop Rice",
+          "group": "Dry Storage",
+          "quality": "Room Temperature",
+          "shelf": "30 days",
+          "container": "container"
+        },
+        {
+          "name": "Tempura Mix",
+          "group": "Dry Storage",
+          "quality": "Room Temperature",
+          "shelf": "30 days",
+          "container": "container"
+        },
+        {
+          "name": "Dried Oregano",
+          "group": "Dry Storage",
+          "quality": "Room Temperature",
+          "shelf": "30 days",
+          "container": "container"
+        },
+        {
+          "name": "Coriander Powder",
+          "group": "Dry Storage",
+          "quality": "Room Temperature",
+          "shelf": "30 days",
+          "container": "container"
+        },
+        {
+          "name": "Corn Flour",
+          "group": "Dry Storage",
+          "quality": "Room Temperature",
+          "shelf": "30 days",
+          "container": "container"
+        },
+        {
+          "name": "Cinnamon Powder",
+          "group": "Dry Storage",
+          "quality": "Room Temperature",
+          "shelf": "30 days",
+          "container": "container"
+        },
+        {
+          "name": "Peppercorn",
+          "group": "Dry Storage",
+          "quality": "Room Temperature",
+          "shelf": "30 days",
+          "container": "container"
+        },
+        {
+          "name": "Chili Flakes",
+          "group": "Dry Storage",
+          "quality": "Room Temperature",
+          "shelf": "30 days",
+          "container": "container"
+        },
+        {
+          "name": "Bay Leaves",
+          "group": "Dry Storage",
+          "quality": "Room Temperature",
+          "shelf": "30 days",
+          "container": "container"
+        },
+        {
+          "name": "Black Pepper Powder",
+          "group": "Dry Storage",
+          "quality": "Room Temperature",
+          "shelf": "30 days",
+          "container": "container"
+        },
+        {
+          "name": "Coriander Seeds",
+          "group": "Dry Storage",
+          "quality": "Room Temperature",
+          "shelf": "30 days",
+          "container": "container"
+        },
+        {
+          "name": "Chili Powder",
+          "group": "Dry Storage",
+          "quality": "Room Temperature",
+          "shelf": "30 days",
+          "container": "container"
+        },
+        {
+          "name": "Cinnamon sticks",
+          "group": "Dry Storage",
+          "quality": "Room Temperature",
+          "shelf": "30 days",
+          "container": "container"
+        },
+        {
+          "name": "Shredded Chili Pepper",
+          "group": "Dry Storage",
+          "quality": "Room Temperature",
+          "shelf": "30 days",
+          "container": "container"
+        },
+        {
+          "name": "Cashew Nuts",
+          "group": "Dry Storage",
+          "quality": "Room Temperature",
+          "shelf": "30 days",
+          "container": "container"
+        },
+        {
+          "name": "Pistachio Nuts",
+          "group": "Dry Storage",
+          "quality": "Room Temperature",
+          "shelf": "30 days",
+          "container": "container"
+        },
+        {
+          "name": "Red Beans",
+          "group": "Dry Storage",
+          "quality": "Room Temperature",
+          "shelf": "30 days",
+          "container": "container"
+        },
+        {
+          "name": "Black-eye Beans",
+          "group": "Dry Storage",
+          "quality": "Room Temperature",
+          "shelf": "30 days",
+          "container": "container"
+        },
+        {
+          "name": "Sesame Seeds",
+          "group": "Dry Storage",
+          "quality": "Room Temperature",
+          "shelf": "30 days",
+          "container": "container"
+        },
+        {
+          "name": "Cardamon",
+          "group": "Dry Storage",
+          "quality": "Room Temperature",
+          "shelf": "30 days",
+          "container": "container"
+        },
+        {
+          "name": "Sesame Seeds",
+          "group": "Dry Storage",
+          "quality": "Room Temperature",
+          "shelf": "30 days",
+          "container": "container"
+        },
+        {
+          "name": "Curry Powder",
+          "group": "Dry Storage",
+          "quality": "Room Temperature",
+          "shelf": "30 days",
+          "container": "container"
+        },
+        {
+          "name": "Polenta",
+          "group": "Dry Storage",
+          "quality": "Room Temperature",
+          "shelf": "30 days",
+          "container": "container"
+        },
+        {
+          "name": "Dried Chipotle",
+          "group": "Dry Storage",
+          "quality": "Room Temperature",
+          "shelf": "30 days",
+          "container": "container"
+        },
+        {
+          "name": "White Quinoa",
+          "group": "Dry Storage",
+          "quality": "Room Temperature",
+          "shelf": "30 days",
+          "container": "container"
+        },
+        {
+          "name": "Red Quinoa",
+          "group": "Dry Storage",
+          "quality": "Room Temperature",
+          "shelf": "30 days",
+          "container": "container"
+        },
+        {
+          "name": "Paprika",
+          "group": "Dry Storage",
+          "quality": "Room Temperature",
+          "shelf": "30 days",
+          "container": "container"
+        },
+        {
+          "name": "Tempura Mix",
+          "group": "Dry Storage",
+          "quality": "Room Temperature",
+          "shelf": "30 days",
+          "container": "container"
+        },
+        {
+          "name": "Sugar",
+          "group": "Dry Storage",
+          "quality": "Room Temperature",
+          "shelf": "30 days",
+          "container": "container"
+        },
+        {
+          "name": "Cumin Seeds",
+          "group": "Dry Storage",
+          "quality": "Room Temperature",
+          "shelf": "30 days",
+          "container": "container"
+        },
+        {
+          "name": "Onion Powder",
+          "group": "Dry Storage",
+          "quality": "Room Temperature",
+          "shelf": "30 days",
+          "container": "container"
+        },
+        {
+          "name": "Garlic Powder",
+          "group": "Dry Storage",
+          "quality": "Room Temperature",
+          "shelf": "30 days",
+          "container": "container"
+        },
+        {
+          "name": "Cumin powder",
+          "group": "Dry Storage",
+          "quality": "Room Temperature",
+          "shelf": "30 days",
+          "container": "container"
+        },
+        {
+          "name": "Sumak",
+          "group": "Dry Storage",
+          "quality": "Room Temperature",
+          "shelf": "30 days",
+          "container": "container"
+        },
+        {
+          "name": "Fajita Seasoning",
+          "group": "Dry Storage",
+          "quality": "Room Temperature",
+          "shelf": "30 days",
+          "container": "container"
+        },
+        {
+          "name": "Bbq Spice",
+          "group": "Dry Storage",
+          "quality": "Room Temperature",
+          "shelf": "30 days",
+          "container": "container"
+        },
+        {
+          "name": "Turmeric",
+          "group": "Dry Storage",
+          "quality": "Room Temperature",
+          "shelf": "30 days",
+          "container": "container"
+        },
+        {
+          "name": "White Pepper",
+          "group": "Dry Storage",
+          "quality": "Room Temperature",
+          "shelf": "30 days",
+          "container": "container"
+        },
+        {
+          "name": "Nutmeg",
+          "group": "Dry Storage",
+          "quality": "Room Temperature",
+          "shelf": "30 days",
+          "container": "container"
+        },
+        {
+          "name": "Salt",
+          "group": "Dry Storage",
+          "quality": "Room Temperature",
+          "shelf": "30 days",
+          "container": "container"
+        },
+        {
+          "name": "Cloves",
+          "group": "Dry Storage",
+          "quality": "Room Temperature",
+          "shelf": "30 days",
+          "container": "container"
+        },
+        {
+          "name": "Bbq Sauce (AG)",
+          "group": "Dry Storage",
+          "quality": "Room Temperature",
+          "shelf": "30 days",
+          "container": "container"
+        },
+        {
+          "name": "Light Sauce",
+          "group": "Dry Storage",
+          "quality": "Room Temperature",
+          "shelf": "30 days",
+          "container": "container"
+        },
+        {
+          "name": "Apple Cider",
+          "group": "Dry Storage",
+          "quality": "Room Temperature",
+          "shelf": "30 days",
+          "container": "container"
+        },
+        {
+          "name": "Sesame oil",
+          "group": "Dry Storage",
+          "quality": "Room Temperature",
+          "shelf": "30 days",
+          "container": "container"
+        },
+        {
+          "name": "Peanut Oil",
+          "group": "Dry Storage",
+          "quality": "Room Temperature",
+          "shelf": "30 days",
+          "container": "container"
+        },
+        {
+          "name": "Mustard Oil",
+          "group": "Dry Storage",
+          "quality": "Room Temperature",
+          "shelf": "30 days",
+          "container": "container"
+        },
+        {
+          "name": "Olive Oil",
+          "group": "Dry Storage",
+          "quality": "Room Temperature",
+          "shelf": "30 days",
+          "container": "container"
+        },
+        {
+          "name": "Fish Sauce",
+          "group": "Dry Storage",
+          "quality": "Room Temperature",
+          "shelf": "30 days",
+          "container": "container"
+        },
+        {
+          "name": "Molasses",
+          "group": "Dry Storage",
+          "quality": "Room Temperature",
+          "shelf": "30 days",
+          "container": "container"
+        },
+        {
+          "name": "Turnips",
+          "group": "Dry Storage",
+          "quality": "Room Temperature",
+          "shelf": "30 days",
+          "container": "container"
+        },
+        {
+          "name": "Balsamic Vinegar",
+          "group": "Dry Storage",
+          "quality": "Room Temperature",
+          "shelf": "30 days",
+          "container": "container"
+        },
+        {
+          "name": "Red Roaster Hot Sauce",
+          "group": "Dry Storage",
+          "quality": "Room Temperature",
+          "shelf": "30 days",
+          "container": "container"
+        },
+        {
+          "name": "Tajin",
+          "group": "Dry Storage",
+          "quality": "Room Temperature",
+          "shelf": "30 days",
+          "container": "container"
+        },
+        {
+          "name": "Cayenne",
+          "group": "Dry Storage",
+          "quality": "Room Temperature",
+          "shelf": "30 days",
+          "container": "container"
+        },
+        {
+          "name": "Acacia Honey",
+          "group": "Dry Storage",
+          "quality": "Room Temperature",
+          "shelf": "30 days",
+          "container": "container"
+        },
+        {
+          "name": "Kewpie Mayo",
+          "group": "Dry Storage",
+          "quality": "Room Temperature",
+          "shelf": "30 days",
+          "container": "container"
+        },
+        {
+          "name": "Maggi Ck Cubes",
+          "group": "Dry Storage",
+          "quality": "Room Temperature",
+          "shelf": "30 days",
+          "container": "container"
+        },
+        {
+          "name": "Cooking Spray",
+          "group": "Dry Storage",
+          "quality": "Room Temperature",
+          "shelf": "30 days",
+          "container": "container"
+        },
+        {
+          "name": "Cream corn Canned",
+          "group": "Dry Storage",
+          "quality": "Room Temperature",
+          "shelf": "30 days",
+          "container": "container"
+        },
+        {
+          "name": "Sweet Corn canned",
+          "group": "Dry Storage",
+          "quality": "Room Temperature",
+          "shelf": "30 days",
+          "container": "container"
+        },
+        {
+          "name": "Baby Corn Canned",
+          "group": "Dry Storage",
+          "quality": "Room Temperature",
+          "shelf": "30 days",
+          "container": "container"
+        },
+        {
+          "name": "Black bean Frijoles",
+          "group": "Dry Storage",
+          "quality": "Room Temperature",
+          "shelf": "30 days",
+          "container": "container"
+        },
+        {
+          "name": "Coconut Cream",
+          "group": "Dry Storage",
+          "quality": "Room Temperature",
+          "shelf": "30 days",
+          "container": "container"
+        },
+        {
+          "name": "Jalapeno Pepper",
+          "group": "Dry Storage",
+          "quality": "Room Temperature",
+          "shelf": "30 days",
+          "container": "container"
+        },
+        {
+          "name": "Coconut Powder",
+          "group": "Dry Storage",
+          "quality": "Room Temperature",
+          "shelf": "30 days",
+          "container": "container"
+        },
+        {
+          "name": "Corn Oil",
+          "group": "Dry Storage",
+          "quality": "Room Temperature",
+          "shelf": "30 days",
+          "container": "container"
+        },
+        {
+          "name": "Onion Red",
+          "group": "Dry Storage",
+          "quality": "Room Temperature",
+          "shelf": "7 Days",
+          "container": "Full Pan"
+        },
+        {
+          "name": "Onion White",
+          "group": "Dry Storage",
+          "quality": "Room Temperature",
+          "shelf": "7 Days",
+          "container": "Full Pan"
+        },
+        {
+          "name": "Ginger",
+          "group": "Dry Storage",
+          "quality": "Room Temperature",
+          "shelf": "7 Days",
+          "container": "Full Pan"
+        },
+        {
+          "name": "Sweet Potatoes",
+          "group": "Dry Storage",
+          "quality": "Room Temperature",
+          "shelf": "7 Days",
+          "container": "Full Pan"
+        },
+        {
+          "name": "Potatoes",
+          "group": "Dry Storage",
+          "quality": "Room Temperature",
+          "shelf": "7 Days",
+          "container": "Full Pan"
+        },
+        {
+          "name": "Baby Potatoes",
+          "group": "Dry Storage",
+          "quality": "Room Temperature",
+          "shelf": "7 Days",
+          "container": "Full Pan"
+        },
+        {
+          "name": "Cassava",
+          "group": "Dry Storage",
+          "quality": "Room Temperature",
+          "shelf": "7 Days",
+          "container": "Full Pan"
+        },
+        {
+          "name": "Pumpkin",
+          "group": "Dry Storage",
+          "quality": "Room Temperature",
+          "shelf": "7 Days",
+          "container": "Full Pan"
+        }
+      ]
+    },
+    {
+      "name": "SWEET ELEMENTS",
+      "title": "SWEET ELEMENTS SECTION LINE CHECKLIST",
+      "items": [
+        {
+          "name": "Icing Sugar",
+          "group": "Chiller Temperature:",
+          "quality": "Room Temperature, no moisture & sealed",
+          "shelf": "7 Days",
+          "container": "Shaker"
+        },
+        {
+          "name": "Cinnamon Sugar Powder",
+          "group": "Chiller Temperature:",
+          "quality": "Room Temperature, no moisture & sealed",
+          "shelf": "7 Days",
+          "container": "Shaker"
+        },
+        {
+          "name": "Almond Streusel",
+          "group": "Chiller Temperature:",
+          "quality": "Room Temperature, no moisture & sealed",
+          "shelf": "3 Days",
+          "container": "1/9 Pan"
+        },
+        {
+          "name": "Crumble Nuts",
+          "group": "Chiller Temperature:",
+          "quality": "Room Temperature, no moisture & sealed",
+          "shelf": "3 Days",
+          "container": "1/9 Pan"
+        },
+        {
+          "name": "Chocolate Sable",
+          "group": "Chiller Temperature:",
+          "quality": "Room Temperature, no moisture & sealed",
+          "shelf": "3 Days",
+          "container": "1/9 Pan"
+        },
+        {
+          "name": "Italian Meringue",
+          "group": "Chiller Temperature:",
+          "quality": "Room Temperature, no moisture & sealed",
+          "shelf": "3 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "White Chocolate rocks",
+          "group": "Chiller Temperature:",
+          "quality": "Room Temperature, no moisture & sealed",
+          "shelf": "3 Days",
+          "container": "1/9 Pan"
+        },
+        {
+          "name": "Sugar",
+          "group": "Chiller Temperature:",
+          "quality": "Room Temperature, no moisture & sealed",
+          "shelf": "3 Days",
+          "container": "1/9 Pan"
+        },
+        {
+          "name": "Sesame Tuille",
+          "group": "Chiller Temperature:",
+          "quality": "Room Temperature, crispy",
+          "shelf": "3 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Chocolate Meringue",
+          "group": "Chiller Temperature:",
+          "quality": "Room Temperature, no moisture & sealed",
+          "shelf": "3 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Italian Meringue",
+          "group": "Chiller Temperature:",
+          "quality": "Room Temperature, no moisture & sealed",
+          "shelf": "3 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Spring Caramel Sugar",
+          "group": "Chiller Temperature:",
+          "quality": "Room Temperature, no moisture & sealed",
+          "shelf": "3 Days",
+          "container": "1/9 Pan"
+        },
+        {
+          "name": "Macarons",
+          "group": "CHILLER 1 (BOTTOM)",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Cocoa Pate Choux",
+          "group": "CHILLER 1 (BOTTOM)",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Brownies",
+          "group": "CHILLER 1 (BOTTOM)",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Green Matcha Chocolate",
+          "group": "CHILLER 1 (BOTTOM)",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Whipped Cream",
+          "group": "CHILLER 1 (BOTTOM)",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "Piping bag"
+        },
+        {
+          "name": "Italian Meringue (Mixture)",
+          "group": "CHILLER 1 (BOTTOM)",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "Piping bag"
+        },
+        {
+          "name": "Churros Mix",
+          "group": "CHILLER 1 (BOTTOM)",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "Piping bag"
+        },
+        {
+          "name": "Yuzu Cremoux",
+          "group": "CHILLER 1 (BOTTOM)",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "Piping bag"
+        },
+        {
+          "name": "Brigadeiro",
+          "group": "CHILLER 1 (BOTTOM)",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "Piping bag"
+        },
+        {
+          "name": "Blackberry Ganache",
+          "group": "CHILLER 1 (BOTTOM)",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "Piping bag"
+        },
+        {
+          "name": "Raspberry Ganache",
+          "group": "CHILLER 1 (BOTTOM)",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "Piping bag"
+        },
+        {
+          "name": "Dulce De Leche",
+          "group": "CHILLER 1 (BOTTOM)",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "Piping bag"
+        },
+        {
+          "name": "Alfajor",
+          "group": "CHILLER 1 (BOTTOM)",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Carrot Cake",
+          "group": "CHILLER 1 (BOTTOM)",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Tres Leches Cake",
+          "group": "CHILLER 1 (BOTTOM)",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Blackberries/Blueberries",
+          "group": "CHILLER 1 (BOTTOM)",
+          "quality": "41\u00b0F & below, fresh no signs of mold",
+          "shelf": "Shiftly",
+          "container": "Garnish Tray"
+        },
+        {
+          "name": "Raspberries/ Red Currant",
+          "group": "CHILLER 1 (BOTTOM)",
+          "quality": "41\u00b0F & below, fresh no signs of mold",
+          "shelf": "Shiftly",
+          "container": "Garnish Tray"
+        },
+        {
+          "name": "Dragon Fruit",
+          "group": "CHILLER 1 (BOTTOM)",
+          "quality": "41\u00b0F & below, fresh Cut",
+          "shelf": "Shiftly",
+          "container": "Garnish Tray"
+        },
+        {
+          "name": "Kiwi",
+          "group": "CHILLER 1 (BOTTOM)",
+          "quality": "41\u00b0F & below, fresh Cut",
+          "shelf": "Shiftly",
+          "container": "Garnish Tray"
+        },
+        {
+          "name": "Pineapple",
+          "group": "CHILLER 1 (BOTTOM)",
+          "quality": "41\u00b0F & below, fresh Cut",
+          "shelf": "Shiftly",
+          "container": "Garnish Tray"
+        },
+        {
+          "name": "Kiwi/Peach",
+          "group": "CHILLER 1 (BOTTOM)",
+          "quality": "41\u00b0F & below, fresh",
+          "shelf": "3 Days",
+          "container": "Pckt"
+        },
+        {
+          "name": "Blackberries",
+          "group": "CHILLER 1 (BOTTOM)",
+          "quality": "41\u00b0F & below, fresh no signs of mold",
+          "shelf": "3 Days",
+          "container": "Pckt"
+        },
+        {
+          "name": "Blueberries",
+          "group": "CHILLER 1 (BOTTOM)",
+          "quality": "41\u00b0F & below, fresh no signs of mold",
+          "shelf": "3 Days",
+          "container": "Pckt"
+        },
+        {
+          "name": "Raspberries",
+          "group": "CHILLER 1 (BOTTOM)",
+          "quality": "41\u00b0F & below, fresh no signs of mold",
+          "shelf": "3 Days",
+          "container": "Pckt"
+        },
+        {
+          "name": "Red Currant",
+          "group": "CHILLER 1 (BOTTOM)",
+          "quality": "41\u00b0F and below, fresh",
+          "shelf": "3 Days",
+          "container": "Pckt"
+        },
+        {
+          "name": "Pineapple/ Dragon Fruit",
+          "group": "CHILLER 1 (BOTTOM)",
+          "quality": "41\u00b0F and below, fresh",
+          "shelf": "3 Days",
+          "container": "Pc."
+        },
+        {
+          "name": "Mint Sprigs",
+          "group": "CHILLER 1 (BOTTOM)",
+          "quality": "41\u00b0F and below, fresh",
+          "shelf": "3 Days",
+          "container": "1/8 Pan"
+        },
+        {
+          "name": "Edible Flower",
+          "group": "CHILLER 1 (BOTTOM)",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "Pckt"
+        },
+        {
+          "name": "Pressed Streusel",
+          "group": "CHILLER 1 (BOTTOM)",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Cream Brulee",
+          "group": "CHILLER 1 (BOTTOM)",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Pudim",
+          "group": "CHILLER 1 (BOTTOM)",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Milk",
+          "group": "CHILLER 1 (BOTTOM)",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "Pack"
+        },
+        {
+          "name": "Whipping Cream",
+          "group": "CHILLER 1 (BOTTOM)",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "Pack"
+        },
+        {
+          "name": "Blackberry Syrup",
+          "group": "CHILLER 1 (BOTTOM)",
+          "quality": "41\u00b0F and below",
+          "shelf": "1 Day",
+          "container": "Drizzle Bottle"
+        },
+        {
+          "name": "White Chocolate",
+          "group": "CHILLER 2 (TOP SHELF)",
+          "quality": "Room Temperature, no moisture & sealed",
+          "shelf": "30 Days",
+          "container": "Bottle"
+        },
+        {
+          "name": "Milk Chocolate",
+          "group": "CHILLER 2 (TOP SHELF)",
+          "quality": "Room Temperature, no moisture & sealed",
+          "shelf": "30 Days",
+          "container": "Bottle"
+        },
+        {
+          "name": "Dark Chocolate",
+          "group": "CHILLER 2 (TOP SHELF)",
+          "quality": "Room Temperature, no moisture & sealed",
+          "shelf": "30 Days",
+          "container": "Bottle"
+        },
+        {
+          "name": "Cocoa Powder",
+          "group": "CHILLER 2 (TOP SHELF)",
+          "quality": "Room Temperature, no moisture & sealed",
+          "shelf": "30 Days",
+          "container": "Bottle"
+        },
+        {
+          "name": "Coffee Beans",
+          "group": "CHILLER 2 (TOP SHELF)",
+          "quality": "Room Temperature, no moisture & sealed",
+          "shelf": "30 Days",
+          "container": "Bottle"
+        },
+        {
+          "name": "Cinnamon Powder",
+          "group": "CHILLER 2 (TOP SHELF)",
+          "quality": "Room Temperature, no moisture & sealed",
+          "shelf": "30 Days",
+          "container": "Bottle"
+        },
+        {
+          "name": "Sugar",
+          "group": "CHILLER 2 (TOP SHELF)",
+          "quality": "Room Temperature, no moisture & sealed",
+          "shelf": "30 Days",
+          "container": "Bottle"
+        },
+        {
+          "name": "Icing Sugar",
+          "group": "CHILLER 2 (TOP SHELF)",
+          "quality": "Room Temperature, no moisture & sealed",
+          "shelf": "30 Days",
+          "container": "Bottle"
+        },
+        {
+          "name": "Flour",
+          "group": "CHILLER 2 (TOP SHELF)",
+          "quality": "Room Temperature, no moisture & sealed",
+          "shelf": "30 Days",
+          "container": "Bottle"
+        },
+        {
+          "name": "Corn Starch",
+          "group": "CHILLER 2 (TOP SHELF)",
+          "quality": "Room Temperature, no moisture & sealed",
+          "shelf": "30 Days",
+          "container": "Bottle"
+        },
+        {
+          "name": "Gelatine",
+          "group": "CHILLER 2 (TOP SHELF)",
+          "quality": "Room Temperature, no moisture & sealed",
+          "shelf": "30 Days",
+          "container": "Box"
+        },
+        {
+          "name": "Corn",
+          "group": "CHILLER 2 (TOP SHELF)",
+          "quality": "Room Temperature, no moisture & sealed",
+          "shelf": "30 Days",
+          "container": "Box"
+        },
+        {
+          "name": "Brown Sugar",
+          "group": "CHILLER 2 (TOP SHELF)",
+          "quality": "Room Temperature, no moisture & sealed",
+          "shelf": "30 Days",
+          "container": "Box"
+        },
+        {
+          "name": "Popcorn",
+          "group": "CHILLER 2 (TOP SHELF)",
+          "quality": "Room Temperature, no moisture & sealed",
+          "shelf": "30 Days",
+          "container": "Box"
+        },
+        {
+          "name": "Yellow Entremet",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "Full Pan"
+        },
+        {
+          "name": "Flexible Ganache",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "Full Pan"
+        },
+        {
+          "name": "Coffee Mousse",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/6 Pan"
+        },
+        {
+          "name": "Bombom",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Brigadeiro",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/6 Pan"
+        },
+        {
+          "name": "Raspberry Sauce",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/6 Pan"
+        },
+        {
+          "name": "Passion fruit Sauce",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/6 Pan"
+        },
+        {
+          "name": "Fruit Compote",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "30 Days",
+          "container": "Tray"
+        },
+        {
+          "name": "Coffee Mouse Mixed",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/6 Pan"
+        },
+        {
+          "name": "Chocolate Glaze",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/6 Pan"
+        },
+        {
+          "name": "Yellow Glaze",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/6 Pan"
+        },
+        {
+          "name": "Churros mix",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/6 Pan"
+        },
+        {
+          "name": "Yuzu Cream",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/6 Pan"
+        },
+        {
+          "name": "Clarified Butter",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Butter",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "30 Days",
+          "container": "Tray"
+        },
+        {
+          "name": "Evaporated milk",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/6 Pan"
+        },
+        {
+          "name": "Condensed Milk",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/6 Pan"
+        },
+        {
+          "name": "Egg White",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "30 Days",
+          "container": "Tray"
+        },
+        {
+          "name": "White Eggs",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below, no cracks",
+          "shelf": "30 Days",
+          "container": "Tray"
+        }
+      ]
+    },
+    {
+      "name": "PREP STANDING CHILLER",
+      "title": "EARTH - STANDING CHILLER/ FREEZER LINE CHECKLIST",
+      "items": [
+        {
+          "name": "Sour Cream",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "Pan"
+        },
+        {
+          "name": "Yogurt",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/2 Pan"
+        },
+        {
+          "name": "Halloumi Cheese",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/2 Pan"
+        },
+        {
+          "name": "Cheddar Cheese",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/2 Pan"
+        },
+        {
+          "name": "Parmesan Cheese",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/2 Pan"
+        },
+        {
+          "name": "Monty Jack Cheese",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/2 Pan"
+        },
+        {
+          "name": "Butter",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/9 Pan"
+        },
+        {
+          "name": "Laban Milk",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/9 Pan"
+        },
+        {
+          "name": "Tahina",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/9 Pan"
+        },
+        {
+          "name": "Pepper Paste -Mild",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/9 Pan"
+        },
+        {
+          "name": "Pepper Paste -Hot",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below",
+          "shelf": "3 Days",
+          "container": "1/9 Pan"
+        },
+        {
+          "name": "Avocadoes",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below, Fresh",
+          "shelf": "5 Days",
+          "container": "1/9 Pan"
+        },
+        {
+          "name": "Yellow Corn",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below, Fresh",
+          "shelf": "5 Days",
+          "container": "1/9 Pan"
+        },
+        {
+          "name": "Radish",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below, Fresh",
+          "shelf": "5 Days",
+          "container": "1/9 Pan"
+        },
+        {
+          "name": "Beetroot",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below, Fresh",
+          "shelf": "5 Days",
+          "container": "1/9 Pan"
+        },
+        {
+          "name": "Fresh Mushroom",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below, Fresh",
+          "shelf": "3 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Shimeji Mushroom",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below, Fresh",
+          "shelf": "5 Days",
+          "container": "1/9 Pan"
+        },
+        {
+          "name": "Enoki Mushroom",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below, Fresh",
+          "shelf": "5 Days",
+          "container": "1/9 Pan"
+        },
+        {
+          "name": "Salad Pea",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below, Fresh",
+          "shelf": "5 Days",
+          "container": "1/9 Pan"
+        },
+        {
+          "name": "Rosemary",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below, Fresh",
+          "shelf": "5 Days",
+          "container": "1/9 Pan"
+        },
+        {
+          "name": "Parsley",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below, Fresh",
+          "shelf": "5 Days",
+          "container": "1/9 Pan"
+        },
+        {
+          "name": "Cherry Tomato",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below, Fresh",
+          "shelf": "5 Days",
+          "container": "1/9 Pan"
+        },
+        {
+          "name": "Asparagus",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below, Fresh",
+          "shelf": "5 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Lemon",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below, Fresh",
+          "shelf": "5 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Grapefruit",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below, Fresh",
+          "shelf": "5 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Mango",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below, Fresh",
+          "shelf": "5 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Pineapple",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below, Fresh",
+          "shelf": "5 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Pomegranate",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below, Fresh",
+          "shelf": "5 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Zucchini",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below, Fresh",
+          "shelf": "5 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Tomato",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below, Fresh",
+          "shelf": "5 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Jalapeno",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below, Fresh",
+          "shelf": "5 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Carrots",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below, Fresh",
+          "shelf": "5 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Capsicum",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below, Fresh",
+          "shelf": "5 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Leeks",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below, Fresh",
+          "shelf": "5 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Spring Onion",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below, Fresh",
+          "shelf": "5 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Broccoli",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below, Fresh",
+          "shelf": "5 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Cauliflower",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below, Fresh",
+          "shelf": "5 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Rocca",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below, Fresh",
+          "shelf": "5 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Decadent Cake",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below, Fresh",
+          "shelf": "5 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Sans Rival",
+          "group": "Chiller Temperature:",
+          "quality": "41\u00b0F and below, Fresh",
+          "shelf": "5 Days",
+          "container": "1/3 Pan"
+        }
+      ]
+    },
+    {
+      "name": "PREP FREEZER",
+      "title": "EARTH - STANDING CHILLER/ FREEZER LINE CHECKLIST",
+      "items": [
+        {
+          "name": "Carrot Cake",
+          "group": "STANDING FREEZER",
+          "quality": "Frozen",
+          "shelf": "30 Days",
+          "container": "Vaccum Pack"
+        },
+        {
+          "name": "Brownie",
+          "group": "STANDING FREEZER",
+          "quality": "Frozen",
+          "shelf": "30 Days",
+          "container": "Vacum"
+        },
+        {
+          "name": "Tres Leches",
+          "group": "STANDING FREEZER",
+          "quality": "Frozen",
+          "shelf": "30 Days",
+          "container": "Vacum"
+        },
+        {
+          "name": "Yellow Entremet",
+          "group": "STANDING FREEZER",
+          "quality": "Frozen",
+          "shelf": "30 Days",
+          "container": "1/2 Pan"
+        },
+        {
+          "name": "Chocolate Ice Cream",
+          "group": "STANDING FREEZER",
+          "quality": "Frozen",
+          "shelf": "30 Days",
+          "container": "Tub"
+        },
+        {
+          "name": "Vanilla Ice Cream",
+          "group": "STANDING FREEZER",
+          "quality": "Frozen",
+          "shelf": "30 Days",
+          "container": "Tub"
+        },
+        {
+          "name": "Blueberry Ice Cream",
+          "group": "STANDING FREEZER",
+          "quality": "Frozen",
+          "shelf": "30 Days",
+          "container": "Tub"
+        },
+        {
+          "name": "Popcorn Ice Cream",
+          "group": "STANDING FREEZER",
+          "quality": "Frozen",
+          "shelf": "30 Days",
+          "container": "Tub"
+        },
+        {
+          "name": "Cocoa Crogline",
+          "group": "STANDING FREEZER",
+          "quality": "Frozen",
+          "shelf": "30 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Sable",
+          "group": "STANDING FREEZER",
+          "quality": "Frozen",
+          "shelf": "30 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Alfajor",
+          "group": "STANDING FREEZER",
+          "quality": "Frozen",
+          "shelf": "30 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Mango Compote",
+          "group": "STANDING FREEZER",
+          "quality": "Frozen",
+          "shelf": "30 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Coffee Mousse",
+          "group": "STANDING FREEZER",
+          "quality": "Frozen",
+          "shelf": "30 Days",
+          "container": "1/3 Pan"
+        },
+        {
+          "name": "Pudim",
+          "group": "STANDING FREEZER",
+          "quality": "Frozen",
+          "shelf": "30 Days",
+          "container": "1/2 Pan"
+        },
+        {
+          "name": "Corn Cream Brulee",
+          "group": "STANDING FREEZER",
+          "quality": "Frozen",
+          "shelf": "30 Days",
+          "container": "1/2 Pan"
+        },
+        {
+          "name": "Mochi Ice cream",
+          "group": "STANDING FREEZER",
+          "quality": "Frozen",
+          "shelf": "30 Days",
+          "container": "1/2 Pan"
+        },
+        {
+          "name": "Corn Soup",
+          "group": "STANDING FREEZER",
+          "quality": "Frozen, no ice crystals",
+          "shelf": "30 Days",
+          "container": "Vaccum Pack"
+        },
+        {
+          "name": "Carrot Soup",
+          "group": "STANDING FREEZER",
+          "quality": "Frozen, no ice crystals",
+          "shelf": "30 Days",
+          "container": "Vaccum Pack"
+        },
+        {
+          "name": "Enchilada Soup",
+          "group": "STANDING FREEZER",
+          "quality": "Frozen, no ice crystals",
+          "shelf": "30 Days",
+          "container": "Vaccum Pack"
+        },
+        {
+          "name": "Rachero Roll",
+          "group": "STANDING FREEZER",
+          "quality": "Frozen, no ice crystals",
+          "shelf": "30 Days",
+          "container": "Vaccum Pack"
+        },
+        {
+          "name": "Queso Pollo",
+          "group": "STANDING FREEZER",
+          "quality": "Frozen, no ice crystals",
+          "shelf": "30 Days",
+          "container": "Vaccum Pack"
+        },
+        {
+          "name": "Empanada",
+          "group": "STANDING FREEZER",
+          "quality": "Frozen, no ice crystals",
+          "shelf": "30 Days",
+          "container": "Vaccum Pack"
+        },
+        {
+          "name": "Ravioli",
+          "group": "STANDING FREEZER",
+          "quality": "Frozen, no ice crystals",
+          "shelf": "30 Days",
+          "container": "Vaccum Pack"
+        },
+        {
+          "name": "Brisket",
+          "group": "STANDING FREEZER",
+          "quality": "Frozen, no ice crystals",
+          "shelf": "30 Days",
+          "container": "Vaccum Pack"
+        },
+        {
+          "name": "Lamb Meat",
+          "group": "STANDING FREEZER",
+          "quality": "Frozen, no ice crystals",
+          "shelf": "30 Days",
+          "container": "Vaccum Pack"
+        },
+        {
+          "name": "Beef Brisket Terrine",
+          "group": "STANDING FREEZER",
+          "quality": "Frozen, no ice crystals",
+          "shelf": "30 Days",
+          "container": "Vaccum Pack"
+        },
+        {
+          "name": "Tamales Meat",
+          "group": "STANDING FREEZER",
+          "quality": "Frozen, no ice crystals",
+          "shelf": "30 Days",
+          "container": "Vaccum Pack"
+        },
+        {
+          "name": "Mussle",
+          "group": "STANDING FREEZER",
+          "quality": "Frozen, no ice crystals",
+          "shelf": "30 Days",
+          "container": "Vaccum Pack"
+        },
+        {
+          "name": "Vegetable Stock",
+          "group": "STANDING FREEZER",
+          "quality": "Frozen, no ice crystals",
+          "shelf": "30 Days",
+          "container": "Vaccum Pack"
+        },
+        {
+          "name": "Beef Stock",
+          "group": "STANDING FREEZER",
+          "quality": "Frozen, no ice crystals",
+          "shelf": "30 Days",
+          "container": "Vaccum Pack"
+        },
+        {
+          "name": "Chicken Stock",
+          "group": "STANDING FREEZER",
+          "quality": "Frozen, no ice crystals",
+          "shelf": "30 Days",
+          "container": "Vaccum Pack"
+        },
+        {
+          "name": "Banana Puree",
+          "group": "STANDING FREEZER",
+          "quality": "Frozen, no ice crystals",
+          "shelf": "30 Days",
+          "container": "Vaccum Pack"
+        },
+        {
+          "name": "Butter Ck Sauce",
+          "group": "STANDING FREEZER",
+          "quality": "Frozen, no ice crystals",
+          "shelf": "30 Days",
+          "container": "Vaccum Pack"
+        },
+        {
+          "name": "Moqueca Sauce",
+          "group": "STANDING FREEZER",
+          "quality": "Frozen, no ice crystals",
+          "shelf": "30 Days",
+          "container": "Vaccum Pack"
+        },
+        {
+          "name": "Aji Amarillo",
+          "group": "STANDING FREEZER",
+          "quality": "Frozen, no ice crystals",
+          "shelf": "30 Days",
+          "container": "Vaccum Pack"
+        },
+        {
+          "name": "Red Beans",
+          "group": "STANDING FREEZER",
+          "quality": "Frozen, no ice crystals",
+          "shelf": "30 Days",
+          "container": "Vaccum Pack"
+        },
+        {
+          "name": "Green Peas",
+          "group": "STANDING FREEZER",
+          "quality": "Frozen, no ice crystals",
+          "shelf": "30 Days",
+          "container": "Vaccum Pack"
+        },
+        {
+          "name": "Black eye Beans",
+          "group": "STANDING FREEZER",
+          "quality": "Frozen, no ice crystals",
+          "shelf": "30 Days",
+          "container": "Vaccum Pack"
+        }
+      ]
+    }
+  ],
+  "statuses": [
+    "OK",
+    "N/A",
+    "F/O",
+    "PREPPING",
+    "NEED TO CLEAN",
+    "WRONG LABEL",
+    "ABOUT TO EXPIRE",
+    "EXPIRED"
+  ],
+  "staff": [
+    "GILBERT",
+    "OMAR",
+    "JEROME",
+    "EDWARD",
+    "KRISTEL",
+    "JOHN",
+    "CHEF ROSE",
+    "CHEF LOUIE",
+    "CHEF RAFEEQ"
+  ]
+}
