@@ -9,38 +9,140 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SettingsRouteImport } from './routes/settings'
+import { Route as HistoryRouteImport } from './routes/history'
+import { Route as AuthRouteImport } from './routes/auth'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as SectionNameRouteImport } from './routes/section.$name'
+import { Route as SIdRouteImport } from './routes/s.$id'
+import { Route as HistoryShiftRouteImport } from './routes/history.shift'
 
+const SettingsRoute = SettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HistoryRoute = HistoryRouteImport.update({
+  id: '/history',
+  path: '/history',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SectionNameRoute = SectionNameRouteImport.update({
+  id: '/section/$name',
+  path: '/section/$name',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SIdRoute = SIdRouteImport.update({
+  id: '/s/$id',
+  path: '/s/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HistoryShiftRoute = HistoryShiftRouteImport.update({
+  id: '/shift',
+  path: '/shift',
+  getParentRoute: () => HistoryRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
+  '/history': typeof HistoryRouteWithChildren
+  '/settings': typeof SettingsRoute
+  '/history/shift': typeof HistoryShiftRoute
+  '/s/$id': typeof SIdRoute
+  '/section/$name': typeof SectionNameRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
+  '/history': typeof HistoryRouteWithChildren
+  '/settings': typeof SettingsRoute
+  '/history/shift': typeof HistoryShiftRoute
+  '/s/$id': typeof SIdRoute
+  '/section/$name': typeof SectionNameRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
+  '/history': typeof HistoryRouteWithChildren
+  '/settings': typeof SettingsRoute
+  '/history/shift': typeof HistoryShiftRoute
+  '/s/$id': typeof SIdRoute
+  '/section/$name': typeof SectionNameRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/auth'
+    | '/history'
+    | '/settings'
+    | '/history/shift'
+    | '/s/$id'
+    | '/section/$name'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/auth'
+    | '/history'
+    | '/settings'
+    | '/history/shift'
+    | '/s/$id'
+    | '/section/$name'
+  id:
+    | '__root__'
+    | '/'
+    | '/auth'
+    | '/history'
+    | '/settings'
+    | '/history/shift'
+    | '/s/$id'
+    | '/section/$name'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthRoute: typeof AuthRoute
+  HistoryRoute: typeof HistoryRouteWithChildren
+  SettingsRoute: typeof SettingsRoute
+  SIdRoute: typeof SIdRoute
+  SectionNameRoute: typeof SectionNameRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/settings': {
+      id: '/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof SettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/history': {
+      id: '/history'
+      path: '/history'
+      fullPath: '/history'
+      preLoaderRoute: typeof HistoryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,11 +150,48 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/section/$name': {
+      id: '/section/$name'
+      path: '/section/$name'
+      fullPath: '/section/$name'
+      preLoaderRoute: typeof SectionNameRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/s/$id': {
+      id: '/s/$id'
+      path: '/s/$id'
+      fullPath: '/s/$id'
+      preLoaderRoute: typeof SIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/history/shift': {
+      id: '/history/shift'
+      path: '/shift'
+      fullPath: '/history/shift'
+      preLoaderRoute: typeof HistoryShiftRouteImport
+      parentRoute: typeof HistoryRoute
+    }
   }
 }
 
+interface HistoryRouteChildren {
+  HistoryShiftRoute: typeof HistoryShiftRoute
+}
+
+const HistoryRouteChildren: HistoryRouteChildren = {
+  HistoryShiftRoute: HistoryShiftRoute,
+}
+
+const HistoryRouteWithChildren =
+  HistoryRoute._addFileChildren(HistoryRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthRoute: AuthRoute,
+  HistoryRoute: HistoryRouteWithChildren,
+  SettingsRoute: SettingsRoute,
+  SIdRoute: SIdRoute,
+  SectionNameRoute: SectionNameRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
