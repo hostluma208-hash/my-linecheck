@@ -11,6 +11,7 @@ import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
+import { AuthGate } from "../components/AuthGate";
 
 function NotFoundComponent() {
   return (
@@ -77,21 +78,24 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
+      { title: "My Line Check" },
+      { name: "description", content: "Kitchen Assistant Helper streamlines kitchen operations" },
       { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { property: "og:title", content: "My Line Check" },
+      { property: "og:description", content: "Kitchen Assistant Helper streamlines kitchen operations" },
       { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:card", content: "summary" },
       { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:title", content: "My Line Check" },
+      { name: "twitter:description", content: "Kitchen Assistant Helper streamlines kitchen operations" },
+      { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/fyqm9xo5ssYppe00GAHC8bFvcKM2/social-images/social-1782983696567-line_check_logo.webp" },
+      { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/fyqm9xo5ssYppe00GAHC8bFvcKM2/social-images/social-1782983696567-line_check_logo.webp" },
     ],
     links: [
       {
         rel: "stylesheet",
         href: appCss,
       },
-      { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
     ],
   }),
   shellComponent: RootShell,
@@ -101,10 +105,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 });
 
 function RootShell({ children }: { children: ReactNode }) {
+  const themeInit = `(function(){try{var t=localStorage.getItem('linecheck:theme');var m=window.matchMedia('(prefers-color-scheme: dark)').matches;if(t==='dark'||(!t&&m)){document.documentElement.classList.add('dark');}var p=localStorage.getItem('linecheck:theme-preset');if(p&&p!=='terracotta'){document.documentElement.setAttribute('data-theme',p);}if(p==='custom'){var css=localStorage.getItem('linecheck:theme-custom-css');if(css){var s=document.createElement('style');s.id='linecheck-custom-theme';s.textContent=css;document.head.appendChild(s);}}}catch(e){}})();`;
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
         <HeadContent />
+        <script dangerouslySetInnerHTML={{ __html: themeInit }} />
       </head>
       <body>
         {children}
@@ -119,8 +125,10 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-      <Outlet />
+      <AuthGate>
+        {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
+        <Outlet />
+      </AuthGate>
     </QueryClientProvider>
   );
 }
