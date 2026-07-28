@@ -14,13 +14,99 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      allowed_emails: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          email: string
+          is_admin: boolean
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          email: string
+          is_admin?: boolean
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          email?: string
+          is_admin?: boolean
+        }
+        Relationships: []
+      }
+      shared_shifts: {
+        Row: {
+          brand_name: string
+          created_at: string
+          date: string
+          id: string
+          member: string | null
+          owner_id: string
+          payload: Json
+          shift: string
+          updated_at: string
+        }
+        Insert: {
+          brand_name?: string
+          created_at?: string
+          date: string
+          id?: string
+          member?: string | null
+          owner_id: string
+          payload: Json
+          shift: string
+          updated_at?: string
+        }
+        Update: {
+          brand_name?: string
+          created_at?: string
+          date?: string
+          id?: string
+          member?: string | null
+          owner_id?: string
+          payload?: Json
+          shift?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      user_state: {
+        Row: {
+          data: Json
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          data?: Json
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          data?: Json
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_shared_shift: {
+        Args: { _id: string }
+        Returns: {
+          brand_name: string
+          date: string
+          id: string
+          member: string
+          payload: Json
+          shift: string
+          updated_at: string
+        }[]
+      }
+      is_admin: { Args: never; Returns: boolean }
     }
     Enums: {
       [_ in never]: never
