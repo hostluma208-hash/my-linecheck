@@ -41,12 +41,12 @@ export const Route = createFileRoute("/")({
   validateSearch: (s: Record<string, unknown>) => dashSearch.parse(s),
   head: () => ({
     meta: [
-      { title: "Shift Overview — Line Check 2026" },
+      { title: "Shift Overview" },
       {
         name: "description",
         content: "Kitchen shift readiness dashboard: station progress and flagged items.",
       },
-      { property: "og:title", content: "Shift Overview — Line Check 2026" },
+      { property: "og:title", content: "Shift Overview" },
     ],
   }),
   component: Dashboard,
