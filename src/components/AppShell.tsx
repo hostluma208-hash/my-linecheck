@@ -1,4 +1,6 @@
 import { lsStore } from "@/lib/lsStore";
+import { getStaffSession, clearStaffSession } from "@/lib/staffSession";
+import { stationSlug } from "@/lib/slug";
 import { Link, useLocation } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import {
@@ -14,6 +16,8 @@ import {
   LayoutDashboard,
   History,
   Settings,
+  PackageCheck,
+  ClipboardCheck,
   ChevronLeft,
   Calendar,
   Clock,
@@ -35,6 +39,9 @@ import {
   Sun,
   Monitor,
   Check,
+  Menu,
+  X,
+
 } from "lucide-react";
 
 const SECTION_ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
@@ -51,6 +58,29 @@ const SECTION_ICONS: Record<string, React.ComponentType<{ className?: string }>>
   "SWEET ELEMENTS": Cake,
   "PREP STANDING CHILLER": Refrigerator,
   "PREP FREEZER": Snowflake,
+};
+
+// Weekday accent colors. The "top" variants are used on light top-bar
+// backgrounds; the "sidebar" variants are darker so they remain readable on
+// the fixed light-orange sidebar active background.
+const DAY_COLOR: Record<string, string> = {
+  Sunday: "#000000",
+  Monday: "#2563eb",
+  Tuesday: "#a16207",
+  Wednesday: "#dc2626",
+  Thursday: "#92400e",
+  Friday: "#15803d",
+  Saturday: "#c2410c",
+};
+
+const DAY_COLOR_SIDEBAR: Record<string, string> = {
+  Sunday: "#000000",
+  Monday: "#1e3a8a",
+  Tuesday: "#5c4b1e",
+  Wednesday: "#7f1d1d",
+  Thursday: "#451a03",
+  Friday: "#14532d",
+  Saturday: "#7c2d12",
 };
 
 function useShifts() {
@@ -92,9 +122,17 @@ export function AppShell({
   member,
   setMember,
 }: Ctx & { children: React.ReactNode }) {
+  const [mobileOpen, setMobileOpen] = useState(false);
   return (
     <div className="flex min-h-screen bg-background">
-      <Sidebar date={date} shift={shift} />
+      {mobileOpen && (
+        <div
+          className="fixed inset-0 z-30 bg-black/50 md:hidden"
+          onClick={() => setMobileOpen(false)}
+          aria-hidden
+        />
+      )}
+      <Sidebar date={date} shift={shift} mobileOpen={mobileOpen} onCloseMobile={() => setMobileOpen(false)} />
       <div className="flex min-w-0 flex-1 flex-col">
         <TopBar
           title={title}
@@ -104,14 +142,25 @@ export function AppShell({
           setShift={setShift}
           member={member}
           setMember={setMember}
+          onOpenMenu={() => setMobileOpen(true)}
         />
-        <div className="min-w-0 flex-1 px-6 py-6 lg:px-10 lg:py-8">{children}</div>
+        <div className="min-w-0 flex-1 px-4 py-4 sm:px-6 sm:py-6 lg:px-10 lg:py-8">{children}</div>
       </div>
     </div>
   );
 }
 
-function Sidebar({ date, shift }: { date: string; shift: Slot }) {
+function Sidebar({
+  date,
+  shift,
+  mobileOpen,
+  onCloseMobile,
+}: {
+  date: string;
+  shift: Slot;
+  mobileOpen: boolean;
+  onCloseMobile: () => void;
+}) {
   const loc = useLocation();
   const [collapsed, setCollapsed] = useState(false);
   // Recompute progress on date/shift change and on storage updates
@@ -133,32 +182,77 @@ function Sidebar({ date, shift }: { date: string; shift: Slot }) {
     };
   }, []);
 
+  // Close the mobile drawer whenever the route changes.
+  useEffect(() => {
+    onCloseMobile();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loc.pathname]);
+
+  const [isStaff, setIsStaff] = useState(false);
+  useEffect(() => {
+    setIsStaff(!!getStaffSession());
+  }, []);
+
+  const RESERVED_PATHS = ["", "auth", "history", "receiving", "closing", "settings", "r", "s", "c", "section"];
+
+  const firstSeg = loc.pathname.split("/")[1] ?? "";
+  const sectionMatch = RESERVED_PATHS.includes(firstSeg) ? null : ([null, firstSeg] as const);
+  let activeSection: string | null = sectionMatch?.[1] ?? null;
+  if (activeSection) {
+    try {
+      activeSection = decodeURIComponent(activeSection);
+    } catch {
+      /* keep raw value */
+    }
+  }
+
+  const dayName = new Date(date + "T00:00:00").toLocaleDateString(undefined, { weekday: "long" });
+  const activeDayColor = DAY_COLOR_SIDEBAR[dayName] ?? undefined;
+
   return (
     <aside
-      className={`sidebar-shell sticky top-0 z-20 hidden h-screen shrink-0 flex-col border-r border-sidebar-border bg-sidebar text-sidebar-foreground transition-all md:flex ${
-        collapsed ? "w-16" : "w-64"
-      }`}
+      className={`sidebar-shell fixed inset-y-0 left-0 z-40 flex h-screen w-64 shrink-0 flex-col border-r border-sidebar-border bg-sidebar text-sidebar-foreground transition-transform md:sticky md:top-0 md:z-20 md:translate-x-0 md:transition-all ${
+        mobileOpen ? "translate-x-0" : "-translate-x-full"
+      } ${collapsed ? "md:w-16" : "md:w-64"}`}
     >
+
       <div className="flex items-center justify-between px-4 py-5">
         <Link to="/" className="flex items-center gap-2" suppressHydrationWarning>
           <BrandMark collapsed={collapsed} />
         </Link>
         <button
+          onClick={onCloseMobile}
+          className="rounded-md p-1 text-muted-foreground hover:bg-sidebar-accent md:hidden"
+          aria-label="Close menu"
+        >
+          <X className="h-4 w-4" />
+        </button>
+        <button
           onClick={() => setCollapsed((c) => !c)}
-          className="rounded-md p-1 text-muted-foreground hover:bg-sidebar-accent"
+          className="hidden rounded-md p-1 text-muted-foreground hover:bg-sidebar-accent md:block"
           aria-label="Toggle sidebar"
         >
           <ChevronLeft className={`h-4 w-4 transition-transform ${collapsed ? "rotate-180" : ""}`} />
         </button>
+
       </div>
 
       <nav className="px-3">
-        <NavItem to="/" icon={LayoutDashboard} label="Dashboard" active={loc.pathname === "/"} collapsed={collapsed} />
-        <NavItem to="/history" icon={History} label="History" active={loc.pathname === "/history"} collapsed={collapsed} />
-        <NavItem to="/settings" icon={Settings} label="Settings" active={loc.pathname === "/settings"} collapsed={collapsed} />
+        {!isStaff && (
+          <>
+            <NavItem to="/" icon={LayoutDashboard} label="Dashboard" active={loc.pathname === "/"} collapsed={collapsed} activeColor={activeDayColor} />
+            <NavItem to="/history" icon={History} label="History" active={loc.pathname === "/history"} collapsed={collapsed} activeColor={activeDayColor} />
+          </>
+        )}
+        <NavItem to="/receiving" icon={PackageCheck} label="Receiving" active={loc.pathname === "/receiving"} collapsed={collapsed} activeColor={activeDayColor} />
+        <NavItem to="/closing" icon={ClipboardCheck} label="Closing Report" active={loc.pathname === "/closing"} collapsed={collapsed} activeColor={activeDayColor} />
+        {!isStaff && (
+          <NavItem to="/settings" icon={Settings} label="Settings" active={loc.pathname === "/settings"} collapsed={collapsed} activeColor={activeDayColor} />
+        )}
       </nav>
 
-      <div className="mt-4 flex-1 overflow-y-auto px-3 pb-6" data-tick={tick}>
+
+      <div className={`mt-4 flex-1 overflow-y-auto px-3 pb-6 ${isStaff ? "hidden" : ""}`} data-tick={tick}>
         {!collapsed && (
           <p className="px-3 pb-2 text-[10px] font-semibold uppercase tracking-[0.14em] text-sidebar-foreground/60">
             Stations
@@ -169,17 +263,18 @@ function Sidebar({ date, shift }: { date: string; shift: Slot }) {
             const Icon = SECTION_ICONS[s.name] ?? Utensils;
             const { done, total } = sectionProgress(s.name, shift, date);
             const pct = total ? Math.round((done / total) * 100) : 0;
-            const active = loc.pathname === `/section/${encodeURIComponent(s.name)}`;
+            const active = activeSection === s.name || activeSection === stationSlug(s.name);
             return (
               <li key={s.name}>
-                <Link
-                  to="/section/$name"
-                  params={{ name: s.name }}
+                  <Link
+                  to="/$name"
+                  params={{ name: stationSlug(s.name) }}
                   className={`group flex items-center gap-3 rounded-lg px-3 py-2 text-xs font-medium transition-colors ${
                     active
-                      ? "bg-sidebar-accent text-sidebar-accent-foreground shadow-sm"
+                      ? "bg-sidebar-accent shadow-sm"
                       : "text-sidebar-foreground/80 sidebar-hover"
                   }`}
+                  style={active ? { color: activeDayColor ?? "var(--sidebar-accent-foreground)" } : undefined}
                 >
                   <Icon className="h-4 w-4 shrink-0" />
                   {!collapsed && (
@@ -216,6 +311,13 @@ function SignOutButton({ collapsed }: { collapsed: boolean }) {
   const [email, setEmail] = useState<string | null>(null);
   useEffect(() => {
     let active = true;
+    const staff = getStaffSession();
+    if (staff) {
+      setEmail(`${staff.name} (PIN access)`);
+      return () => {
+        active = false;
+      };
+    }
     import("@/integrations/supabase/client").then(({ supabase }) => {
       supabase.auth.getUser().then(({ data }) => {
         if (active) setEmail(data.user?.email ?? null);
@@ -226,10 +328,12 @@ function SignOutButton({ collapsed }: { collapsed: boolean }) {
     };
   }, []);
   const handle = async () => {
+    clearStaffSession();
     const { supabase } = await import("@/integrations/supabase/client");
     await supabase.auth.signOut();
     window.location.href = "/auth";
   };
+
   return (
     <div className="border-t border-sidebar-border px-3 py-3">
       {!collapsed && email && (
@@ -255,6 +359,7 @@ function NavItem({
   active,
   collapsed,
   disabled,
+  activeColor,
 }: {
   to: string;
   icon: React.ComponentType<{ className?: string }>;
@@ -262,24 +367,26 @@ function NavItem({
   active?: boolean;
   collapsed: boolean;
   disabled?: boolean;
+  activeColor?: string;
 }) {
   const cls = `flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
     active
-      ? "bg-sidebar-accent text-sidebar-accent-foreground shadow-sm"
+      ? "bg-sidebar-accent shadow-sm"
       : disabled
         ? "text-sidebar-foreground/40 cursor-not-allowed"
         : "text-sidebar-foreground sidebar-hover"
   }`;
+  const style = active && activeColor ? { color: activeColor } : undefined;
   if (disabled) {
     return (
-      <div className={cls}>
+      <div className={cls} style={style}>
         <Icon className="h-4 w-4" />
         {!collapsed && <span>{label}</span>}
       </div>
     );
   }
   return (
-    <Link to={to} className={cls}>
+    <Link to={to} className={cls} style={style}>
       <Icon className="h-4 w-4" />
       {!collapsed && <span>{label}</span>}
     </Link>
@@ -294,7 +401,8 @@ function TopBar({
   setShift,
   member,
   setMember,
-}: Ctx) {
+  onOpenMenu,
+}: Ctx & { onOpenMenu: () => void }) {
   const shifts = useShifts();
 
   const dayName = new Date(date + "T00:00:00").toLocaleDateString(undefined, {
@@ -306,9 +414,17 @@ function TopBar({
     year: "numeric",
   });
   return (
-    <header className="sticky top-0 z-10 flex flex-wrap items-center gap-3 border-b border-border bg-background/85 px-6 py-4 backdrop-blur lg:px-10">
-      <h1 className="text-lg font-bold tracking-tight text-foreground">{title}</h1>
-      <div className="ml-auto flex flex-wrap items-center gap-2">
+    <header className="sticky top-0 z-10 flex flex-wrap items-center gap-2 border-b border-border bg-background/85 px-4 py-3 backdrop-blur sm:gap-3 sm:px-6 sm:py-4 lg:px-10">
+      <button
+        onClick={onOpenMenu}
+        className="-ml-1 shrink-0 rounded-md border border-border p-2 text-foreground md:hidden"
+        aria-label="Open menu"
+      >
+        <Menu className="h-4 w-4" />
+      </button>
+      <h1 className="min-w-0 flex-1 truncate text-base font-bold tracking-tight text-foreground sm:flex-none sm:text-lg">{title}</h1>
+
+      <div className="ml-auto flex w-full flex-wrap items-center gap-2 sm:w-auto">
         <Pill icon={<Calendar className="h-3.5 w-3.5" />}>
           <input
             type="date"
@@ -317,7 +433,10 @@ function TopBar({
             className="bg-transparent text-xs font-semibold uppercase tracking-wide outline-none"
             aria-label="Date"
           />
-          <span className="rounded-full bg-info-soft px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-info">
+          <span
+            className="rounded-full bg-day-pill-bg px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider"
+            style={{ color: DAY_COLOR[dayName] ?? "inherit" }}
+          >
             {dayName}
           </span>
           <span className="sr-only">{shortDate}</span>

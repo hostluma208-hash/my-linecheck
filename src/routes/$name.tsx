@@ -1,7 +1,9 @@
 import { lsStore } from "@/lib/lsStore";
+import { stationFromSlug } from "@/lib/slug";
 import { compressImageFile } from "@/lib/image";
 
 import { createFileRoute, useRouter } from "@tanstack/react-router";
+import type React from "react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { AppShell, useShellState } from "@/components/AppShell";
 import {
@@ -15,11 +17,13 @@ import {
   entryKey,
   readEntry,
   getShiftLabel,
+  getEffectiveSections,
+  effectiveCategorizedItems,
   type Entry,
   type SectionState,
   type Slot,
 } from "@/lib/lineCheck";
-import { Camera, Check, ChevronDown, ChevronUp, Download, Edit3, Filter, GripVertical, Save, Thermometer, Plus, Trash2, Upload, X } from "lucide-react";
+import { Camera, Check, ChevronDown, FolderInput, ChevronUp, Download, Edit3, Filter, GripVertical, Image as ImageIcon, Save, Thermometer, Plus, Trash2, Upload, X } from "lucide-react";
 import { z } from "zod";
 import {
   DndContext,
@@ -86,7 +90,20 @@ function loadSectionStruct(name: string, fallback: EditCategory[]): EditCategory
   return fallback;
 }
 
-export const Route = createFileRoute("/section/$name")({
+/** Load another station's category structure (saved edits, else defaults). */
+function loadStationStruct(stationName: string): EditCategory[] {
+  try {
+    const raw = lsStore.getItem(sectionStructKey(stationName));
+    if (raw) return JSON.parse(raw) as EditCategory[];
+  } catch {}
+  return effectiveCategorizedItems(stationName).map((c) => ({
+    group: c.group,
+    temp: /temp/i.test(c.group),
+    items: c.items.map((i) => ({ name: i.name, quality: "", shelf: "", container: "" })),
+  }));
+}
+
+export const Route = createFileRoute("/$name")({
   validateSearch: (s: Record<string, unknown>) =>
     z
       .object({
@@ -96,8 +113,8 @@ export const Route = createFileRoute("/section/$name")({
       .parse(s),
   head: ({ params }) => ({
     meta: [
-      { title: `${params.name} — Line Check` },
-      { name: "description", content: `Line check for ${params.name} section.` },
+      { title: `${params.name.replace(/-/g, " ")} — Line Check` },
+      { name: "description", content: `Line check for ${params.name.replace(/-/g, " ")} section.` },
     ],
   }),
   component: SectionPage,
@@ -148,7 +165,8 @@ function buildDefaultStruct(section: { items: Array<{ name: string; group?: stri
 }
 
 function SectionPage() {
-  const { name } = Route.useParams();
+  const { name: rawName } = Route.useParams();
+  const name = useMemo(() => stationFromSlug(rawName), [rawName]);
   const search = Route.useSearch() as { date?: string; shift?: Slot };
   const section = useMemo(
     () => SECTIONS.find((s) => s.name === name) ?? { name, items: [] as { name: string }[] },
@@ -186,6 +204,7 @@ function SectionPage() {
   const [flaggedOnly, setFlaggedOnly] = useState(false);
   const [viewer, setViewer] = useState<{ group: string; name: string; occ: number; photo: string } | null>(null);
   const viewerFileRef = useRef<HTMLInputElement | null>(null);
+  const viewerGalleryRef = useRef<HTMLInputElement | null>(null);
   const [temps, setTemps] = useState<Record<string, string>>({});
   const [tempUnit, setTempUnitState] = useState<"F" | "C">(() => {
     try {
@@ -313,6 +332,138 @@ function SectionPage() {
     loadSectionStruct(name, defaultStruct),
   );
   const [draft, setDraft] = useState<EditCategory[]>(struct);
+  const viewSensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 6 } }),
+    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }),
+  );
+  const persistStruct = (next: EditCategory[]) => {
+    try {
+      lsStore.setItem(sectionStructKey(name), JSON.stringify(next));
+    } catch {}
+    setStruct(next);
+    setDraft(next);
+    window.dispatchEvent(new Event("linecheck:update"));
+  };
+
+  // Quick action: move an item from one category to another (view mode),
+  // carrying its saved statuses/notes/photos along with it.
+  const quickMoveItem = (fromGroup: string, itemIdx: number, toGroup: string) => {
+    if (fromGroup === toGroup) return;
+    const fromCat = struct.find((c) => c.group === fromGroup);
+    const toCat = struct.find((c) => c.group === toGroup);
+    const moved = fromCat?.items[itemIdx];
+    if (!fromCat || !toCat || !moved) return;
+    const fromOcc = fromCat.items.slice(0, itemIdx).filter((i) => i.name === moved.name).length;
+    const toOcc = toCat.items.filter((i) => i.name === moved.name).length;
+
+    setState((prev) => {
+      const entries = { ...prev.entries };
+      const oldKey = entryKey(fromGroup, moved.name, fromOcc);
+      const newKey = entryKey(toGroup, moved.name, toOcc);
+      if (entries[oldKey]) {
+        entries[newKey] = entries[oldKey];
+        delete entries[oldKey];
+      }
+      // Re-key later duplicates in the source category (their occurrence shifts down).
+      let shift = fromOcc;
+      fromCat.items.forEach((it, j) => {
+        if (j <= itemIdx || it.name !== moved.name) return;
+        const cur = entryKey(fromGroup, it.name, shift + 1);
+        const next = entryKey(fromGroup, it.name, shift);
+        if (entries[cur]) {
+          entries[next] = entries[cur];
+          delete entries[cur];
+        }
+        shift += 1;
+      });
+      return { ...prev, entries };
+    });
+
+    persistStruct(
+      struct.map((c) => {
+        if (c.group === fromGroup) return { ...c, items: c.items.filter((_, j) => j !== itemIdx) };
+        if (c.group === toGroup) return { ...c, items: [...c.items, moved] };
+        return c;
+      }),
+    );
+  };
+
+  // Quick action: move an item to a category in ANOTHER station, carrying its
+  // saved status/note/photo for the current date along with it.
+  const quickMoveItemToStation = (
+    fromGroup: string,
+    itemIdx: number,
+    toStation: string,
+    toGroup: string,
+  ) => {
+    const fromCat = struct.find((c) => c.group === fromGroup);
+    const moved = fromCat?.items[itemIdx];
+    if (!fromCat || !moved) return;
+    const fromOcc = fromCat.items.slice(0, itemIdx).filter((i) => i.name === moved.name).length;
+
+    // Target station structure
+    const targetStruct = loadStationStruct(toStation);
+    const targetCat = targetStruct.find((c) => c.group === toGroup);
+    if (!targetCat) return;
+    const toOcc = targetCat.items.filter((i) => i.name === moved.name).length;
+
+    const entry = readEntry(state, fromGroup, moved.name, slot, fromOcc);
+
+    // Write item into the target station's structure
+    const nextTarget = targetStruct.map((c) =>
+      c.group === toGroup ? { ...c, items: [...c.items, moved] } : c,
+    );
+    try {
+      lsStore.setItem(sectionStructKey(toStation), JSON.stringify(nextTarget));
+    } catch {}
+
+    // Carry the entry over to the target station's saved state
+    if (entry?.status || entry?.note || entry?.photo) {
+      try {
+        const tState = loadSection(toStation, shell.date);
+        tState.entries[entryKey(toGroup, moved.name, toOcc)] = {
+          ...tState.entries[entryKey(toGroup, moved.name, toOcc)],
+          [slot]: entry,
+        } as Record<Slot, Entry>;
+        lsStore.setItem(storageKey(toStation, shell.date), JSON.stringify(tState));
+      } catch {}
+    }
+
+    // Remove from this station (and re-key later duplicates)
+    setState((prev) => {
+      const entries = { ...prev.entries };
+      delete entries[entryKey(fromGroup, moved.name, fromOcc)];
+      let shift = fromOcc;
+      fromCat.items.forEach((it, j) => {
+        if (j <= itemIdx || it.name !== moved.name) return;
+        const cur = entryKey(fromGroup, it.name, shift + 1);
+        const nxt = entryKey(fromGroup, it.name, shift);
+        if (entries[cur]) {
+          entries[nxt] = entries[cur];
+          delete entries[cur];
+        }
+        shift += 1;
+      });
+      return { ...prev, entries };
+    });
+
+    persistStruct(
+      struct.map((c) =>
+        c.group === fromGroup ? { ...c, items: c.items.filter((_, j) => j !== itemIdx) } : c,
+      ),
+    );
+  };
+
+  const otherStations = useMemo(
+    () =>
+      getEffectiveSections()
+        .filter((s) => s.name !== name)
+        .map((s) => ({ name: s.name, groups: loadStationStruct(s.name).map((c) => c.group) }))
+        .filter((s) => s.groups.length > 0),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [name, struct],
+  );
+
 
   useEffect(() => {
     setState(loadSection(name, shell.date));
@@ -380,37 +531,52 @@ function SectionPage() {
     setEntry(group, item, occ, { status: cur === "OK" ? "" : "OK" });
   };
 
-  const markAllOK = () => {
-    setState((prev) => {
-      const entries = { ...prev.entries };
-      for (const ci of allCatItems) {
-        const k = entryKey(ci.group, ci.name, ci.occ);
-        entries[k] = {
-          op: entries[k]?.op ?? emptyEntry(),
-          mid: entries[k]?.mid ?? emptyEntry(),
-          cl: entries[k]?.cl ?? emptyEntry(),
-          [slot]: { status: "OK", note: entries[k]?.[slot]?.note ?? "" },
-        };
-      }
-      return { ...prev, entries };
-    });
+  /** Apply a status to every item in the station, using the freshest stored
+   *  snapshot so a racing sync pull can't clobber the bulk change. */
+  const bulkSet = (status: string) => {
+    const fresh = loadSection(name, shell.date);
+    const entries: SectionState["entries"] = { ...fresh.entries };
+    for (const ci of allCatItems) {
+      const k = entryKey(ci.group, ci.name, ci.occ);
+      const prev = entries[k] ?? {};
+      entries[k] = {
+        ...prev,
+        [slot]: { ...(prev[slot] ?? emptyEntry()), status },
+      } as SectionState["entries"][string];
+    }
+    const next: SectionState = { ...fresh, entries };
+    setState(next);
+    try {
+      lsStore.setItem(key, JSON.stringify(next));
+      window.dispatchEvent(new Event("linecheck:update"));
+    } catch {}
+    setSavedFlash(true);
+    setTimeout(() => setSavedFlash(false), 1400);
   };
 
+  const markAllOK = () => bulkSet("OK");
+
+  // Reset guard: a station may only be unmarked once per shift + manager combo.
+  // Picking a new shift or a new team member unlocks it again.
+  const resetCtxKey = `linecheck:reset-ctx:${name}:${shell.date}`;
+  const resetCtx = `${slot}|${shell.member}`;
+  const lastResetCtx = (() => {
+    try {
+      return lsStore.getItem(resetCtxKey) || "";
+    } catch {
+      return "";
+    }
+  })();
+  const canReset = lastResetCtx !== resetCtx;
+
   const unmarkAll = () => {
-    setState((prev) => {
-      const entries = { ...prev.entries };
-      for (const ci of allCatItems) {
-        const k = entryKey(ci.group, ci.name, ci.occ);
-        entries[k] = {
-          op: entries[k]?.op ?? emptyEntry(),
-          mid: entries[k]?.mid ?? emptyEntry(),
-          cl: entries[k]?.cl ?? emptyEntry(),
-          [slot]: { status: "", note: "" },
-        };
-      }
-      return { ...prev, entries };
-    });
+    if (!canReset) return;
+    bulkSet("");
+    try {
+      lsStore.setItem(resetCtxKey, resetCtx);
+    } catch {}
   };
+
 
 
   const saveCheck = () => {
@@ -464,6 +630,17 @@ function SectionPage() {
           : c,
       ),
     );
+  const moveItemToCategory = (ci: number, ii: number, toCi: number) =>
+    setDraft((d) => {
+      if (toCi === ci || toCi < 0 || toCi >= d.length) return d;
+      const item = d[ci]?.items[ii];
+      if (!item) return d;
+      return d.map((c, idx) => {
+        if (idx === ci) return { ...c, items: c.items.filter((_, j) => j !== ii) };
+        if (idx === toCi) return { ...c, items: [...c.items, item] };
+        return c;
+      });
+    });
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
@@ -638,17 +815,17 @@ function SectionPage() {
       </div>
 
       {/* Hero card */}
-      <section className="rounded-2xl border border-border bg-card px-6 py-5 shadow-sm">
+      <section className="rounded-2xl border border-border bg-card px-4 py-4 shadow-sm sm:px-6 sm:py-5">
         <div className="flex flex-wrap items-center justify-between gap-4">
-          <div className="min-w-0">
+          <div className="min-w-0 flex-1">
             <h2 className="text-2xl font-extrabold tracking-tight">{section.name}</h2>
             <p className="mt-0.5 text-xs text-muted-foreground">
               {done} of {total} items checked{!editMode && ` · ${shiftLabel}`}
             </p>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex w-full flex-wrap items-center gap-2 sm:w-auto sm:gap-3">
             <div
-              className="grid h-14 w-14 place-items-center rounded-full"
+              className="grid h-14 w-14 shrink-0 place-items-center rounded-full"
               style={ringStyle}
               aria-label={`${pct} percent complete`}
             >
@@ -669,22 +846,29 @@ function SectionPage() {
                   <Filter className="h-3.5 w-3.5" /> {flaggedOnly ? "Flagged Only" : "All Items"}
                 </button>
                 <button
+                  onClick={markAllOK}
+                  className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-3.5 py-2 text-xs font-semibold hover:bg-accent"
+                >
+                  <Check className="h-3.5 w-3.5" /> Mark All OK
+                </button>
+                <button
+                  onClick={unmarkAll}
+                  disabled={!canReset}
+                  title={
+                    canReset
+                      ? undefined
+                      : "Already reset for this shift — select a new shift or team member first"
+                  }
+                  className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-3.5 py-2 text-xs font-semibold hover:bg-accent disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  <X className="h-3.5 w-3.5" /> Unmark All
+                </button>
+
+                <button
                   onClick={enterEdit}
                   className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-3.5 py-2 text-xs font-semibold hover:bg-accent"
                 >
                   <Edit3 className="h-3.5 w-3.5" /> Edit
-                </button>
-                <button
-                  onClick={markAllOK}
-                  className="inline-flex items-center gap-1.5 rounded-full border border-emerald-300 bg-emerald-50 px-3.5 py-2 text-xs font-semibold text-emerald-700 hover:bg-emerald-100"
-                >
-                  <Check className="h-3.5 w-3.5" /> Mark All
-                </button>
-                <button
-                  onClick={unmarkAll}
-                  className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-3.5 py-2 text-xs font-semibold hover:bg-accent"
-                >
-                  <X className="h-3.5 w-3.5" /> Unmark All
                 </button>
                 <button
                   onClick={saveCheck}
@@ -694,6 +878,7 @@ function SectionPage() {
                 >
                   <Save className="h-3.5 w-3.5" /> {savedFlash ? "Saved!" : "Save Check"}
                 </button>
+
 
               </>
             )}
@@ -773,6 +958,7 @@ function SectionPage() {
             updateItem={updateItem}
             removeItem={removeItem}
             addItem={addItem}
+            moveItemToCategory={moveItemToCategory}
             SHELF_OPTIONS={SHELF_OPTIONS}
             CONTAINER_OPTIONS={CONTAINER_OPTIONS}
           />
@@ -785,10 +971,10 @@ function SectionPage() {
         struct
           .map((cat) => {
             const seen = new Map<string, number>();
-            const withOcc = cat.items.map((item) => {
+            const withOcc = cat.items.map((item, idx) => {
               const occ = seen.get(item.name) ?? 0;
               seen.set(item.name, occ + 1);
-              return { item, occ };
+              return { item, occ, idx };
             });
             const visible = withOcc.filter(({ item, occ }) => {
               if (!flaggedOnly) return true;
@@ -820,7 +1006,7 @@ function SectionPage() {
                 borderLeft: `4px solid ${accent}`,
               }}
             >
-              <div className="mb-2 flex items-center justify-between px-1">
+              <div className="mb-2 flex flex-wrap items-center justify-between gap-2 px-1">
                 <h3 className="text-sm font-bold uppercase tracking-[0.14em]" style={{ color: headingColor }}>
                   {cat.group}
                 </h3>
@@ -850,8 +1036,28 @@ function SectionPage() {
                 )}
               </div>
 
+              <DndContext
+                sensors={viewSensors}
+                collisionDetection={closestCenter}
+                onDragEnd={(ev: DragEndEvent) => {
+                  const { active, over } = ev;
+                  if (!over || active.id === over.id) return;
+                  const from = items.find((v) => `${v.item.name}#${v.occ}` === active.id)?.idx;
+                  const to = items.find((v) => `${v.item.name}#${v.occ}` === over.id)?.idx;
+                  if (from == null || to == null) return;
+                  persistStruct(
+                    struct.map((c) =>
+                      c.group === cat.group ? { ...c, items: arrayMove(c.items, from, to) } : c,
+                    ),
+                  );
+                }}
+              >
+                <SortableContext
+                  items={items.map(({ item, occ }) => `${item.name}#${occ}`)}
+                  strategy={verticalListSortingStrategy}
+                >
               <div className="space-y-2">
-                {items.map(({ item, occ }) => {
+                {items.map(({ item, occ, idx }) => {
                   const e = readEntry(state, cat.group, item.name, slot, occ);
                   const status = e?.status ?? "";
                   const checked = !!status && OK_STATUSES.has(status);
@@ -860,13 +1066,17 @@ function SectionPage() {
 
                   const noteMissing = flagged && !e?.note?.trim();
                   return (
-                    <div
+                    <SortableCheckRow
                       key={`${item.name}#${occ}`}
+                      id={`${item.name}#${occ}`}
                       className={`rounded-2xl border bg-card transition ${
                         noteMissing ? "border-rose-400 ring-1 ring-rose-200" : flagged ? "border-rose-200" : "border-border"
                       }`}
                     >
-                      <div className="flex items-center gap-3 px-3 py-2.5">
+                      {(handle) => (<>
+                      <div className="flex flex-wrap items-center gap-2 px-3 py-2.5 sm:flex-nowrap sm:gap-3">
+                      {handle}
+
                       <button
                         onClick={() => toggleCheck(cat.group, item.name, occ)}
                         aria-label={checked ? "Uncheck item" : "Mark item OK"}
@@ -879,7 +1089,7 @@ function SectionPage() {
                         {checked && <Check className="h-4 w-4" strokeWidth={3} />}
                       </button>
 
-                      <div className="min-w-0 flex-1">
+                      <div className="min-w-0 flex-1 basis-[45%]">
                         <p
                           className={`truncate text-sm font-semibold ${
                             checked ? "text-muted-foreground line-through" : "text-foreground"
@@ -897,6 +1107,7 @@ function SectionPage() {
                         )}
                       </div>
 
+                      <div className="ml-auto flex shrink-0 items-center gap-2 sm:gap-3">
                       <div className="hidden h-1.5 w-28 overflow-hidden rounded-full bg-muted sm:block">
                         <div
                           className="h-full rounded-full transition-all"
@@ -907,7 +1118,7 @@ function SectionPage() {
                         />
                       </div>
 
-                      <div className="relative">
+                      <div className="relative shrink-0">
                         <select
                           value={status}
                           onChange={(ev) => setEntry(cat.group, item.name, occ, { status: ev.target.value })}
@@ -936,14 +1147,13 @@ function SectionPage() {
 
                       <label
                         className="grid h-7 w-7 cursor-pointer place-items-center rounded-full text-muted-foreground hover:bg-accent"
-                        aria-label={`Capture photo for ${item.name}`}
-                        title={e?.photo ? "Replace photo" : "Capture photo"}
+                        aria-label={`Choose photo from gallery for ${item.name}`}
+                        title="Choose from gallery"
                       >
-                        <Camera className={`h-4 w-4 ${e?.photo ? "text-foreground" : ""}`} />
+                        <ImageIcon className="h-4 w-4" />
                         <input
                           type="file"
                           accept="image/*"
-                          capture="environment"
                           className="hidden"
                           onChange={async (ev) => {
                             const file = ev.target.files?.[0];
@@ -957,9 +1167,9 @@ function SectionPage() {
                             const dataUrl = await compressImageFile(file);
                             if (dataUrl) setEntry(cat.group, item.name, occ, { photo: dataUrl });
                           }}
-
                         />
                       </label>
+
                       {e?.photo && (
                         <button
                           type="button"
@@ -971,6 +1181,49 @@ function SectionPage() {
                           <img src={e.photo} alt="" className="h-full w-full object-cover" />
                         </button>
                       )}
+
+                      {(struct.length > 1 || otherStations.length > 0) && (
+                        <div className="relative shrink-0">
+                          <select
+                            value=""
+                            onChange={(ev) => {
+                              const raw = ev.target.value;
+                              ev.target.value = "";
+                              if (!raw) return;
+                              const [st, grp] = raw.split("\u241F");
+                              if (st === name) quickMoveItem(cat.group, idx, grp);
+                              else quickMoveItemToStation(cat.group, idx, st, grp);
+                            }}
+                            title="Move to another category or station"
+                            aria-label={`Move ${item.name} to another category or station`}
+                            className="h-7 w-7 cursor-pointer appearance-none rounded-full border border-transparent bg-transparent text-transparent hover:bg-accent"
+                          >
+                            <option value="" className="bg-popover text-popover-foreground">Move to…</option>
+                            <optgroup label={name} className="bg-popover text-popover-foreground">
+                              {struct
+                                .filter((c) => c.group !== cat.group)
+                                .map((c) => (
+                                  <option key={c.group} value={`${name}\u241F${c.group}`} className="bg-popover text-popover-foreground">
+                                    {c.group}
+                                  </option>
+                                ))}
+                            </optgroup>
+                            {otherStations.map((st) => (
+                              <optgroup key={st.name} label={st.name} className="bg-popover text-popover-foreground">
+                                {st.groups.map((g) => (
+                                  <option key={g} value={`${st.name}\u241F${g}`} className="bg-popover text-popover-foreground">
+                                    {g}
+                                  </option>
+                                ))}
+                              </optgroup>
+                            ))}
+                          </select>
+                          <FolderInput className="pointer-events-none absolute left-1/2 top-1/2 h-4 w-4 -translate-x-1/2 -translate-y-1/2 text-muted-foreground" />
+                        </div>
+                      )}
+
+                      </div>
+
                       </div>
                       {flagged && (
                         <div className="border-t border-border/60 px-3 py-2.5">
@@ -995,28 +1248,32 @@ function SectionPage() {
                           />
                         </div>
                       )}
-                    </div>
+                      </>)}
+                    </SortableCheckRow>
                   );
                 })}
 
               </div>
+                </SortableContext>
+              </DndContext>
             </section>
+
           );})}
 
       {!editMode && (
         <section className="mt-8">
-          <div className="mb-2 flex items-center justify-between px-1">
+          <div className="mb-2 flex flex-wrap items-center justify-between gap-2 px-1">
             <h3 className="text-[10px] font-bold uppercase tracking-[0.18em] text-muted-foreground">
               Station Comment / Feedback
             </h3>
             <div className="flex items-center gap-2">
               <label
                 className="inline-flex h-7 cursor-pointer items-center gap-1 rounded-md border border-border bg-background px-2 text-[10px] font-semibold uppercase tracking-wide text-muted-foreground hover:bg-accent hover:text-foreground"
-                title="Attach reference image"
-                aria-label="Attach reference image to station comment"
+                title="Take a photo with the camera"
+                aria-label="Capture reference image for station comment"
               >
                 <Camera className="h-3.5 w-3.5" />
-                <span>Add Photo</span>
+                <span>Camera</span>
                 <input
                   type="file"
                   accept="image/*"
@@ -1029,6 +1286,26 @@ function SectionPage() {
                   }}
                 />
               </label>
+              <label
+                className="inline-flex h-7 cursor-pointer items-center gap-1 rounded-md border border-border bg-background px-2 text-[10px] font-semibold uppercase tracking-wide text-muted-foreground hover:bg-accent hover:text-foreground"
+                title="Choose images from gallery"
+                aria-label="Choose reference images from gallery"
+              >
+                <ImageIcon className="h-3.5 w-3.5" />
+                <span>Gallery</span>
+                <input
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  className="hidden"
+                  onChange={(ev) => {
+                    const files = Array.from(ev.target.files ?? []);
+                    ev.target.value = "";
+                    files.forEach((f) => addCommentPhoto(f));
+                  }}
+                />
+              </label>
+
               <span className="text-[10px] text-muted-foreground">
                 Auto-saved · {slot.toUpperCase()}
               </span>
@@ -1179,14 +1456,44 @@ function SectionPage() {
                 }}
 
               />
+              <input
+                ref={viewerGalleryRef}
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={async (ev) => {
+                  const file = ev.target.files?.[0];
+                  ev.target.value = "";
+                  if (!file || !viewer) return;
+                  const MAX = 15 * 1024 * 1024;
+                  if (file.size > MAX) {
+                    alert("Image too large (max 15MB).");
+                    return;
+                  }
+                  const dataUrl = await compressImageFile(file);
+                  if (dataUrl) {
+                    setEntry(viewer.group, viewer.name, viewer.occ, { photo: dataUrl });
+                    setViewer({ ...viewer, photo: dataUrl });
+                  }
+                }}
+              />
               <button
                 type="button"
                 onClick={() => viewerFileRef.current?.click()}
                 className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-background px-3 py-1.5 text-xs font-medium hover:bg-accent"
               >
                 <Camera className="h-3.5 w-3.5" />
-                Retake / Replace
+                Retake
               </button>
+              <button
+                type="button"
+                onClick={() => viewerGalleryRef.current?.click()}
+                className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-background px-3 py-1.5 text-xs font-medium hover:bg-accent"
+              >
+                <ImageIcon className="h-3.5 w-3.5" />
+                Gallery
+              </button>
+
               <button
                 type="button"
                 onClick={() => {
@@ -1255,6 +1562,7 @@ type EditDraftDndProps = {
   updateItem: (ci: number, ii: number, patch: Partial<EditItem>) => void;
   removeItem: (ci: number, ii: number) => void;
   addItem: (ci: number) => void;
+  moveItemToCategory: (ci: number, ii: number, toCi: number) => void;
   SHELF_OPTIONS: string[];
   CONTAINER_OPTIONS: string[];
 };
@@ -1270,11 +1578,27 @@ function EditDraftDnd(props: EditDraftDndProps) {
   const handleCatDragEnd = (e: DragEndEvent) => {
     const { active, over } = e;
     if (!over || active.id === over.id) return;
-    const from = catIds.indexOf(String(active.id));
-    const to = catIds.indexOf(String(over.id));
+    const activeId = String(active.id);
+    const overId = String(over.id);
+
+    // Item reorder (within the same category)
+    if (activeId.startsWith("item-") && overId.startsWith("item-")) {
+      const [, aCi, aIi] = activeId.split("-").map(Number);
+      const [, oCi, oIi] = overId.split("-").map(Number);
+      if (aCi !== oCi) return;
+      setDraft((d) =>
+        d.map((c, idx) => (idx === aCi ? { ...c, items: arrayMove(c.items, aIi, oIi) } : c)),
+      );
+      return;
+    }
+
+    if (!activeId.startsWith("cat-") || !overId.startsWith("cat-")) return;
+    const from = catIds.indexOf(activeId);
+    const to = catIds.indexOf(overId);
     if (from < 0 || to < 0) return;
     setDraft((d) => arrayMove(d, from, to));
   };
+
 
   return (
     <div className="space-y-5">
@@ -1299,6 +1623,7 @@ function SortableCategory({
   updateItem,
   removeItem,
   addItem,
+  moveItemToCategory,
   SHELF_OPTIONS,
   CONTAINER_OPTIONS,
 }: EditDraftDndProps & { ci: number; cat: EditCategory }) {
@@ -1311,22 +1636,8 @@ function SortableCategory({
     opacity: isDragging ? 0.6 : 1,
   };
 
-  const sensors = useSensors(
-    useSensor(PointerSensor, { activationConstraint: { distance: 6 } }),
-    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }),
-  );
   const itemIds = cat.items.map((_, i) => `item-${ci}-${i}`);
 
-  const handleItemDragEnd = (e: DragEndEvent) => {
-    const { active, over } = e;
-    if (!over || active.id === over.id) return;
-    const from = itemIds.indexOf(String(active.id));
-    const to = itemIds.indexOf(String(over.id));
-    if (from < 0 || to < 0) return;
-    setDraft((d) =>
-      d.map((c, idx) => (idx === ci ? { ...c, items: arrayMove(c.items, from, to) } : c)),
-    );
-  };
 
   return (
     <div ref={setNodeRef} style={style} className="rounded-xl border border-border bg-background/40 p-3">
@@ -1374,26 +1685,23 @@ function SortableCategory({
       </div>
 
       <div className="mt-3 space-y-2">
-        <DndContext
-          sensors={sensors}
-          collisionDetection={closestCenter}
-          onDragEnd={handleItemDragEnd}
-        >
-          <SortableContext items={itemIds} strategy={verticalListSortingStrategy}>
-            {cat.items.map((it, ii) => (
-              <SortableItem
-                key={ii}
-                ci={ci}
-                ii={ii}
-                it={it}
-                updateItem={updateItem}
-                removeItem={removeItem}
-                SHELF_OPTIONS={SHELF_OPTIONS}
-                CONTAINER_OPTIONS={CONTAINER_OPTIONS}
-              />
-            ))}
-          </SortableContext>
-        </DndContext>
+        <SortableContext items={itemIds} strategy={verticalListSortingStrategy}>
+          {cat.items.map((it, ii) => (
+            <SortableItem
+              key={ii}
+              ci={ci}
+              ii={ii}
+              it={it}
+              updateItem={updateItem}
+              removeItem={removeItem}
+              moveItemToCategory={moveItemToCategory}
+              categories={draft.map((c) => c.group)}
+              SHELF_OPTIONS={SHELF_OPTIONS}
+              CONTAINER_OPTIONS={CONTAINER_OPTIONS}
+            />
+          ))}
+        </SortableContext>
+
         <button
           onClick={() => addItem(ci)}
           className="inline-flex items-center gap-1.5 rounded-full border border-dashed border-border bg-card/60 px-3 py-1.5 text-xs font-semibold text-muted-foreground hover:bg-accent hover:text-foreground"
@@ -1411,6 +1719,8 @@ function SortableItem({
   it,
   updateItem,
   removeItem,
+  moveItemToCategory,
+  categories,
   SHELF_OPTIONS,
   CONTAINER_OPTIONS,
 }: {
@@ -1419,6 +1729,8 @@ function SortableItem({
   it: EditItem;
   updateItem: (ci: number, ii: number, patch: Partial<EditItem>) => void;
   removeItem: (ci: number, ii: number) => void;
+  moveItemToCategory: (ci: number, ii: number, toCi: number) => void;
+  categories: string[];
   SHELF_OPTIONS: string[];
   CONTAINER_OPTIONS: string[];
 }) {
@@ -1448,6 +1760,26 @@ function SortableItem({
           placeholder="Item name"
           className="flex-1 rounded-lg border border-input bg-card px-3 py-1.5 text-sm outline-none focus:border-foreground/30"
         />
+        <select
+          value=""
+          onChange={(e) => {
+            const toCi = Number(e.target.value);
+            if (!Number.isNaN(toCi)) moveItemToCategory(ci, ii, toCi);
+            e.currentTarget.selectedIndex = 0;
+          }}
+          title="Move to category"
+          aria-label="Move to category"
+          className="max-w-[140px] rounded-lg border border-input bg-card px-2 py-1.5 text-xs outline-none focus:border-foreground/30"
+        >
+          <option value="">Move to…</option>
+          {categories.map((g, idx) =>
+            idx === ci ? null : (
+              <option key={idx} value={idx}>
+                {g || `Category ${idx + 1}`}
+              </option>
+            ),
+          )}
+        </select>
         <button
           onClick={() => removeItem(ci, ii)}
           className="grid h-7 w-7 place-items-center rounded-md text-muted-foreground hover:bg-danger-soft hover:text-danger"
@@ -1491,6 +1823,47 @@ function SortableItem({
         </select>
         <div className="w-7" />
       </div>
+    </div>
+  );
+}
+
+function SortableCheckRow({
+  id,
+  className,
+  children,
+}: {
+  id: string;
+  className: string;
+  children: (handle: React.ReactNode) => React.ReactNode;
+}) {
+  const { attributes, listeners, setNodeRef, setActivatorNodeRef, transform, transition, isDragging } =
+    useSortable({ id });
+  const handle = (
+    <button
+      type="button"
+      ref={setActivatorNodeRef}
+      {...attributes}
+      {...listeners}
+      aria-label="Drag to reorder item"
+      title="Drag to reorder"
+      className="grid h-7 w-5 shrink-0 cursor-grab touch-none place-items-center rounded text-muted-foreground hover:bg-accent active:cursor-grabbing"
+    >
+      <GripVertical className="h-4 w-4" />
+    </button>
+  );
+  return (
+    <div
+      ref={setNodeRef}
+      style={{
+        transform: CSS.Transform.toString(transform),
+        transition,
+        opacity: isDragging ? 0.6 : 1,
+        zIndex: isDragging ? 20 : undefined,
+        position: "relative",
+      }}
+      className={className}
+    >
+      {children(handle)}
     </div>
   );
 }

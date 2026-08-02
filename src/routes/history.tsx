@@ -1,4 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { stationSlug } from "@/lib/slug";
 import { useEffect, useMemo, useState } from "react";
 import { AppShell, useShellState } from "@/components/AppShell";
 import {
@@ -555,8 +556,8 @@ function StationRow({
             </ul>
           )}
           <Link
-            to="/section/$name"
-            params={{ name: station.name }}
+            to="/$name"
+            params={{ name: stationSlug(station.name) }}
             search={{ date, shift: slot }}
             className="mt-3 inline-flex items-center gap-1 rounded-full border border-border bg-card px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-foreground hover:bg-accent"
             title="Reopen this station"

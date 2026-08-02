@@ -2,9 +2,12 @@ import { lsStore } from "@/lib/lsStore";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { AppShell, useShellState, SECTION_ICONS } from "@/components/AppShell";
-import { SECTIONS, STAFF, STATUSES, getShifts, saveShifts, type Slot, type ShiftDef } from "@/lib/lineCheck";
+import { SECTIONS, STAFF, STATUSES, getShifts, saveShifts, getStatusColors, saveStatusColors, type Slot, type ShiftDef } from "@/lib/lineCheck";
 import { supabase } from "@/integrations/supabase/client";
 import { ADMIN_EMAIL, isAdminEmail } from "@/lib/allowlist";
+import { adminSetPassword } from "@/lib/adminAccounts.functions";
+
+import { hashPinBrowser } from "@/lib/staffSession";
 import {
   ArrowLeft,
   Settings as SettingsIcon,
@@ -22,7 +25,27 @@ import {
   Upload,
   Pencil,
   ShieldCheck,
+  GripVertical,
+  KeyRound,
 } from "lucide-react";
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+} from "@dnd-kit/core";
+import {
+  SortableContext,
+  arrayMove,
+  sortableKeyboardCoordinates,
+  useSortable,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
+import { setStationOrder } from "@/lib/order";
 
 
 export const Route = createFileRoute("/settings")({
@@ -35,7 +58,7 @@ export const Route = createFileRoute("/settings")({
   component: SettingsPage,
 });
 
-type Tab = "branding" | "stations" | "team" | "statuses" | "shifts" | "shelves" | "containers" | "access" | "admins";
+type Tab = "branding" | "stations" | "team" | "members" | "statuses" | "shifts" | "shelves" | "containers" | "access" | "admins" | "pins";
 
 const ICON_OPTIONS = Object.keys(SECTION_ICONS);
 
@@ -47,6 +70,7 @@ type LocalStation = {
 
 const STATIONS_KEY = "linecheck:settings:stations";
 const STAFF_KEY = "linecheck:settings:staff";
+const MEMBERS_KEY = "linecheck:settings:members";
 const STATUSES_KEY = "linecheck:settings:statuses";
 const SHELVES_KEY = "linecheck:settings:shelves";
 const CONTAINERS_KEY = "linecheck:settings:containers";
@@ -118,6 +142,9 @@ function SettingsPage() {
             Stations & Items
           </TabPill>
           <TabPill active={tab === "team"} onClick={() => setTab("team")} icon={<Users className="h-4 w-4" />}>
+            Manager
+          </TabPill>
+          <TabPill active={tab === "members"} onClick={() => setTab("members")} icon={<Users className="h-4 w-4" />}>
             Team Members
           </TabPill>
           <TabPill active={tab === "statuses"} onClick={() => setTab("statuses")} icon={<Tag className="h-4 w-4" />}>
@@ -131,6 +158,9 @@ function SettingsPage() {
           </TabPill>
           <TabPill active={tab === "containers"} onClick={() => setTab("containers")} icon={<Package className="h-4 w-4" />}>
             Container
+          </TabPill>
+          <TabPill active={tab === "pins"} onClick={() => setTab("pins")} icon={<KeyRound className="h-4 w-4" />}>
+            PIN Access
           </TabPill>
           {isAdmin && (
             <TabPill active={tab === "access"} onClick={() => setTab("access")} icon={<ShieldCheck className="h-4 w-4" />}>
@@ -147,6 +177,7 @@ function SettingsPage() {
         {tab === "branding" && <BrandingPanel />}
         {tab === "stations" && <StationsPanel />}
         {tab === "team" && <TeamPanel />}
+        {tab === "members" && <MembersPanel />}
         {tab === "statuses" && <StatusPanel />}
         {tab === "shifts" && <ShiftsPanel />}
         {tab === "shelves" && (
@@ -167,6 +198,7 @@ function SettingsPage() {
             eventName="linecheck:containers-update"
           />
         )}
+        {tab === "pins" && <PinAccessPanel />}
         {tab === "access" && isAdmin && <AccessPanel />}
         {tab === "admins" && isAdmin && <AdminsPanel />}
       </div>
@@ -374,6 +406,25 @@ function StationsPanel() {
   const [renamingIdx, setRenamingIdx] = useState<number | null>(null);
   const [renameValue, setRenameValue] = useState("");
 
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
+    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }),
+  );
+
+  const onDragEnd = (e: DragEndEvent) => {
+    const { active, over } = e;
+    if (!over || active.id === over.id) return;
+    setStations((s) => {
+      const from = s.findIndex((x) => x.name === active.id);
+      const to = s.findIndex((x) => x.name === over.id);
+      if (from < 0 || to < 0) return s;
+      const next = arrayMove(s, from, to);
+      setStationOrder(next.map((x) => x.name));
+      return next;
+    });
+  };
+
+
   useEffect(() => {
     lsStore.setItem(STATIONS_KEY, JSON.stringify(stations));
     if (typeof window !== "undefined")
@@ -460,113 +511,184 @@ function StationsPanel() {
         )}
       </div>
 
-      <ul className="space-y-2">
-        {stations.map((st, idx) => {
-          const Icon = SECTION_ICONS[st.icon] ?? Utensils;
-          const open = expanded === st.name;
-          const isRenaming = renamingIdx === idx;
-          return (
-            <li
-              key={st.name + idx}
-              className="rounded-2xl border border-border bg-card shadow-sm"
-            >
-              <div className="flex items-center gap-3 px-4 py-3">
-                <button
-                  onClick={() => setExpanded(open ? null : st.name)}
-                  className="grid h-6 w-6 place-items-center rounded-md text-muted-foreground hover:bg-muted"
-                  aria-label="Expand"
-                >
-                  {open ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
-                </button>
-
-                <IconPicker
-                  value={st.icon}
-                  onChange={(v) =>
-                    setStations((s) =>
-                      s.map((x, i) => (i === idx ? { ...x, icon: v } : x)),
-                    )
-                  }
-                />
-
-                <Icon className="h-4 w-4 text-muted-foreground" />
-                {isRenaming ? (
-                  <input
-                    autoFocus
-                    value={renameValue}
-                    onChange={(e) => {
-                      setRenameValue(e.target.value);
-                      if (renameError) setRenameError(null);
-                    }}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter") commitRename(idx);
-                      if (e.key === "Escape") cancelRename();
-                    }}
-                    onBlur={() => commitRename(idx)}
-                    aria-invalid={!!renameError}
-                    className={`min-w-0 flex-1 rounded-md border bg-background px-2 py-1 text-sm font-bold tracking-tight outline-none focus:border-foreground/40 ${renameError ? "border-danger" : "border-border"}`}
-                  />
-                ) : (
-                  <>
-                    <span className="font-bold tracking-tight">{st.name}</span>
-                    <button
-                      onClick={() => startRename(idx)}
-                      className="grid h-7 w-7 place-items-center rounded-md text-muted-foreground hover:bg-muted hover:text-foreground"
-                      aria-label="Rename"
-                      title="Rename station"
-                    >
-                      <Pencil className="h-3.5 w-3.5" />
-                    </button>
-                  </>
-                )}
-
-
-                <span className="ml-auto text-xs text-muted-foreground">
-                  {st.items.length} cats
-                </span>
-                <button
-                  onClick={() => {
-                    if (confirm(`Delete station "${st.name}"? This does not delete its saved check history.`))
-                      setStations((s) => s.filter((_, i) => i !== idx));
-                  }}
-                  className="grid h-7 w-7 place-items-center rounded-md text-muted-foreground hover:bg-danger-soft hover:text-danger"
-                  aria-label="Delete"
-                >
-                  <Trash2 className="h-4 w-4" />
-                </button>
-              </div>
-              {isRenaming && renameError && (
-                <p role="alert" className="border-t border-border px-4 py-2 text-sm font-medium text-danger">
-                  {renameError}
-                </p>
-              )}
-              {open && (
-                <div className="border-t border-border px-12 py-3">
-                  {st.items.length === 0 ? (
-                    <p className="text-xs text-muted-foreground">
-                      No categories yet. Open this station from the dashboard and use{" "}
-                      <span className="font-semibold">Edit Categories</span> to add items.
-                    </p>
-                  ) : (
-                    <ul className="grid grid-cols-2 gap-1.5 text-xs">
-                      {st.items.map((it) => (
-                        <li
-                          key={it.name}
-                          className="rounded-md bg-muted/50 px-2 py-1 text-muted-foreground"
-                        >
-                          {it.name}
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                </div>
-              )}
-            </li>
-          );
-        })}
-      </ul>
+      <DndContext
+        sensors={sensors}
+        collisionDetection={closestCenter}
+        onDragEnd={onDragEnd}
+      >
+        <SortableContext
+          items={stations.map((s) => s.name)}
+          strategy={verticalListSortingStrategy}
+        >
+          <ul className="space-y-2">
+            {stations.map((st, idx) => (
+              <SortableStationRow
+                key={st.name}
+                st={st}
+                idx={idx}
+                open={expanded === st.name}
+                isRenaming={renamingIdx === idx}
+                renameValue={renameValue}
+                renameError={renameError}
+                setRenameValue={setRenameValue}
+                setRenameError={setRenameError}
+                commitRename={commitRename}
+                cancelRename={cancelRename}
+                startRename={startRename}
+                setExpanded={setExpanded}
+                setStations={setStations}
+              />
+            ))}
+          </ul>
+        </SortableContext>
+      </DndContext>
     </div>
   );
 }
+
+function SortableStationRow({
+  st,
+  idx,
+  open,
+  isRenaming,
+  renameValue,
+  renameError,
+  setRenameValue,
+  setRenameError,
+  commitRename,
+  cancelRename,
+  startRename,
+  setExpanded,
+  setStations,
+}: {
+  st: LocalStation;
+  idx: number;
+  open: boolean;
+  isRenaming: boolean;
+  renameValue: string;
+  renameError: string | null;
+  setRenameValue: (v: string) => void;
+  setRenameError: (v: string | null) => void;
+  commitRename: (idx: number) => void;
+  cancelRename: () => void;
+  startRename: (idx: number) => void;
+  setExpanded: (v: string | null) => void;
+  setStations: React.Dispatch<React.SetStateAction<LocalStation[]>>;
+}) {
+  const Icon = SECTION_ICONS[st.icon] ?? Utensils;
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } =
+    useSortable({ id: st.name });
+
+  return (
+    <li
+      ref={setNodeRef}
+      style={{
+        transform: CSS.Transform.toString(transform),
+        transition,
+        opacity: isDragging ? 0.6 : 1,
+        zIndex: isDragging ? 20 : undefined,
+      }}
+      className="relative rounded-2xl border border-border bg-card shadow-sm"
+    >
+      <div className="flex items-center gap-3 px-4 py-3">
+        <button
+          {...attributes}
+          {...listeners}
+          className="grid h-7 w-6 cursor-grab touch-none place-items-center rounded-md text-muted-foreground hover:bg-muted active:cursor-grabbing"
+          aria-label="Drag to reorder"
+          title="Drag to reorder"
+        >
+          <GripVertical className="h-4 w-4" />
+        </button>
+
+        <button
+          onClick={() => setExpanded(open ? null : st.name)}
+          className="grid h-6 w-6 place-items-center rounded-md text-muted-foreground hover:bg-muted"
+          aria-label="Expand"
+        >
+          {open ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
+        </button>
+
+        <IconPicker
+          value={st.icon}
+          onChange={(v) =>
+            setStations((s) => s.map((x, i) => (i === idx ? { ...x, icon: v } : x)))
+          }
+        />
+
+        <Icon className="h-4 w-4 text-muted-foreground" />
+        {isRenaming ? (
+          <input
+            autoFocus
+            value={renameValue}
+            onChange={(e) => {
+              setRenameValue(e.target.value);
+              if (renameError) setRenameError(null);
+            }}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") commitRename(idx);
+              if (e.key === "Escape") cancelRename();
+            }}
+            onBlur={() => commitRename(idx)}
+            aria-invalid={!!renameError}
+            className={`min-w-0 flex-1 rounded-md border bg-background px-2 py-1 text-sm font-bold tracking-tight outline-none focus:border-foreground/40 ${renameError ? "border-danger" : "border-border"}`}
+          />
+        ) : (
+          <>
+            <span className="font-bold tracking-tight">{st.name}</span>
+            <button
+              onClick={() => startRename(idx)}
+              className="grid h-7 w-7 place-items-center rounded-md text-muted-foreground hover:bg-muted hover:text-foreground"
+              aria-label="Rename"
+              title="Rename station"
+            >
+              <Pencil className="h-3.5 w-3.5" />
+            </button>
+          </>
+        )}
+
+        <span className="ml-auto text-xs text-muted-foreground">{st.items.length} cats</span>
+        <button
+          onClick={() => {
+            if (confirm(`Delete station "${st.name}"? This does not delete its saved check history.`))
+              setStations((s) => s.filter((_, i) => i !== idx));
+          }}
+          className="grid h-7 w-7 place-items-center rounded-md text-muted-foreground hover:bg-danger-soft hover:text-danger"
+          aria-label="Delete"
+        >
+          <Trash2 className="h-4 w-4" />
+        </button>
+      </div>
+      {isRenaming && renameError && (
+        <p role="alert" className="border-t border-border px-4 py-2 text-sm font-medium text-danger">
+          {renameError}
+        </p>
+      )}
+      {open && (
+        <div className="border-t border-border px-12 py-3">
+          {st.items.length === 0 ? (
+            <p className="text-xs text-muted-foreground">
+              No categories yet. Open this station from the dashboard and use{" "}
+              <span className="font-semibold">Edit Categories</span> to add items.
+            </p>
+          ) : (
+            <ul className="grid grid-cols-2 gap-1.5 text-xs">
+              {st.items.map((it) => (
+                <li
+                  key={it.name}
+                  className="rounded-md bg-muted/50 px-2 py-1 text-muted-foreground"
+                >
+                  {it.name}
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      )}
+    </li>
+  );
+}
+
 
 /* ============= ICON PICKER ============= */
 
@@ -637,17 +759,53 @@ function IconPicker({ value, onChange }: { value: string; onChange: (v: string) 
 /* ============= TEAM ============= */
 
 function TeamPanel() {
-  const [members, setMembers] = useState<string[]>(() => loadJSON(STAFF_KEY, STAFF));
+  return (
+    <PeoplePanel
+      storageKey={STAFF_KEY}
+      updateEvent="linecheck:staff-update"
+      defaults={STAFF}
+      placeholder="New manager..."
+    />
+  );
+}
+
+function MembersPanel() {
+  return (
+    <PeoplePanel
+      storageKey={MEMBERS_KEY}
+      updateEvent="linecheck:members-update"
+      defaults={[]}
+      placeholder="New team member..."
+    />
+  );
+}
+
+function PeoplePanel({
+  storageKey,
+  updateEvent,
+  defaults,
+  placeholder,
+}: {
+  storageKey: string;
+  updateEvent: string;
+  defaults: string[];
+  placeholder: string;
+}) {
+  const [members, setMembers] = useState<string[]>(() => loadJSON(storageKey, defaults));
   const [name, setName] = useState("");
 
   useEffect(() => {
-    lsStore.setItem(STAFF_KEY, JSON.stringify(members));
-    window.dispatchEvent(new Event("linecheck:staff-update"));
-  }, [members]);
+    lsStore.setItem(storageKey, JSON.stringify(members));
+    window.dispatchEvent(new Event(updateEvent));
+  }, [members, storageKey, updateEvent]);
 
   const add = () => {
     const n = name.trim();
     if (!n) return;
+    if (members.some((m) => m.toLowerCase() === n.toLowerCase())) {
+      setName("");
+      return;
+    }
     setMembers((m) => [n, ...m]);
     setName("");
   };
@@ -659,9 +817,10 @@ function TeamPanel() {
           value={name}
           onChange={(e) => setName(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && add()}
-          placeholder="New team member..."
+          placeholder={placeholder}
           className="flex-1 rounded-full border border-border bg-card px-5 py-3 text-sm outline-none focus:border-foreground/30"
         />
+
         <button
           onClick={add}
           className="flex items-center gap-1.5 rounded-full bg-muted-foreground/80 px-5 py-3 text-sm font-semibold text-background hover:bg-foreground"
@@ -696,16 +855,25 @@ function TeamPanel() {
 
 function StatusPanel() {
   const [statuses, setStatuses] = useState<string[]>(() => loadJSON(STATUSES_KEY, STATUSES));
+  const [colors, setColors] = useState<Record<string, "green" | "red">>(() => getStatusColors());
   const [name, setName] = useState("");
 
   useEffect(() => {
     lsStore.setItem(STATUSES_KEY, JSON.stringify(statuses));
   }, [statuses]);
 
+  const setColor = (status: string, color: "green" | "red") => {
+    const next = { ...colors, [status]: color };
+    setColors(next);
+    saveStatusColors(next);
+  };
+
   const add = () => {
     const n = name.trim();
     if (!n) return;
-    setStatuses((s) => [n.toUpperCase(), ...s]);
+    const up = n.toUpperCase();
+    setStatuses((s) => [up, ...s]);
+    setColor(up, "green");
     setName("");
   };
 
@@ -727,27 +895,63 @@ function StatusPanel() {
         </button>
       </div>
 
+      <p className="mb-3 text-xs text-muted-foreground">
+        Green = okay. Red = flagged and recorded on the dashboard.
+      </p>
+
       <ul className="space-y-2">
-        {statuses.map((s, i) => (
-          <li
-            key={s + i}
-            className="flex items-center gap-3 rounded-2xl border border-border bg-card px-4 py-3 shadow-sm"
-          >
-            <Tag className="h-4 w-4 text-muted-foreground" />
-            <span className="font-semibold tracking-tight">{s}</span>
-            <button
-              onClick={() => setStatuses((arr) => arr.filter((_, j) => j !== i))}
-              className="ml-auto grid h-7 w-7 place-items-center rounded-md text-muted-foreground hover:bg-danger-soft hover:text-danger"
-              aria-label="Delete"
+        {statuses.map((s, i) => {
+          const color = colors[s] ?? "green";
+          return (
+            <li
+              key={s + i}
+              className={`flex flex-wrap items-center gap-3 rounded-2xl border bg-card px-4 py-3 shadow-sm ${
+                color === "red" ? "border-danger/40" : "border-success/40"
+              }`}
             >
-              <Trash2 className="h-4 w-4" />
-            </button>
-          </li>
-        ))}
+              <span
+                className={`h-3 w-3 shrink-0 rounded-full ${
+                  color === "red" ? "bg-danger" : "bg-success"
+                }`}
+              />
+              <span className="font-semibold tracking-tight">{s}</span>
+              <div className="ml-auto flex items-center gap-1 rounded-full border border-border p-0.5">
+                <button
+                  onClick={() => setColor(s, "green")}
+                  className={`rounded-full px-3 py-1 text-[11px] font-bold uppercase tracking-wider transition ${
+                    color === "green"
+                      ? "bg-success text-background"
+                      : "text-muted-foreground hover:bg-accent"
+                  }`}
+                >
+                  Green
+                </button>
+                <button
+                  onClick={() => setColor(s, "red")}
+                  className={`rounded-full px-3 py-1 text-[11px] font-bold uppercase tracking-wider transition ${
+                    color === "red"
+                      ? "bg-danger text-background"
+                      : "text-muted-foreground hover:bg-accent"
+                  }`}
+                >
+                  Red
+                </button>
+              </div>
+              <button
+                onClick={() => setStatuses((arr) => arr.filter((_, j) => j !== i))}
+                className="grid h-7 w-7 place-items-center rounded-md text-muted-foreground hover:bg-danger-soft hover:text-danger"
+                aria-label="Delete"
+              >
+                <Trash2 className="h-4 w-4" />
+              </button>
+            </li>
+          );
+        })}
       </ul>
     </div>
   );
 }
+
 
 /* ============= SHIFTS ============= */
 
@@ -1000,6 +1204,29 @@ function AccessPanel() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const [pwFor, setPwFor] = useState<string | null>(null);
+  const [pwValue, setPwValue] = useState("");
+  const [pwBusy, setPwBusy] = useState(false);
+  const [pwMsg, setPwMsg] = useState<string | null>(null);
+
+  const savePassword = async (email: string) => {
+    setPwBusy(true);
+    setPwMsg(null);
+    try {
+      const res = await adminSetPassword({ data: { email, password: pwValue } });
+      setPwMsg(
+        res.created
+          ? "Account created with this password."
+          : "Password updated.",
+      );
+      setPwValue("");
+    } catch (err: any) {
+      setPwMsg(err?.message || "Could not set the password.");
+    } finally {
+      setPwBusy(false);
+    }
+  };
+
 
   const load = async () => {
     setLoading(true);
@@ -1109,29 +1336,69 @@ function AccessPanel() {
           )}
           {emails.map((e) => {
             const isAdminRow = e.toLowerCase() === ADMIN_EMAIL;
+            const open = pwFor === e;
             return (
-              <li key={e} className="flex items-center justify-between gap-3 p-3">
-                <div className="flex items-center gap-2">
-                  <span className="text-sm">{e}</span>
-                  {isAdminRow && (
-                    <span className="rounded-full bg-foreground/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-foreground">
-                      Admin
-                    </span>
-                  )}
+              <li key={e} className="p-3">
+                <div className="flex items-center justify-between gap-3">
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm">{e}</span>
+                    {isAdminRow && (
+                      <span className="rounded-full bg-foreground/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-foreground">
+                        Admin
+                      </span>
+                    )}
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setPwFor(open ? null : e);
+                        setPwValue("");
+                        setPwMsg(null);
+                      }}
+                      className="flex items-center gap-1 rounded-md border border-border px-2 py-1 text-xs font-semibold text-foreground hover:bg-muted"
+                    >
+                      <KeyRound className="h-3.5 w-3.5" />
+                      Set password
+                    </button>
+                    {!isAdminRow && (
+                      <button
+                        type="button"
+                        onClick={() => void remove(e)}
+                        className="rounded-md p-1.5 text-muted-foreground hover:bg-muted hover:text-foreground"
+                        aria-label={`Remove ${e}`}
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </button>
+                    )}
+                  </div>
                 </div>
-                {!isAdminRow && (
-                  <button
-                    type="button"
-                    onClick={() => void remove(e)}
-                    className="rounded-md p-1.5 text-muted-foreground hover:bg-muted hover:text-foreground"
-                    aria-label={`Remove ${e}`}
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </button>
+                {open && (
+                  <div className="mt-2 flex flex-wrap items-center gap-2">
+                    <input
+                      type="text"
+                      value={pwValue}
+                      onChange={(ev) => setPwValue(ev.target.value)}
+                      placeholder="New password (min 8 characters)"
+                      className="min-w-0 flex-1 rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-foreground"
+                    />
+                    <button
+                      type="button"
+                      disabled={pwBusy}
+                      onClick={() => void savePassword(e)}
+                      className="rounded-lg bg-foreground px-3 py-2 text-sm font-semibold text-background hover:opacity-90 disabled:opacity-50"
+                    >
+                      {pwBusy ? "Saving…" : "Save"}
+                    </button>
+                    {pwMsg && (
+                      <p className="w-full text-xs text-muted-foreground">{pwMsg}</p>
+                    )}
+                  </div>
                 )}
               </li>
             );
           })}
+
         </ul>
       )}
     </section>
@@ -1304,6 +1571,144 @@ function AdminsPanel() {
           )}
         </ul>
       )}
+    </section>
+  );
+}
+
+type PinRow = { id: string; name: string; created_at: string };
+
+function PinAccessPanel() {
+  const [rows, setRows] = useState<PinRow[]>([]);
+  const [name, setName] = useState("");
+  const [pin, setPin] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [msg, setMsg] = useState<string | null>(null);
+
+  const load = async () => {
+    const { data, error } = await supabase
+      .from("staff_logins")
+      .select("id, name, created_at")
+      .order("created_at", { ascending: true });
+    if (error) setMsg(error.message);
+    else setRows((data ?? []) as PinRow[]);
+  };
+
+  useEffect(() => {
+    void load();
+  }, []);
+
+  const add = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const n = name.trim();
+    if (!n || !/^\d{4,8}$/.test(pin)) {
+      setMsg("Enter a name and a 4-8 digit PIN.");
+      return;
+    }
+    setBusy(true);
+    setMsg(null);
+    try {
+      const { data: userData } = await supabase.auth.getUser();
+      const owner_id = userData.user?.id;
+      if (!owner_id) throw new Error("Sign in required");
+      const pin_hash = await hashPinBrowser(n, pin);
+      const { error } = await supabase
+        .from("staff_logins")
+        .insert({ owner_id, name: n, pin_hash });
+      if (error) throw error;
+      setName("");
+      setPin("");
+      await load();
+    } catch (err: any) {
+      setMsg(
+        String(err?.message || "").includes("duplicate")
+          ? "That name is already taken. Use a different one."
+          : err?.message || "Could not create PIN login",
+      );
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const resetPin = async (row: PinRow) => {
+    const next = window.prompt(`New PIN for ${row.name} (4-8 digits)`)?.trim() ?? "";
+    if (!/^\d{4,8}$/.test(next)) return;
+    const pin_hash = await hashPinBrowser(row.name, next);
+    const { error } = await supabase
+      .from("staff_logins")
+      .update({ pin_hash })
+      .eq("id", row.id);
+    if (error) setMsg(error.message);
+    else setMsg(`PIN updated for ${row.name}.`);
+  };
+
+  const remove = async (row: PinRow) => {
+    if (!window.confirm(`Remove PIN access for ${row.name}?`)) return;
+    const { error } = await supabase.from("staff_logins").delete().eq("id", row.id);
+    if (error) setMsg(error.message);
+    else await load();
+  };
+
+  return (
+    <section className="rounded-2xl border border-border bg-card p-5">
+      <h3 className="text-sm font-bold">Team PIN access</h3>
+      <p className="mt-1 text-xs text-muted-foreground">
+        Create a simple name + PIN login for a team member. They can only open
+        the Receiving and Closing reports — no dashboard, stations or settings.
+      </p>
+
+      <form onSubmit={add} className="mt-4 flex flex-wrap gap-2">
+        <input
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          placeholder="Team member name"
+          className="min-w-[10rem] flex-1 rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-foreground"
+        />
+        <input
+          value={pin}
+          onChange={(e) => setPin(e.target.value.replace(/\D/g, "").slice(0, 8))}
+          inputMode="numeric"
+          placeholder="PIN (4-8 digits)"
+          className="w-40 rounded-lg border border-border bg-background px-3 py-2 text-sm tracking-widest outline-none focus:border-foreground"
+        />
+        <button
+          type="submit"
+          disabled={busy}
+          className="inline-flex items-center gap-1.5 rounded-lg bg-foreground px-4 py-2 text-sm font-semibold text-background hover:opacity-90 disabled:opacity-50"
+        >
+          <Plus className="h-4 w-4" />
+          Add
+        </button>
+      </form>
+      {msg && <p className="mt-2 text-xs text-muted-foreground">{msg}</p>}
+
+      <ul className="mt-4 divide-y divide-border rounded-xl border border-border">
+        {rows.map((r) => (
+          <li key={r.id} className="flex items-center gap-2 p-3">
+            <KeyRound className="h-4 w-4 text-muted-foreground" />
+            <span className="truncate text-sm font-medium">{r.name}</span>
+            <span className="ml-auto flex items-center gap-1">
+              <button
+                type="button"
+                onClick={() => void resetPin(r)}
+                className="rounded-md px-2 py-1 text-xs font-semibold text-muted-foreground hover:bg-muted hover:text-foreground"
+              >
+                Reset PIN
+              </button>
+              <button
+                type="button"
+                onClick={() => void remove(r)}
+                className="rounded-md p-1.5 text-muted-foreground hover:bg-muted hover:text-foreground"
+                aria-label={`Remove ${r.name}`}
+              >
+                <Trash2 className="h-4 w-4" />
+              </button>
+            </span>
+          </li>
+        ))}
+        {rows.length === 0 && (
+          <li className="p-3 text-sm text-muted-foreground">No PIN logins yet.</li>
+        )}
+      </ul>
     </section>
   );
 }

@@ -239,9 +239,13 @@ function SharedView() {
       </header>
 
       <main className="mx-auto max-w-3xl px-5 py-8">
+        <p className="mb-2 text-lg font-black uppercase tracking-wide text-foreground">
+          {p.brand_name}
+        </p>
         <h1 className="text-2xl font-black tracking-tight">
           {SLOT_LABEL[slot]} Shift · {p.date}
         </h1>
+
         <p className="mt-1 text-xs text-muted-foreground">
           Last updated {new Date(data.updated_at).toLocaleString()}
         </p>
