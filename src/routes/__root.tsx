@@ -12,6 +12,9 @@ import { useEffect, type ReactNode } from "react";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { AuthGate } from "../components/AuthGate";
+import { OfflineBanner } from "../components/OfflineBanner";
+import { registerOfflineSupport } from "../lib/offline";
+
 
 function NotFoundComponent() {
   return (
@@ -78,16 +81,16 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Shift Overview" },
-      { name: "description", content: "Kitchen shift readiness dashboard: station progress and flagged items." },
+      { title: "My Line Check" },
+      { name: "description", content: "Kitchen Assistant Helper streamlines kitchen operations" },
       { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Shift Overview" },
-      { property: "og:description", content: "Kitchen shift readiness dashboard: station progress and flagged items." },
+      { property: "og:title", content: "My Line Check" },
+      { property: "og:description", content: "Kitchen Assistant Helper streamlines kitchen operations" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:site", content: "@Lovable" },
-      { name: "twitter:title", content: "Shift Overview" },
-      { name: "twitter:description", content: "Kitchen shift readiness dashboard: station progress and flagged items." },
+      { name: "twitter:title", content: "My Line Check" },
+      { name: "twitter:description", content: "Kitchen Assistant Helper streamlines kitchen operations" },
       { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/fyqm9xo5ssYppe00GAHC8bFvcKM2/social-images/social-1782983696567-line_check_logo.webp" },
       { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/fyqm9xo5ssYppe00GAHC8bFvcKM2/social-images/social-1782983696567-line_check_logo.webp" },
     ],
@@ -96,7 +99,6 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         rel: "stylesheet",
         href: appCss,
       },
-      { rel: "icon", type: "image/x-icon", href: "/favicon.ico" },
     ],
   }),
   shellComponent: RootShell,
@@ -124,8 +126,13 @@ function RootShell({ children }: { children: ReactNode }) {
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
 
+  useEffect(() => {
+    registerOfflineSupport();
+  }, []);
+
   return (
     <QueryClientProvider client={queryClient}>
+      <OfflineBanner />
       <AuthGate>
         {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
         <Outlet />
@@ -133,3 +140,4 @@ function RootComponent() {
     </QueryClientProvider>
   );
 }
+

@@ -115,13 +115,67 @@ export function readEntry(
 }
 
 
-export const FLAG_STATUSES = new Set([
-  "ABOUT TO EXPIRE",
-  "EXPIRED",
-  "NEED TO CLEAN",
-  "WRONG LABEL",
-]);
-export const OK_STATUSES = new Set(["OK", "N/A", "F/O", "PREPPING"]);
+export type StatusColor = "green" | "red";
+
+export const STATUS_COLORS_KEY = "linecheck:settings:statusColors";
+
+/** Built-in color designation: green = okay, red = flagged. */
+const DEFAULT_STATUS_COLORS: Record<string, StatusColor> = {
+  OK: "green",
+  "N/A": "green",
+  "F/O": "green",
+  PREPPING: "green",
+  "ABOUT TO EXPIRE": "red",
+  EXPIRED: "red",
+  "NEED TO CLEAN": "red",
+  "WRONG LABEL": "red",
+};
+
+/** Effective color map, merging user designations from Settings. */
+export function getStatusColors(): Record<string, StatusColor> {
+  const out: Record<string, StatusColor> = { ...DEFAULT_STATUS_COLORS };
+  try {
+    const raw = lsStore.getItem(STATUS_COLORS_KEY);
+    if (raw) {
+      const obj = JSON.parse(raw) as Record<string, string>;
+      if (obj && typeof obj === "object") {
+        for (const [k, v] of Object.entries(obj)) {
+          if (v === "green" || v === "red") out[k] = v;
+        }
+      }
+    }
+  } catch {}
+  return out;
+}
+
+export function saveStatusColors(map: Record<string, StatusColor>) {
+  try {
+    lsStore.setItem(STATUS_COLORS_KEY, JSON.stringify(map));
+    if (typeof window !== "undefined")
+      window.dispatchEvent(new Event("linecheck:update"));
+  } catch {}
+}
+
+/** Color of a status; unknown statuses default to green (okay). */
+export function statusColor(status: string): StatusColor {
+  return getStatusColors()[status] ?? "green";
+}
+
+export function isFlaggedStatus(status: string): boolean {
+  return !!status && statusColor(status) === "red";
+}
+export function isOkStatus(status: string): boolean {
+  return !!status && statusColor(status) === "green";
+}
+
+/** Dynamic Set-like views so existing `.has()` call sites honor user colors. */
+export const FLAG_STATUSES: { has(s: string): boolean } = {
+  has: (s: string) => isFlaggedStatus(s),
+};
+export const OK_STATUSES: { has(s: string): boolean } = {
+  has: (s: string) => isOkStatus(s),
+};
+
 
 export function todayISO() {
   return new Date().toISOString().slice(0, 10);
