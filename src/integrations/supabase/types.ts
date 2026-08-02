@@ -35,6 +35,66 @@ export type Database = {
         }
         Relationships: []
       }
+      shared_closings: {
+        Row: {
+          brand_name: string
+          created_at: string
+          id: string
+          owner_id: string
+          payload: Json
+          record_id: string
+          updated_at: string
+        }
+        Insert: {
+          brand_name?: string
+          created_at?: string
+          id?: string
+          owner_id: string
+          payload: Json
+          record_id: string
+          updated_at?: string
+        }
+        Update: {
+          brand_name?: string
+          created_at?: string
+          id?: string
+          owner_id?: string
+          payload?: Json
+          record_id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      shared_receivings: {
+        Row: {
+          brand_name: string
+          created_at: string
+          id: string
+          owner_id: string
+          payload: Json
+          record_id: string
+          updated_at: string
+        }
+        Insert: {
+          brand_name?: string
+          created_at?: string
+          id?: string
+          owner_id: string
+          payload: Json
+          record_id: string
+          updated_at?: string
+        }
+        Update: {
+          brand_name?: string
+          created_at?: string
+          id?: string
+          owner_id?: string
+          payload?: Json
+          record_id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       shared_shifts: {
         Row: {
           brand_name: string
@@ -71,6 +131,33 @@ export type Database = {
         }
         Relationships: []
       }
+      staff_logins: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+          owner_id: string
+          pin_hash: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name: string
+          owner_id: string
+          pin_hash: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
+          owner_id?: string
+          pin_hash?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       user_state: {
         Row: {
           data: Json
@@ -94,6 +181,24 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      get_shared_closing: {
+        Args: { _id: string }
+        Returns: {
+          brand_name: string
+          id: string
+          payload: Json
+          updated_at: string
+        }[]
+      }
+      get_shared_receiving: {
+        Args: { _id: string }
+        Returns: {
+          brand_name: string
+          id: string
+          payload: Json
+          updated_at: string
+        }[]
+      }
       get_shared_shift: {
         Args: { _id: string }
         Returns: {
