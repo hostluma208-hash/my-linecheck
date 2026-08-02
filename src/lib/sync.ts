@@ -46,9 +46,10 @@ function isOffline() {
 
 function refreshStatus() {
   if (!currentUserId) return setSyncStatus("idle");
-  if (pushing) return setSyncStatus("syncing");
-  if (hasDirty(currentUserId)) {
-    setSyncStatus(isOffline() || retryAttempt > 0 ? "pending" : "syncing");
+  const n = dirtyCount(currentUserId);
+  if (pushing) return setSyncStatus("syncing", n);
+  if (n > 0) {
+    setSyncStatus(isOffline() || retryAttempt > 0 ? "pending" : "syncing", n);
     return;
   }
   setSyncStatus("idle");

@@ -50,9 +50,10 @@ function isOffline() {
 function refreshStatus() {
   const s = scope();
   if (!s) return setSyncStatus("idle");
-  if (pushing) return setSyncStatus("syncing");
-  if (hasDirty(s)) {
-    setSyncStatus(isOffline() || retryAttempt > 0 ? "pending" : "syncing");
+  const n = dirtyCount(s);
+  if (pushing) return setSyncStatus("syncing", n);
+  if (n > 0) {
+    setSyncStatus(isOffline() || retryAttempt > 0 ? "pending" : "syncing", n);
     return;
   }
   setSyncStatus("idle");

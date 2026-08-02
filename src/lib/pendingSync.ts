@@ -13,6 +13,7 @@ const STORE_PREFIX = "linecheck:pending:";
 export type SyncStatus = "idle" | "pending" | "syncing" | "error";
 
 let status: SyncStatus = "idle";
+let pendingCount = 0;
 const listeners = new Set<() => void>();
 
 function raw(): Storage | null {
@@ -94,10 +95,16 @@ export function getSyncStatus(): SyncStatus {
   return status;
 }
 
-export function setSyncStatus(next: SyncStatus) {
-  if (status === next) return;
+export function setSyncStatus(next: SyncStatus, count = 0) {
+  if (status === next && pendingCount === count) return;
   status = next;
+  pendingCount = count;
   emit();
+}
+
+/** Local changes still waiting to reach the server for the active session. */
+export function getPendingCount() {
+  return pendingCount;
 }
 
 export function subscribeSync(fn: () => void) {
