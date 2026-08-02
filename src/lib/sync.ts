@@ -1,12 +1,30 @@
 // Cross-device sync: mirrors all `linecheck:*` localStorage keys (scoped to
 // the signed-in user) to the `user_state` table. On sign-in we pull the
 // remote snapshot; every local write is debounced and pushed back.
+//
+// Offline behaviour: local writes are recorded in a durable dirty-key queue
+// (see `pendingSync.ts`). Those keys win over remote values on the next pull
+// and are pushed as soon as connectivity returns — including after a reload
+// or an app restart that happened while still offline.
 import { supabase } from "@/integrations/supabase/client";
-import { lsStore, getUserScope } from "@/lib/lsStore";
+import { lsStore } from "@/lib/lsStore";
+import {
+  backoffDelay,
+  clearDirty,
+  dirtyCount,
+  getDirty,
+  hasDirty,
+  isDefinitelyOffline,
+  markDirty,
+  setSyncStatus,
+} from "@/lib/pendingSync";
 
 const PREFIX = "linecheck:";
 let suppressPush = false;
 let pushTimer: ReturnType<typeof setTimeout> | null = null;
+let retryTimer: ReturnType<typeof setTimeout> | null = null;
+let retryAttempt = 0;
+let pushing = false;
 let currentUserId: string | null = null;
 let unsubWrite: (() => void) | null = null;
 let lastRemoteKeys = new Set<string>();
@@ -22,32 +40,76 @@ function collectSnapshot(): Record<string, string> {
   return out;
 }
 
-let pendingWhileOffline = false;
-
 function isOffline() {
-  return typeof navigator !== "undefined" && navigator.onLine === false;
+  return isDefinitelyOffline();
+}
+
+function refreshStatus() {
+  if (!currentUserId) return setSyncStatus("idle");
+  const n = dirtyCount(currentUserId);
+  if (pushing) return setSyncStatus("syncing", n);
+  if (n > 0) {
+    setSyncStatus(isOffline() || retryAttempt > 0 ? "pending" : "syncing", n);
+    return;
+  }
+  setSyncStatus("idle");
+}
+
+function clearRetry() {
+  if (retryTimer) {
+    clearTimeout(retryTimer);
+    retryTimer = null;
+  }
+  retryAttempt = 0;
+}
+
+function scheduleRetry() {
+  if (retryTimer || !currentUserId) return;
+  retryAttempt += 1;
+  retryTimer = setTimeout(() => {
+    retryTimer = null;
+    void pushNow();
+  }, backoffDelay(retryAttempt));
+  refreshStatus();
 }
 
 async function pushNow() {
   if (!currentUserId) return;
+  if (pushing) return;
   if (isOffline()) {
     // Keep the change locally; it is pushed as soon as we're back online.
-    pendingWhileOffline = true;
+    refreshStatus();
     return;
   }
+  const userAtStart = currentUserId;
   const data = collectSnapshot();
+  // Snapshot the dirty keys we're about to deliver; writes landing during the
+  // request stay queued for the next push.
+  const pushedKeys = getDirty(userAtStart);
+  pushing = true;
+  refreshStatus();
   try {
     const { error } = await supabase
       .from("user_state")
       .upsert(
-        { user_id: currentUserId, data, updated_at: new Date().toISOString() },
+        { user_id: userAtStart, data, updated_at: new Date().toISOString() },
         { onConflict: "user_id" },
       );
     if (error) throw error;
-    pendingWhileOffline = false;
+    if (currentUserId !== userAtStart) return;
+    clearDirty(userAtStart, pushedKeys);
+    lastRemoteKeys = new Set(Object.keys(data));
+    clearRetry();
   } catch (e) {
-    pendingWhileOffline = true;
     console.warn("[sync] push failed", e);
+    if (currentUserId === userAtStart) scheduleRetry();
+  } finally {
+    pushing = false;
+    refreshStatus();
+    if (currentUserId === userAtStart && !retryTimer && hasDirty(userAtStart)) {
+      // Writes arrived mid-flight — deliver them.
+      schedulePush();
+    }
   }
 }
 
@@ -63,12 +125,16 @@ function schedulePush() {
 
 function onBackOnline() {
   if (!currentUserId) return;
-  if (pendingWhileOffline) void pushNow();
-  else void pullFromServer();
+  clearRetry();
+  // Merge remote first (local dirty keys win), then deliver the queue.
+  void pullFromServer();
 }
 
-
-function onLocalWrite() {
+function onLocalWrite(e: Event) {
+  if (suppressPush || !currentUserId) return;
+  const key = (e as CustomEvent<{ key?: string }>).detail?.key;
+  if (key && key.startsWith(PREFIX)) markDirty(currentUserId, key);
+  refreshStatus();
   schedulePush();
 }
 
@@ -90,13 +156,15 @@ async function pullFromServer() {
       await pushNow();
       return;
     }
+    // Unsynced local edits always win over the remote snapshot.
+    const dirty = getDirty(userAtStart);
     let changed = false;
     suppressPush = true;
     try {
       const localKeys = new Set(lsStore.keys().filter((k) => k.startsWith(PREFIX)));
       for (const [k, v] of Object.entries(remote)) {
         if (typeof v === "string" && k.startsWith(PREFIX)) {
-          if (lsStore.getItem(k) !== v) {
+          if (!dirty.has(k) && lsStore.getItem(k) !== v) {
             lsStore.setItem(k, v);
             changed = true;
           }
@@ -107,7 +175,7 @@ async function pullFromServer() {
       // deleted on another device — mirror that deletion here. Keys never seen
       // on the server are local-only (unpushed) and stay intact.
       for (const k of localKeys) {
-        if (lastRemoteKeys.has(k)) {
+        if (lastRemoteKeys.has(k) && !dirty.has(k)) {
           lsStore.removeItem(k);
           changed = true;
         }
@@ -122,10 +190,12 @@ async function pullFromServer() {
       window.dispatchEvent(new Event("linecheck:members-update"));
       window.dispatchEvent(new Event("linecheck:brand-update"));
     }
-    // If we had unpushed local-only keys, push the merged snapshot back up.
-    if (localOnlyPending()) void pushNow();
+    // Deliver queued offline edits, or local-only keys the server hasn't seen.
+    if (hasDirty(userAtStart) || localOnlyPending()) void pushNow();
+    else refreshStatus();
   } catch (e) {
     console.warn("[sync] pull failed", e);
+    if (currentUserId === userAtStart && hasDirty(userAtStart)) scheduleRetry();
   }
 }
 
@@ -148,6 +218,10 @@ function onVisible() {
   if (document.visibilityState === "hidden") {
     flushPendingPush();
   } else if (currentUserId && !isOffline()) {
+    if (hasDirty(currentUserId)) {
+      clearRetry();
+      void pushNow();
+    }
     void pullFromServer();
   }
 }
@@ -158,33 +232,36 @@ export async function startSync(userId: string) {
   stopSync();
   currentUserId = userId;
   lastRemoteKeys = new Set();
-  pendingWhileOffline = false;
+  refreshStatus();
   if (typeof window !== "undefined" && !unsubWrite) {
     window.addEventListener("linecheck:local-write", onLocalWrite);
     window.addEventListener("pagehide", flushPendingPush);
     window.addEventListener("beforeunload", flushPendingPush);
     window.addEventListener("online", onBackOnline);
+    window.addEventListener("offline", refreshStatus);
     window.addEventListener("focus", onVisible);
     document.addEventListener("visibilitychange", onVisible);
-    // Periodic refresh so changes made on another device show up here.
+    // Periodic refresh so changes made on another device show up here, and a
+    // safety net that retries a stuck queue even if no `online` event fires.
     pollTimer = setInterval(() => {
-      if (currentUserId && !isOffline() && document.visibilityState === "visible") {
-        void pullFromServer();
-      }
+      if (!currentUserId || isOffline()) return;
+      if (hasDirty(currentUserId) && !retryTimer && !pushing) void pushNow();
+      if (document.visibilityState === "visible") void pullFromServer();
     }, 30000);
     unsubWrite = () => {
       window.removeEventListener("linecheck:local-write", onLocalWrite);
       window.removeEventListener("pagehide", flushPendingPush);
       window.removeEventListener("beforeunload", flushPendingPush);
       window.removeEventListener("online", onBackOnline);
+      window.removeEventListener("offline", refreshStatus);
       window.removeEventListener("focus", onVisible);
       document.removeEventListener("visibilitychange", onVisible);
     };
   }
-  if (!isOffline()) await pullFromServer();
+  if (isOffline()) return;
+  // A queue left over from a previous offline session is merged, then flushed.
+  await pullFromServer();
 }
-
-
 
 export function stopSync() {
   currentUserId = null;
@@ -193,6 +270,7 @@ export function stopSync() {
     clearTimeout(pushTimer);
     pushTimer = null;
   }
+  clearRetry();
   if (pollTimer) {
     clearInterval(pollTimer);
     pollTimer = null;
@@ -201,8 +279,14 @@ export function stopSync() {
     unsubWrite();
     unsubWrite = null;
   }
+  setSyncStatus("idle");
 }
 
 export function isSuppressingPush() {
   return suppressPush;
+}
+
+/** Number of local changes still waiting to reach the server. */
+export function pendingChangeCount() {
+  return currentUserId ? dirtyCount(currentUserId) : 0;
 }

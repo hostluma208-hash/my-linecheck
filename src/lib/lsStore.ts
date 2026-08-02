@@ -37,9 +37,11 @@ function safe(): Storage | null {
   }
 }
 
-function emitWrite() {
+function emitWrite(key: string) {
   if (typeof window !== "undefined") {
-    window.dispatchEvent(new Event("linecheck:local-write"));
+    window.dispatchEvent(
+      new CustomEvent("linecheck:local-write", { detail: { key } }),
+    );
   }
 }
 
@@ -51,12 +53,12 @@ export const lsStore = {
   setItem(key: string, value: string) {
     const s = safe();
     if (s) s.setItem(scopedKey(key), value);
-    emitWrite();
+    emitWrite(key);
   },
   removeItem(key: string) {
     const s = safe();
     if (s) s.removeItem(scopedKey(key));
-    emitWrite();
+    emitWrite(key);
   },
   /** List raw (un-prefixed) keys belonging to the current user. */
   keys(): string[] {
