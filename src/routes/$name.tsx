@@ -1029,9 +1029,13 @@ function SectionPage() {
               {(catHandle) => (<>
 
               <div className="mb-2 flex flex-wrap items-center justify-between gap-2 px-1">
-                <h3 className="text-sm font-bold uppercase tracking-[0.14em]" style={{ color: headingColor }}>
-                  {cat.group}
-                </h3>
+                <div className="flex min-w-0 items-center gap-1.5">
+                  {catHandle}
+                  <h3 className="truncate text-sm font-bold uppercase tracking-[0.14em]" style={{ color: headingColor }}>
+                    {cat.group}
+                  </h3>
+                </div>
+
                 {cat.temp && (
                   <div className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-2 py-0.5 text-[10px] font-medium text-muted-foreground">
                     <Thermometer className="h-3 w-3 text-sky-500" />
