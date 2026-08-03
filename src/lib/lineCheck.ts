@@ -1,5 +1,15 @@
-import data from "@/data/lineCheck.json";
+import rawData from "@/data/lineCheck.json";
 import { lsStore, getUserScope } from "@/lib/lsStore";
+
+/** Shipped baseline. Stations and staff intentionally ship EMPTY so that
+ *  templates configured/uploaded by the user are the single source of truth
+ *  and never conflict with built-in demo data. */
+const data = rawData as {
+  sections: { name: string; items: { name: string; group?: string }[] }[];
+  statuses: string[];
+  staff: string[];
+};
+
 
 
 export type Slot = string;
