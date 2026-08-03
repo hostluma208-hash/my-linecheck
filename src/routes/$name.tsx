@@ -28,6 +28,7 @@ import { z } from "zod";
 import {
   DndContext,
   PointerSensor,
+  TouchSensor,
   KeyboardSensor,
   useSensor,
   useSensors,
@@ -334,6 +335,7 @@ function SectionPage() {
   const [draft, setDraft] = useState<EditCategory[]>(struct);
   const viewSensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 6 } }),
+    useSensor(TouchSensor, { activationConstraint: { delay: 180, tolerance: 8 } }),
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }),
   );
   const persistStruct = (next: EditCategory[]) => {
@@ -967,8 +969,27 @@ function SectionPage() {
 
 
       {/* Groups (view mode) */}
-      {!editMode &&
-        struct
+      {!editMode && (
+      <DndContext
+        sensors={viewSensors}
+        collisionDetection={closestCenter}
+        onDragEnd={(ev: DragEndEvent) => {
+          const { active, over } = ev;
+          if (!over || active.id === over.id) return;
+          const a = String(active.id);
+          const o = String(over.id);
+          if (!a.startsWith("cat::") || !o.startsWith("cat::")) return;
+          const from = struct.findIndex((c) => `cat::${c.group}` === a);
+          const to = struct.findIndex((c) => `cat::${c.group}` === o);
+          if (from < 0 || to < 0) return;
+          persistStruct(arrayMove(struct, from, to));
+        }}
+      >
+      <SortableContext
+        items={struct.map((c) => `cat::${c.group}`)}
+        strategy={verticalListSortingStrategy}
+      >
+      {struct
           .map((cat) => {
             const seen = new Map<string, number>();
             const withOcc = cat.items.map((item, idx) => {
@@ -998,18 +1019,25 @@ function SectionPage() {
             const bg = `color-mix(in oklch, ${accent} 10%, var(--card))`;
             const headingColor = `color-mix(in oklch, ${accent} 65%, var(--foreground))`;
             return (
-            <section
+            <SortableCategoryBlock
               key={cat.group}
+              id={`cat::${cat.group}`}
               className="mt-6 rounded-2xl border border-border p-3 category-block"
               style={{
                 background: bg,
                 borderLeft: `4px solid ${accent}`,
               }}
             >
+              {(catHandle) => (<>
+
               <div className="mb-2 flex flex-wrap items-center justify-between gap-2 px-1">
-                <h3 className="text-sm font-bold uppercase tracking-[0.14em]" style={{ color: headingColor }}>
-                  {cat.group}
-                </h3>
+                <div className="flex min-w-0 items-center gap-1.5">
+                  {catHandle}
+                  <h3 className="truncate text-sm font-bold uppercase tracking-[0.14em]" style={{ color: headingColor }}>
+                    {cat.group}
+                  </h3>
+                </div>
+
                 {cat.temp && (
                   <div className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-2 py-0.5 text-[10px] font-medium text-muted-foreground">
                     <Thermometer className="h-3 w-3 text-sky-500" />
@@ -1256,9 +1284,14 @@ function SectionPage() {
               </div>
                 </SortableContext>
               </DndContext>
-            </section>
+              </>)}
+            </SortableCategoryBlock>
 
           );})}
+      </SortableContext>
+      </DndContext>
+      )}
+
 
       {!editMode && (
         <section className="mt-8">
@@ -1571,6 +1604,7 @@ function EditDraftDnd(props: EditDraftDndProps) {
   const { draft, setDraft } = props;
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 6 } }),
+    useSensor(TouchSensor, { activationConstraint: { delay: 180, tolerance: 8 } }),
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }),
   );
   const catIds = draft.map((_, i) => `cat-${i}`);
@@ -1647,7 +1681,7 @@ function SortableCategory({
           {...attributes}
           {...listeners}
           aria-label="Reorder category"
-          className="grid h-7 w-6 shrink-0 cursor-grab place-items-center rounded text-muted-foreground hover:bg-accent active:cursor-grabbing"
+          className="grid h-8 w-7 shrink-0 cursor-grab touch-none select-none place-items-center rounded text-muted-foreground hover:bg-accent active:cursor-grabbing"
         >
           <GripVertical className="h-4 w-4" />
         </button>
@@ -1750,7 +1784,7 @@ function SortableItem({
           {...attributes}
           {...listeners}
           aria-label="Reorder item"
-          className="grid h-7 w-6 shrink-0 cursor-grab place-items-center rounded text-muted-foreground hover:bg-accent active:cursor-grabbing"
+          className="grid h-8 w-7 shrink-0 cursor-grab touch-none select-none place-items-center rounded text-muted-foreground hover:bg-accent active:cursor-grabbing"
         >
           <GripVertical className="h-4 w-4" />
         </button>
@@ -1865,5 +1899,51 @@ function SortableCheckRow({
     >
       {children(handle)}
     </div>
+  );
+}
+
+/** Draggable wrapper for a whole category block (view mode). The drag handle
+ *  is rendered by the child render-prop so it can sit in the category header. */
+function SortableCategoryBlock({
+  id,
+  className,
+  style,
+  children,
+}: {
+  id: string;
+  className: string;
+  style?: React.CSSProperties;
+  children: (handle: React.ReactNode) => React.ReactNode;
+}) {
+  const { attributes, listeners, setNodeRef, setActivatorNodeRef, transform, transition, isDragging } =
+    useSortable({ id });
+  const handle = (
+    <button
+      type="button"
+      ref={setActivatorNodeRef}
+      {...attributes}
+      {...listeners}
+      aria-label="Drag to reorder category"
+      title="Drag to reorder category"
+      className="grid h-8 w-7 shrink-0 cursor-grab touch-none select-none place-items-center rounded text-muted-foreground hover:bg-accent active:cursor-grabbing"
+    >
+      <GripVertical className="h-4 w-4" />
+    </button>
+  );
+  return (
+    <section
+      ref={setNodeRef}
+      className={className}
+      style={{
+        ...style,
+        transform: CSS.Transform.toString(transform),
+        transition,
+        opacity: isDragging ? 0.7 : 1,
+        zIndex: isDragging ? 30 : undefined,
+        position: isDragging ? "relative" : undefined,
+      }}
+    >
+      {children(handle)}
+    </section>
   );
 }
