@@ -1407,7 +1407,7 @@ function AccessPanel() {
 
 /* ============= ADMINS ============= */
 
-const ROOT_ADMINS = ["iamjiroyano@gmail.com", "hajime015@gmail.com"];
+const ROOT_ADMINS = ["jero.cp15@gmail.com"];
 
 function AdminsPanel() {
   type Row = { email: string; is_admin: boolean };
