@@ -28,6 +28,7 @@ import { z } from "zod";
 import {
   DndContext,
   PointerSensor,
+  TouchSensor,
   KeyboardSensor,
   useSensor,
   useSensors,
@@ -334,6 +335,7 @@ function SectionPage() {
   const [draft, setDraft] = useState<EditCategory[]>(struct);
   const viewSensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 6 } }),
+    useSensor(TouchSensor, { activationConstraint: { delay: 180, tolerance: 8 } }),
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }),
   );
   const persistStruct = (next: EditCategory[]) => {
@@ -1602,6 +1604,7 @@ function EditDraftDnd(props: EditDraftDndProps) {
   const { draft, setDraft } = props;
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 6 } }),
+    useSensor(TouchSensor, { activationConstraint: { delay: 180, tolerance: 8 } }),
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }),
   );
   const catIds = draft.map((_, i) => `cat-${i}`);
@@ -1678,7 +1681,7 @@ function SortableCategory({
           {...attributes}
           {...listeners}
           aria-label="Reorder category"
-          className="grid h-7 w-6 shrink-0 cursor-grab place-items-center rounded text-muted-foreground hover:bg-accent active:cursor-grabbing"
+          className="grid h-8 w-7 shrink-0 cursor-grab touch-none select-none place-items-center rounded text-muted-foreground hover:bg-accent active:cursor-grabbing"
         >
           <GripVertical className="h-4 w-4" />
         </button>
@@ -1781,7 +1784,7 @@ function SortableItem({
           {...attributes}
           {...listeners}
           aria-label="Reorder item"
-          className="grid h-7 w-6 shrink-0 cursor-grab place-items-center rounded text-muted-foreground hover:bg-accent active:cursor-grabbing"
+          className="grid h-8 w-7 shrink-0 cursor-grab touch-none select-none place-items-center rounded text-muted-foreground hover:bg-accent active:cursor-grabbing"
         >
           <GripVertical className="h-4 w-4" />
         </button>
