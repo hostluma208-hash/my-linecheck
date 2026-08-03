@@ -1278,9 +1278,14 @@ function SectionPage() {
               </div>
                 </SortableContext>
               </DndContext>
-            </section>
+              </>)}
+            </SortableCategoryBlock>
 
           );})}
+      </SortableContext>
+      </DndContext>
+      )}
+
 
       {!editMode && (
         <section className="mt-8">
