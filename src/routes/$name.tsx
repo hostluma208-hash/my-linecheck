@@ -967,8 +967,27 @@ function SectionPage() {
 
 
       {/* Groups (view mode) */}
-      {!editMode &&
-        struct
+      {!editMode && (
+      <DndContext
+        sensors={viewSensors}
+        collisionDetection={closestCenter}
+        onDragEnd={(ev: DragEndEvent) => {
+          const { active, over } = ev;
+          if (!over || active.id === over.id) return;
+          const a = String(active.id);
+          const o = String(over.id);
+          if (!a.startsWith("cat::") || !o.startsWith("cat::")) return;
+          const from = struct.findIndex((c) => `cat::${c.group}` === a);
+          const to = struct.findIndex((c) => `cat::${c.group}` === o);
+          if (from < 0 || to < 0) return;
+          persistStruct(arrayMove(struct, from, to));
+        }}
+      >
+      <SortableContext
+        items={struct.map((c) => `cat::${c.group}`)}
+        strategy={verticalListSortingStrategy}
+      >
+      {struct
           .map((cat) => {
             const seen = new Map<string, number>();
             const withOcc = cat.items.map((item, idx) => {
@@ -998,14 +1017,17 @@ function SectionPage() {
             const bg = `color-mix(in oklch, ${accent} 10%, var(--card))`;
             const headingColor = `color-mix(in oklch, ${accent} 65%, var(--foreground))`;
             return (
-            <section
+            <SortableCategoryBlock
               key={cat.group}
+              id={`cat::${cat.group}`}
               className="mt-6 rounded-2xl border border-border p-3 category-block"
               style={{
                 background: bg,
                 borderLeft: `4px solid ${accent}`,
               }}
             >
+              {(catHandle) => (<>
+
               <div className="mb-2 flex flex-wrap items-center justify-between gap-2 px-1">
                 <h3 className="text-sm font-bold uppercase tracking-[0.14em]" style={{ color: headingColor }}>
                   {cat.group}
