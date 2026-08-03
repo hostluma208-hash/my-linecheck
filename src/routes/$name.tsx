@@ -1898,3 +1898,49 @@ function SortableCheckRow({
     </div>
   );
 }
+
+/** Draggable wrapper for a whole category block (view mode). The drag handle
+ *  is rendered by the child render-prop so it can sit in the category header. */
+function SortableCategoryBlock({
+  id,
+  className,
+  style,
+  children,
+}: {
+  id: string;
+  className: string;
+  style?: React.CSSProperties;
+  children: (handle: React.ReactNode) => React.ReactNode;
+}) {
+  const { attributes, listeners, setNodeRef, setActivatorNodeRef, transform, transition, isDragging } =
+    useSortable({ id });
+  const handle = (
+    <button
+      type="button"
+      ref={setActivatorNodeRef}
+      {...attributes}
+      {...listeners}
+      aria-label="Drag to reorder category"
+      title="Drag to reorder category"
+      className="grid h-8 w-7 shrink-0 cursor-grab touch-none select-none place-items-center rounded text-muted-foreground hover:bg-accent active:cursor-grabbing"
+    >
+      <GripVertical className="h-4 w-4" />
+    </button>
+  );
+  return (
+    <section
+      ref={setNodeRef}
+      className={className}
+      style={{
+        ...style,
+        transform: CSS.Transform.toString(transform),
+        transition,
+        opacity: isDragging ? 0.7 : 1,
+        zIndex: isDragging ? 30 : undefined,
+        position: isDragging ? "relative" : undefined,
+      }}
+    >
+      {children(handle)}
+    </section>
+  );
+}
