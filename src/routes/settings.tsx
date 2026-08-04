@@ -5,7 +5,7 @@ import { AppShell, useShellState, SECTION_ICONS } from "@/components/AppShell";
 import { SECTIONS, STAFF, STATUSES, getShifts, saveShifts, getStatusColors, saveStatusColors, type Slot, type ShiftDef } from "@/lib/lineCheck";
 import { supabase } from "@/integrations/supabase/client";
 import { ADMIN_EMAIL, isAdminEmail } from "@/lib/allowlist";
-import { adminSetPassword } from "@/lib/adminAccounts.functions";
+
 
 import { hashPinBrowser } from "@/lib/staffSession";
 import {
@@ -1204,28 +1204,8 @@ function AccessPanel() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
-  const [pwFor, setPwFor] = useState<string | null>(null);
-  const [pwValue, setPwValue] = useState("");
-  const [pwBusy, setPwBusy] = useState(false);
-  const [pwMsg, setPwMsg] = useState<string | null>(null);
 
-  const savePassword = async (email: string) => {
-    setPwBusy(true);
-    setPwMsg(null);
-    try {
-      const res = await adminSetPassword({ data: { email, password: pwValue } });
-      setPwMsg(
-        res.created
-          ? "Account created with this password."
-          : "Password updated.",
-      );
-      setPwValue("");
-    } catch (err: any) {
-      setPwMsg(err?.message || "Could not set the password.");
-    } finally {
-      setPwBusy(false);
-    }
-  };
+
 
 
   const load = async () => {
@@ -1291,9 +1271,8 @@ function AccessPanel() {
         <h3 className="text-lg font-bold">Access Control</h3>
       </div>
       <p className="mb-4 text-sm text-muted-foreground">
-        Only the admin ({ADMIN_EMAIL}) and the emails listed below may sign in
-        (Google or password). Add sub-account emails here before they attempt
-        to log in.
+        Only the admin ({ADMIN_EMAIL}) and the emails listed below may sign in.
+        Add sub-account emails here before they attempt to log in.
       </p>
 
       <div className="mb-4 flex gap-2">
@@ -1336,7 +1315,7 @@ function AccessPanel() {
           )}
           {emails.map((e) => {
             const isAdminRow = e.toLowerCase() === ADMIN_EMAIL;
-            const open = pwFor === e;
+            
             return (
               <li key={e} className="p-3">
                 <div className="flex items-center justify-between gap-3">
@@ -1349,18 +1328,6 @@ function AccessPanel() {
                     )}
                   </div>
                   <div className="flex items-center gap-1">
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setPwFor(open ? null : e);
-                        setPwValue("");
-                        setPwMsg(null);
-                      }}
-                      className="flex items-center gap-1 rounded-md border border-border px-2 py-1 text-xs font-semibold text-foreground hover:bg-muted"
-                    >
-                      <KeyRound className="h-3.5 w-3.5" />
-                      Set password
-                    </button>
                     {!isAdminRow && (
                       <button
                         type="button"
@@ -1373,28 +1340,6 @@ function AccessPanel() {
                     )}
                   </div>
                 </div>
-                {open && (
-                  <div className="mt-2 flex flex-wrap items-center gap-2">
-                    <input
-                      type="text"
-                      value={pwValue}
-                      onChange={(ev) => setPwValue(ev.target.value)}
-                      placeholder="New password (min 8 characters)"
-                      className="min-w-0 flex-1 rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-foreground"
-                    />
-                    <button
-                      type="button"
-                      disabled={pwBusy}
-                      onClick={() => void savePassword(e)}
-                      className="rounded-lg bg-foreground px-3 py-2 text-sm font-semibold text-background hover:opacity-90 disabled:opacity-50"
-                    >
-                      {pwBusy ? "Saving…" : "Save"}
-                    </button>
-                    {pwMsg && (
-                      <p className="w-full text-xs text-muted-foreground">{pwMsg}</p>
-                    )}
-                  </div>
-                )}
               </li>
             );
           })}
