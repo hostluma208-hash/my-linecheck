@@ -1336,7 +1336,7 @@ function AccessPanel() {
           )}
           {emails.map((e) => {
             const isAdminRow = e.toLowerCase() === ADMIN_EMAIL;
-            const open = pwFor === e;
+            
             return (
               <li key={e} className="p-3">
                 <div className="flex items-center justify-between gap-3">
