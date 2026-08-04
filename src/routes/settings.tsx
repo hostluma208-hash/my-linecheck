@@ -1204,28 +1204,8 @@ function AccessPanel() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
-  const [pwFor, setPwFor] = useState<string | null>(null);
-  const [pwValue, setPwValue] = useState("");
-  const [pwBusy, setPwBusy] = useState(false);
-  const [pwMsg, setPwMsg] = useState<string | null>(null);
 
-  const savePassword = async (email: string) => {
-    setPwBusy(true);
-    setPwMsg(null);
-    try {
-      const res = await adminSetPassword({ data: { email, password: pwValue } });
-      setPwMsg(
-        res.created
-          ? "Account created with this password."
-          : "Password updated.",
-      );
-      setPwValue("");
-    } catch (err: any) {
-      setPwMsg(err?.message || "Could not set the password.");
-    } finally {
-      setPwBusy(false);
-    }
-  };
+
 
 
   const load = async () => {
