@@ -1291,9 +1291,8 @@ function AccessPanel() {
         <h3 className="text-lg font-bold">Access Control</h3>
       </div>
       <p className="mb-4 text-sm text-muted-foreground">
-        Only the admin ({ADMIN_EMAIL}) and the emails listed below may sign in
-        (Google or password). Add sub-account emails here before they attempt
-        to log in.
+        Only the admin ({ADMIN_EMAIL}) and the emails listed below may sign in.
+        Add sub-account emails here before they attempt to log in.
       </p>
 
       <div className="mb-4 flex gap-2">
