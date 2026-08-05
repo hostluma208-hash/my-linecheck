@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import { AppShell, useShellState } from "@/components/AppShell";
 import { lsStore } from "@/lib/lsStore";
-import { compressImageFile } from "@/lib/image";
+import { savePhoto } from "@/lib/photoStore";
 import { STAFF, getEffectiveSections } from "@/lib/lineCheck";
 import {
   Camera,
@@ -272,7 +272,7 @@ function ClosingPage() {
   async function addPhoto(file: File | null | undefined) {
     if (!file) return;
     try {
-      const dataUrl = await compressImageFile(file);
+      const dataUrl = await savePhoto(file);
       setForm((f) => ({ ...f, photos: [...f.photos, dataUrl] }));
     } catch (e) {
       console.warn("photo failed", e);

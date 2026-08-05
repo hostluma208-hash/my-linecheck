@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import { AppShell, useShellState } from "@/components/AppShell";
 import { lsStore } from "@/lib/lsStore";
-import { compressImageFile } from "@/lib/image";
+import { savePhoto } from "@/lib/photoStore";
 import { Camera, Trash2, X, PackageCheck, Plus, ChevronDown, ChevronUp, Pencil, Image as ImageIcon, Check as CheckIcon, Share2 } from "lucide-react";
 import { publishSharedReceiving } from "@/lib/shareReceiving";
 
@@ -211,7 +211,7 @@ function ReceivingPage() {
   async function addPhoto(file: File | null | undefined) {
     if (!file) return;
     try {
-      const dataUrl = await compressImageFile(file);
+      const dataUrl = await savePhoto(file);
       setForm((f) => ({ ...f, photos: [...f.photos, dataUrl] }));
     } catch (e) {
       console.warn("photo failed", e);

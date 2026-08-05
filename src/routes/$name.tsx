@@ -1,6 +1,6 @@
 import { lsStore } from "@/lib/lsStore";
 import { stationFromSlug } from "@/lib/slug";
-import { compressImageFile } from "@/lib/image";
+import { savePhoto } from "@/lib/photoStore";
 
 import { createFileRoute, useRouter } from "@tanstack/react-router";
 import type React from "react";
@@ -333,7 +333,7 @@ function SectionPage() {
       alert("Image too large (max 15MB).");
       return;
     }
-    const dataUrl = await compressImageFile(file);
+    const dataUrl = await savePhoto(file);
     if (dataUrl) {
       setCommentPhotos((prev) => {
         const next = [...prev, dataUrl];
@@ -1301,7 +1301,7 @@ function SectionPage() {
                               alert("Image too large (max 15MB).");
                               return;
                             }
-                            const dataUrl = await compressImageFile(file);
+                            const dataUrl = await savePhoto(file);
                             if (dataUrl) setEntry(cat.group, item.name, occ, { photo: dataUrl });
                           }}
                         />
@@ -1590,7 +1590,7 @@ function SectionPage() {
                     alert("Image too large (max 15MB).");
                     return;
                   }
-                  const dataUrl = await compressImageFile(file);
+                  const dataUrl = await savePhoto(file);
                   if (dataUrl) {
                     setEntry(viewer.group, viewer.name, viewer.occ, { photo: dataUrl });
                     setViewer({ ...viewer, photo: dataUrl });
@@ -1612,7 +1612,7 @@ function SectionPage() {
                     alert("Image too large (max 15MB).");
                     return;
                   }
-                  const dataUrl = await compressImageFile(file);
+                  const dataUrl = await savePhoto(file);
                   if (dataUrl) {
                     setEntry(viewer.group, viewer.name, viewer.occ, { photo: dataUrl });
                     setViewer({ ...viewer, photo: dataUrl });
