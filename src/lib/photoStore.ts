@@ -37,7 +37,13 @@ function dataUrlToBlob(dataUrl: string): Blob | null {
 /** Upload a blob and return a long-lived signed URL, or null on failure. */
 export async function uploadPhotoBlob(blob: Blob): Promise<string | null> {
   try {
-    const path = `${new Date().toISOString().slice(0, 10)}/${crypto.randomUUID()}.${extFor(blob.type)}`;
+    // Files are stored under the signed-in account's own folder so storage
+    // policies can restrict access to the owner. Without a session we bail out
+    // and the caller keeps the inline data URL.
+    const { data: userData } = await supabase.auth.getUser();
+    const uid = userData?.user?.id;
+    if (!uid) return null;
+    const path = `${uid}/${new Date().toISOString().slice(0, 10)}/${crypto.randomUUID()}.${extFor(blob.type)}`;
     const { error } = await supabase.storage
       .from(BUCKET)
       .upload(path, blob, { contentType: blob.type || "image/jpeg", upsert: false });
