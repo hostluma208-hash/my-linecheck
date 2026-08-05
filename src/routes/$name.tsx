@@ -503,11 +503,20 @@ function SectionPage() {
     const refresh = () => {
       const raw = lsStore.getItem(key);
       const json = raw ?? JSON.stringify(loadSection(name, shell.date));
-      if (lastSavedRef.current?.key === key && lastSavedRef.current.json === json) return;
       try {
-        const parsed = raw ? (JSON.parse(raw) as SectionState) : loadSection(name, shell.date);
-        lastSavedRef.current = { key, json };
-        setState(parsed);
+        if (lastSavedRef.current?.key !== key || lastSavedRef.current.json !== json) {
+          const parsed = raw ? (JSON.parse(raw) as SectionState) : loadSection(name, shell.date);
+          lastSavedRef.current = { key, json };
+          setState(parsed);
+        }
+
+        // Category/item templates are synced independently from station marks.
+        // Refresh both together so the progress denominator and stored marks
+        // always describe the same latest snapshot.
+        const nextStruct = loadSectionStruct(name, defaultStruct);
+        setStruct((current) =>
+          JSON.stringify(current) === JSON.stringify(nextStruct) ? current : nextStruct,
+        );
       } catch {}
     };
     window.addEventListener("linecheck:update", refresh);
@@ -518,7 +527,7 @@ function SectionPage() {
       window.removeEventListener("linecheck:scope-change", refresh);
       window.removeEventListener("storage", refresh);
     };
-  }, [key, name, shell.date]);
+  }, [key, name, shell.date, defaultStruct]);
 
 
   if (!section) return <div className="p-10">Section not found.</div>;
@@ -550,23 +559,33 @@ function SectionPage() {
 
   const setEntry = (group: string, item: string, occ: number, patch: Partial<Entry>) => {
     const k = entryKey(group, item, occ);
-    setState((prev) => ({
-      ...prev,
+    // Commit the mark before updating the view. This keeps the progress ring,
+    // overview, reloads, and sync queue on one authoritative stored snapshot.
+    const fresh = loadSection(name, shell.date);
+    const next: SectionState = {
+      ...fresh,
       entries: {
-        ...prev.entries,
+        ...fresh.entries,
         [k]: {
-          op: prev.entries[k]?.op ?? emptyEntry(),
-          mid: prev.entries[k]?.mid ?? emptyEntry(),
-          cl: prev.entries[k]?.cl ?? emptyEntry(),
-          [slot]: { ...(prev.entries[k]?.[slot] ?? emptyEntry()), ...patch },
+          op: fresh.entries[k]?.op ?? emptyEntry(),
+          mid: fresh.entries[k]?.mid ?? emptyEntry(),
+          cl: fresh.entries[k]?.cl ?? emptyEntry(),
+          [slot]: { ...(fresh.entries[k]?.[slot] ?? emptyEntry()), ...patch },
         },
       },
-    }));
+    };
+    const json = JSON.stringify(next);
+    try {
+      lastSavedRef.current = { key, json };
+      lsStore.setItem(key, json);
+    } catch {}
+    setState(next);
+    window.dispatchEvent(new Event("linecheck:update"));
   };
 
 
   const toggleCheck = (group: string, item: string, occ: number) => {
-    const cur = readEntry(state, group, item, slot, occ)?.status;
+    const cur = readEntry(loadSection(name, shell.date), group, item, slot, occ)?.status;
     setEntry(group, item, occ, { status: cur === "OK" ? "" : "OK" });
   };
 
