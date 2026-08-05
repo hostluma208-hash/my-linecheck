@@ -845,16 +845,11 @@ function SectionPage() {
                 </button>
                 <button
                   onClick={unmarkAll}
-                  disabled={!canReset}
-                  title={
-                    canReset
-                      ? undefined
-                      : "Already reset for this shift — select a new shift or team member first"
-                  }
-                  className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-3.5 py-2 text-xs font-semibold hover:bg-accent disabled:cursor-not-allowed disabled:opacity-50"
+                  className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-3.5 py-2 text-xs font-semibold hover:bg-accent"
                 >
                   <X className="h-3.5 w-3.5" /> Unmark All
                 </button>
+
 
                 <button
                   onClick={enterEdit}
