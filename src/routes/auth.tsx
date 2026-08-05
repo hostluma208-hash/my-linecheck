@@ -280,7 +280,7 @@ function AuthPage() {
             }}
           >
             <KeyRound className="h-3.5 w-3.5" />
-            Team member? Sign in with name & PIN
+            Sign in with a PIN instead
           </button>
         </p>
 
