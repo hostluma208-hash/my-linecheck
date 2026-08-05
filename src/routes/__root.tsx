@@ -13,6 +13,8 @@ import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { AuthGate } from "../components/AuthGate";
 import { OfflineBanner } from "../components/OfflineBanner";
+import { StorageFullBanner } from "../components/StorageFullBanner";
+
 import { registerOfflineSupport } from "../lib/offline";
 
 
@@ -133,6 +135,8 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <OfflineBanner />
+      <StorageFullBanner />
+
       <AuthGate>
         {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
         <Outlet />
