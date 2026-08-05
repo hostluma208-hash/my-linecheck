@@ -11,7 +11,7 @@ export const staffLogin = createServerFn({ method: "POST" })
     return { ok: true as const, id: row.id, name: row.name, ownerId: row.owner_id };
   });
 
-/** Public: read the owner's synced app state on behalf of a verified PIN user. */
+/** Public: read the owner's stored records on behalf of a verified PIN user. */
 export const staffPullState = createServerFn({ method: "POST" })
   .inputValidator((input: Creds) => input)
   .handler(async ({ data }) => {
@@ -19,19 +19,20 @@ export const staffPullState = createServerFn({ method: "POST" })
     const row = await verifyStaff(validCreds(data));
     if (!row) return { ok: false as const, state: null };
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const { data: state, error } = await supabaseAdmin
-      .from("user_state")
-      .select("data")
-      .eq("user_id", row.owner_id)
-      .maybeSingle();
+    const { data: rows, error } = await supabaseAdmin
+      .from("app_records")
+      .select("key, value")
+      .eq("owner_id", row.owner_id);
     if (error) throw error;
-    return {
-      ok: true as const,
-      state: (state?.data ?? null) as Record<string, string> | null,
-    };
+    const state = (rows ?? []).length
+      ? Object.fromEntries(
+          (rows as { key: string; value: string }[]).map((r) => [r.key, r.value]),
+        )
+      : null;
+    return { ok: true as const, state: state as Record<string, string> | null };
   });
 
-/** Public: merge keys back into the owner's synced app state. */
+/** Public: write records back into the owner's account. */
 export const staffPushState = createServerFn({ method: "POST" })
   .inputValidator((input: Creds & { patch: Record<string, string> }) => input)
   .handler(async ({ data }) => {
@@ -40,20 +41,20 @@ export const staffPushState = createServerFn({ method: "POST" })
     if (!row) return { ok: false as const };
     const patch =
       data.patch && typeof data.patch === "object" ? data.patch : {};
+    const records = Object.entries(patch)
+      .filter(([k, v]) => typeof v === "string" && k.startsWith("linecheck:"))
+      .map(([key, value]) => ({
+        owner_id: row.owner_id,
+        key,
+        value,
+        updated_at: new Date().toISOString(),
+      }));
+    if (!records.length) return { ok: true as const };
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const { data: state } = await supabaseAdmin
-      .from("user_state")
-      .select("data")
-      .eq("user_id", row.owner_id)
-      .maybeSingle();
-    const merged = { ...((state?.data ?? {}) as Record<string, string>) };
-    for (const [k, v] of Object.entries(patch)) {
-      if (typeof v === "string" && k.startsWith("linecheck:")) merged[k] = v;
-    }
-    const { error } = await supabaseAdmin.from("user_state").upsert(
-      { user_id: row.owner_id, data: merged, updated_at: new Date().toISOString() },
-      { onConflict: "user_id" },
-    );
+    const { error } = await supabaseAdmin
+      .from("app_records")
+      .upsert(records, { onConflict: "owner_id,key" });
     if (error) throw error;
     return { ok: true as const };
   });
+
