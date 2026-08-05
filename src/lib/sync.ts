@@ -178,19 +178,22 @@ async function pullFromServer() {
   );
   try {
     const { data, error } = await supabase
-      .from("user_state")
-      .select("data")
-      .eq("user_id", currentUserId)
-      .maybeSingle();
+      .from("app_records")
+      .select("key, value")
+      .eq("owner_id", currentUserId);
     if (error) throw error;
     // Account switched while the request was in flight — discard.
     if (currentUserId !== userAtStart) return;
-    const remote = (data?.data ?? null) as Record<string, string> | null;
+    const rows = (data ?? []) as { key: string; value: string }[];
+    const remote: Record<string, string> | null = rows.length
+      ? Object.fromEntries(rows.map((r) => [r.key, r.value]))
+      : null;
     if (!remote) {
       // No remote yet — push whatever we have locally so future devices see it.
       await pushNow();
       return;
     }
+
     // Unsynced local edits always win over the remote snapshot.
     const dirty = getDirty(userAtStart);
     let changed = false;
