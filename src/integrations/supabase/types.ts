@@ -20,18 +20,21 @@ export type Database = {
           created_by: string | null
           email: string
           is_admin: boolean
+          pin_hash: string | null
         }
         Insert: {
           created_at?: string
           created_by?: string | null
           email: string
           is_admin?: boolean
+          pin_hash?: string | null
         }
         Update: {
           created_at?: string
           created_by?: string | null
           email?: string
           is_admin?: boolean
+          pin_hash?: string | null
         }
         Relationships: []
       }
