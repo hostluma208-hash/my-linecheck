@@ -1,11 +1,29 @@
-// Compress an image File to a JPEG data URL, capped at maxDim on the longest edge
-// and at roughly maxBytes of encoded data so device storage stays within quota.
-// Falls back to the original data URL if compression fails.
+// Compress an image File to a small data URL (WebP when supported, else JPEG),
+// capped at maxDim on the longest edge and at roughly maxBytes of encoded data
+// so device storage stays within quota. Falls back to the original on failure.
+
+let cachedType: "image/webp" | "image/jpeg" | null = null;
+
+function bestType(): "image/webp" | "image/jpeg" {
+  if (cachedType) return cachedType;
+  try {
+    const c = document.createElement("canvas");
+    c.width = 1;
+    c.height = 1;
+    cachedType = c.toDataURL("image/webp").startsWith("data:image/webp")
+      ? "image/webp"
+      : "image/jpeg";
+  } catch {
+    cachedType = "image/jpeg";
+  }
+  return cachedType;
+}
+
 export async function compressImageFile(
   file: File,
-  maxDim = 1024,
-  quality = 0.7,
-  maxBytes = 120 * 1024,
+  maxDim = 800,
+  quality = 0.65,
+  maxBytes = 70 * 1024,
 ): Promise<string> {
   const readAsDataUrl = (f: File) =>
     new Promise<string>((resolve, reject) => {
@@ -27,6 +45,7 @@ export async function compressImageFile(
       i.src = original;
     });
 
+    const type = bestType();
     const encode = (dim: number, q: number) => {
       const scale = Math.min(1, dim / Math.max(img.width, img.height));
       const w = Math.max(1, Math.round(img.width * scale));
@@ -36,26 +55,26 @@ export async function compressImageFile(
       canvas.height = h;
       const ctx = canvas.getContext("2d");
       if (!ctx) return "";
+      // White matte so transparent PNGs don't turn black once flattened.
+      ctx.fillStyle = "#ffffff";
+      ctx.fillRect(0, 0, w, h);
       ctx.drawImage(img, 0, 0, w, h);
-      return canvas.toDataURL("image/jpeg", q);
+      return canvas.toDataURL(type, q);
     };
 
     let out = encode(maxDim, quality);
     if (!out) return original;
 
-    // Step down quality, then dimensions, until the encoded photo fits the budget.
-    const steps: Array<[number, number]> = [
-      [maxDim, 0.6],
-      [maxDim, 0.45],
-      [Math.round(maxDim * 0.75), 0.5],
-      [Math.round(maxDim * 0.55), 0.45],
-      [640, 0.4],
-      [480, 0.35],
-    ];
-    for (const [dim, q] of steps) {
-      if (out.length <= maxBytes) break;
+    // Progressively shrink quality then dimensions until the photo fits budget.
+    let dim = maxDim;
+    let q = quality;
+    for (let i = 0; i < 8 && out.length > maxBytes; i++) {
+      if (q > 0.35) q = Math.max(0.35, q - 0.12);
+      else dim = Math.max(320, Math.round(dim * 0.75));
       const next = encode(dim, q);
-      if (next && next.length < out.length) out = next;
+      if (!next) break;
+      if (next.length < out.length) out = next;
+      if (dim <= 320 && q <= 0.35) break;
     }
 
     // Only return compressed if it's actually smaller.
