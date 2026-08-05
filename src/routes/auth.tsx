@@ -5,6 +5,11 @@ import { lovable } from "@/integrations/lovable";
 import { staffLogin } from "@/lib/staffAuth.functions";
 import { accountPinLogin } from "@/lib/accountPin.functions";
 import { setStaffSession } from "@/lib/staffSession";
+import {
+  rememberDeviceStaffAccount,
+  requestPersistentStorage,
+  verifyDeviceStaffAccount,
+} from "@/lib/deviceStore";
 import { ChefHat, Loader2, KeyRound } from "lucide-react";
 
 
