@@ -33,7 +33,26 @@ function AuthPage() {
     setBusy(true);
     setMsg(null);
     try {
-      const res = await staffLogin({ data: { name: pinName.trim(), pin } });
+      const who = pinName.trim();
+      if (who.includes("@")) {
+        // Account PIN login → real signed-in session for that account.
+        const res = await accountPinLogin({ data: { email: who, pin } });
+        if (!res?.ok) {
+          setMsg("Wrong email or PIN.");
+          return;
+        }
+        const { error } = await supabase.auth.verifyOtp({
+          type: "email",
+          token_hash: res.tokenHash,
+        });
+        if (error) {
+          setMsg(error.message);
+          return;
+        }
+        window.location.href = "/";
+        return;
+      }
+      const res = await staffLogin({ data: { name: who, pin } });
       if (!res?.ok) {
         setMsg("Wrong name or PIN.");
         return;
@@ -46,6 +65,7 @@ function AuthPage() {
       setBusy(false);
     }
   };
+
 
 
   useEffect(() => {
