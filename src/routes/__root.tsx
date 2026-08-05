@@ -16,6 +16,7 @@ import { OfflineBanner } from "../components/OfflineBanner";
 import { StorageFullBanner } from "../components/StorageFullBanner";
 
 import { registerOfflineSupport } from "../lib/offline";
+import { runStorageHousekeeping } from "../lib/lsStore";
 
 
 function NotFoundComponent() {
