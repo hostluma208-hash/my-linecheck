@@ -28,6 +28,7 @@ let retryAttempt = 0;
 let pushing = false;
 let unsub: (() => void) | null = null;
 let pollTimer: ReturnType<typeof setInterval> | null = null;
+let localRevision = 0;
 
 function scope() {
   return session ? `staff:${session.id}` : null;
@@ -138,7 +139,10 @@ function onWrite(e: Event) {
   const s = scope();
   if (suppress || !s) return;
   const key = (e as CustomEvent<{ key?: string }>).detail?.key;
-  if (key && key.startsWith(PREFIX)) markDirty(s, key);
+  if (key && key.startsWith(PREFIX)) {
+    localRevision += 1;
+    markDirty(s, key);
+  }
   refreshStatus();
   schedulePush();
 }
@@ -155,11 +159,19 @@ async function pullNow() {
   const s = scope();
   if (!session || !s || isOffline()) return;
   const sessionAtStart = session;
+  const revisionAtStart = localRevision;
   try {
     const res = await staffPullState({
       data: { name: sessionAtStart.name, pin: sessionAtStart.pin },
     });
     if (session?.id !== sessionAtStart.id) return;
+    // Ignore a remote response requested before a newer local edit. The edit
+    // may already have been pushed and acknowledged, so dirty keys alone are
+    // not sufficient protection against this stale response.
+    if (localRevision !== revisionAtStart) {
+      if (hasDirty(s)) void pushNow();
+      return;
+    }
     const remote = res?.ok ? res.state : null;
     // Unsynced local edits always win over the remote snapshot.
     const dirty = getDirty(s);
@@ -206,6 +218,7 @@ export async function startStaffSync(s: StaffSession) {
   if (session && session.id === s.id) return;
   stopStaffSync();
   session = s;
+  localRevision = 0;
   refreshStatus();
   if (typeof window !== "undefined" && !unsub) {
     window.addEventListener("linecheck:local-write", onWrite);
@@ -237,6 +250,7 @@ export async function startStaffSync(s: StaffSession) {
 
 export function stopStaffSync() {
   session = null;
+  localRevision = 0;
   if (timer) {
     clearTimeout(timer);
     timer = null;
