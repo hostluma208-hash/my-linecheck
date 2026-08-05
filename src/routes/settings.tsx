@@ -1199,30 +1199,47 @@ function SimpleListPanel({
 /* ============= ACCESS (admin allowlist) ============= */
 
 function AccessPanel() {
-  const [emails, setEmails] = useState<string[]>([]);
+  const [emails, setEmails] = useState<{ email: string; hasPin: boolean }[]>([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const [pinFor, setPinFor] = useState<string | null>(null);
+  const [pinValue, setPinValue] = useState("");
 
-
-
+  const savePin = async (email: string, pin: string | null) => {
+    setBusy(true);
+    setError(null);
+    try {
+      await setAccountPin({ data: { email, pin } });
+      setPinFor(null);
+      setPinValue("");
+      await load();
+    } catch (e: any) {
+      setError(e?.message || "Could not save PIN");
+    } finally {
+      setBusy(false);
+    }
+  };
 
   const load = async () => {
     setLoading(true);
     setError(null);
     const { data, error } = await supabase
       .from("allowed_emails")
-      .select("email")
+      .select("email, pin_hash")
       .order("email");
     if (error) setError(error.message);
-    setEmails((data ?? []).map((r) => r.email as string));
+    setEmails(
+      (data ?? []).map((r: any) => ({ email: r.email as string, hasPin: !!r.pin_hash })),
+    );
     setLoading(false);
   };
 
   useEffect(() => {
     void load();
   }, []);
+
 
   const add = async () => {
     const raw = input.trim().toLowerCase();
