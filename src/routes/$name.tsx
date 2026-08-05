@@ -556,28 +556,18 @@ function SectionPage() {
     setTimeout(() => setSavedFlash(false), 1400);
   };
 
-  const markAllOK = () => bulkSet("OK");
-
-  // Reset guard: a station may only be unmarked once per shift + manager combo.
-  // Picking a new shift or a new team member unlocks it again.
-  const resetCtxKey = `linecheck:reset-ctx:${name}:${shell.date}`;
-  const resetCtx = `${slot}|${shell.member}`;
-  const lastResetCtx = (() => {
-    try {
-      return lsStore.getItem(resetCtxKey) || "";
-    } catch {
-      return "";
-    }
-  })();
-  const canReset = lastResetCtx !== resetCtx;
+  const markAllOK = () => {
+    // Showing only flagged items would hide every row right after marking OK,
+    // making the action look like it did nothing.
+    setFlaggedOnly(false);
+    bulkSet("OK");
+  };
 
   const unmarkAll = () => {
-    if (!canReset) return;
+    setFlaggedOnly(false);
     bulkSet("");
-    try {
-      lsStore.setItem(resetCtxKey, resetCtx);
-    } catch {}
   };
+
 
 
 
