@@ -131,6 +131,7 @@ function RootComponent() {
 
   useEffect(() => {
     registerOfflineSupport();
+    void runStorageHousekeeping();
   }, []);
 
   return (
