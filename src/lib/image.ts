@@ -3,9 +3,9 @@
 // Falls back to the original data URL if compression fails.
 export async function compressImageFile(
   file: File,
-  maxDim = 1280,
-  quality = 0.75,
-  maxBytes = 220 * 1024,
+  maxDim = 1024,
+  quality = 0.7,
+  maxBytes = 120 * 1024,
 ): Promise<string> {
   const readAsDataUrl = (f: File) =>
     new Promise<string>((resolve, reject) => {

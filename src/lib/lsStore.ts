@@ -91,45 +91,121 @@ function isoDaysAgo(days: number): string {
   return d.toISOString().slice(0, 10);
 }
 
+const DATE_RE = /(\d{4}-\d{2}-\d{2})/;
+const PHOTO_KEY_RE = /photo|attachment|image/i;
+
+/** Replace every embedded base64 image inside a JSON blob with "". */
+function stripDataUrls(json: string): string | null {
+  if (!json.includes("data:image")) return null;
+  try {
+    const walk = (v: unknown): unknown => {
+      if (typeof v === "string") return v.startsWith("data:image") ? "" : v;
+      if (Array.isArray(v)) return v.map(walk);
+      if (v && typeof v === "object") {
+        const out: Record<string, unknown> = {};
+        for (const [k, val] of Object.entries(v as Record<string, unknown>)) {
+          out[k] = walk(val);
+        }
+        return out;
+      }
+      return v;
+    };
+    const next = JSON.stringify(walk(JSON.parse(json)));
+    return next.length < json.length ? next : null;
+  } catch {
+    return null;
+  }
+}
+
 /**
- * Reclaim space when localStorage is full: drop the heaviest disposable data
- * first (old photo attachments), then any other data keyed to an old date.
- * Never touches templates, settings, or today's work.
+ * Reclaim space by dropping the heaviest disposable data first: old photo
+ * attachments, then base64 images embedded inside older daily records.
+ * Text records (marks, temps, notes), templates and settings are preserved —
+ * only the images inside old records are removed.
  */
 function reclaimSpace(protectKey: string, aggressive: boolean): boolean {
   const s = safe();
   if (!s) return false;
-  const cutoff = isoDaysAgo(aggressive ? 3 : 14);
-  const dateRe = /(\d{4}-\d{2}-\d{2})/;
+  const cutoff = isoDaysAgo(aggressive ? 2 : 14);
+  const today = isoDaysAgo(0);
   const victims: string[] = [];
+  const strippable: string[] = [];
 
   for (let i = 0; i < s.length; i++) {
     const raw = s.key(i);
     if (!raw || raw === protectKey) continue;
     if (!raw.startsWith("u:")) continue;
-    const m = raw.match(dateRe);
-    const isOld = m ? m[1] < cutoff : false;
-    const isPhoto = /photo|attachment|image/i.test(raw);
-    if ((isPhoto && isOld) || (aggressive && isPhoto && !raw.includes(isoDaysAgo(0)))) {
+    const m = raw.match(DATE_RE);
+    const day = m ? m[1] : null;
+    const isOld = day ? day < cutoff : false;
+    const isPhotoKey = PHOTO_KEY_RE.test(raw);
+
+    if (isPhotoKey && (isOld || (aggressive && day !== today))) {
       victims.push(raw);
-    } else if (isOld && aggressive) {
-      victims.push(raw);
+    } else if (day && day !== today && (isOld || aggressive)) {
+      strippable.push(raw);
     }
   }
 
-  if (!victims.length) return false;
+  let freed = false;
   for (const k of victims) {
     try {
       s.removeItem(k);
+      freed = true;
     } catch {}
   }
-  return true;
+  for (const k of strippable) {
+    try {
+      const cur = s.getItem(k);
+      if (!cur) continue;
+      const next = stripDataUrls(cur);
+      if (next === null) continue;
+      s.setItem(k, next);
+      freed = true;
+    } catch {}
+  }
+  return freed;
+}
+
+/**
+ * Background housekeeping: trims images from records older than two weeks so
+ * the device rarely gets close to the storage quota in the first place.
+ * Safe to call on every app start.
+ */
+export function pruneOldAttachments(): void {
+  try {
+    reclaimSpace("", false);
+  } catch {}
+}
+
+/** Rough share (0..1) of the storage quota already used, when measurable. */
+export async function storagePressure(): Promise<number | null> {
+  try {
+    if (typeof navigator === "undefined" || !navigator.storage?.estimate) return null;
+    const { usage, quota } = await navigator.storage.estimate();
+    if (!usage || !quota) return null;
+    return usage / quota;
+  } catch {
+    return null;
+  }
+}
+
+/** Prune proactively once the device is running low, before writes can fail. */
+export async function runStorageHousekeeping(): Promise<void> {
+  pruneOldAttachments();
+  const pressure = await storagePressure();
+  if (pressure !== null && pressure > 0.8) {
+    try {
+      reclaimSpace("", true);
+    } catch {}
+  }
 }
 
 function notifyStorageFull() {
   if (typeof window === "undefined") return;
   window.dispatchEvent(new Event("linecheck:storage-full"));
 }
+
 
 export const lsStore = {
   getItem(key: string) {
