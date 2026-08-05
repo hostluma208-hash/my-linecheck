@@ -58,6 +58,7 @@ export function AuthGate({ children }: { children: React.ReactNode }) {
       }
       stopStaffSync();
       setUserScope(session.user.id);
+      void requestPersistentStorage();
       void startSync(session.user.id);
       if (active) setStatus("signed-in");
     };
