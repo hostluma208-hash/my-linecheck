@@ -1330,9 +1330,9 @@ function AccessPanel() {
           {emails.length === 0 && (
             <li className="p-3 text-sm text-muted-foreground">No emails yet.</li>
           )}
-          {emails.map((e) => {
+          {emails.map(({ email: e, hasPin }) => {
             const isAdminRow = e.toLowerCase() === ADMIN_EMAIL;
-            
+            const editing = pinFor === e;
             return (
               <li key={e} className="p-3">
                 <div className="flex items-center justify-between gap-3">
@@ -1343,8 +1343,24 @@ function AccessPanel() {
                         Admin
                       </span>
                     )}
+                    {hasPin && (
+                      <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-foreground">
+                        PIN
+                      </span>
+                    )}
                   </div>
                   <div className="flex items-center gap-1">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setPinFor(editing ? null : e);
+                        setPinValue("");
+                        setError(null);
+                      }}
+                      className="rounded-md px-2 py-1 text-xs font-semibold text-muted-foreground hover:bg-muted hover:text-foreground"
+                    >
+                      {hasPin ? "Change PIN" : "Set PIN"}
+                    </button>
                     {!isAdminRow && (
                       <button
                         type="button"
@@ -1357,9 +1373,41 @@ function AccessPanel() {
                     )}
                   </div>
                 </div>
+                {editing && (
+                  <div className="mt-2 flex flex-wrap items-center gap-2">
+                    <input
+                      inputMode="numeric"
+                      placeholder="4-8 digits"
+                      value={pinValue}
+                      onChange={(ev) =>
+                        setPinValue(ev.target.value.replace(/\D/g, "").slice(0, 8))
+                      }
+                      className="w-32 rounded-lg border border-border bg-background px-3 py-1.5 text-sm tracking-widest outline-none focus:border-foreground"
+                    />
+                    <button
+                      type="button"
+                      disabled={busy || pinValue.length < 4}
+                      onClick={() => void savePin(e, pinValue)}
+                      className="rounded-lg bg-foreground px-3 py-1.5 text-xs font-semibold text-background hover:opacity-90 disabled:opacity-50"
+                    >
+                      Save PIN
+                    </button>
+                    {hasPin && (
+                      <button
+                        type="button"
+                        disabled={busy}
+                        onClick={() => void savePin(e, null)}
+                        className="rounded-lg border border-border px-3 py-1.5 text-xs font-semibold hover:bg-muted disabled:opacity-50"
+                      >
+                        Remove PIN
+                      </button>
+                    )}
+                  </div>
+                )}
               </li>
             );
           })}
+
 
         </ul>
       )}
