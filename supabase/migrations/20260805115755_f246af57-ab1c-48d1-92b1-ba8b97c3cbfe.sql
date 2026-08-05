@@ -1,0 +1,3 @@
+CREATE POLICY "attachments read" ON storage.objects FOR SELECT TO anon, authenticated USING (bucket_id = 'attachments');
+CREATE POLICY "attachments upload" ON storage.objects FOR INSERT TO anon, authenticated WITH CHECK (bucket_id = 'attachments');
+CREATE POLICY "attachments update" ON storage.objects FOR UPDATE TO anon, authenticated USING (bucket_id = 'attachments') WITH CHECK (bucket_id = 'attachments');
