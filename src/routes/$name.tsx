@@ -84,7 +84,9 @@ function sectionStructKey(name: string) {
 }
 
 function completionLockKey(name: string, date: string, shift: Slot, member: string) {
-  return `linecheck:mark-all:${name}:${date}:${shift}:${encodeURIComponent(member)}`;
+  // Local sync metadata, intentionally outside the `linecheck:*` payload so an
+  // older remote snapshot cannot delete the guard before station data settles.
+  return `completion-lock:${name}:${date}:${shift}:${encodeURIComponent(member)}`;
 }
 
 function applyStatusToStruct(
