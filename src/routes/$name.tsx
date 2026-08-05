@@ -467,8 +467,15 @@ function SectionPage() {
   );
 
 
+  // Tracks the storage key + serialized value this component last read/wrote,
+  // so we never write state belonging to a previous key (station/date switch)
+  // and never fight a sync pull that legitimately changed storage.
+  const lastSavedRef = useRef<{ key: string; json: string } | null>(null);
+
   useEffect(() => {
-    setState(loadSection(name, shell.date));
+    const loaded = loadSection(name, shell.date);
+    lastSavedRef.current = { key: storageKey(name, shell.date), json: JSON.stringify(loaded) };
+    setState(loaded);
   }, [name, shell.date]);
 
   useEffect(() => {
@@ -478,11 +485,41 @@ function SectionPage() {
   }, [name, defaultStruct]);
 
   useEffect(() => {
+    // Skip the render that still holds the previous key's state.
+    if (lastSavedRef.current && lastSavedRef.current.key !== key) return;
+    const json = JSON.stringify(state);
+    if (lastSavedRef.current?.json === json) return;
     try {
-      lsStore.setItem(key, JSON.stringify(state));
+      lastSavedRef.current = { key, json };
+      lsStore.setItem(key, json);
       window.dispatchEvent(new Event("linecheck:update"));
     } catch {}
   }, [key, state]);
+
+  // Adopt storage changes made elsewhere (cross-device sync pull, another tab,
+  // sign-in scope switch) instead of keeping a stale in-memory copy that would
+  // later be written back over the fresh data.
+  useEffect(() => {
+    const refresh = () => {
+      const raw = lsStore.getItem(key);
+      const json = raw ?? JSON.stringify(loadSection(name, shell.date));
+      if (lastSavedRef.current?.key === key && lastSavedRef.current.json === json) return;
+      try {
+        const parsed = raw ? (JSON.parse(raw) as SectionState) : loadSection(name, shell.date);
+        lastSavedRef.current = { key, json };
+        setState(parsed);
+      } catch {}
+    };
+    window.addEventListener("linecheck:update", refresh);
+    window.addEventListener("linecheck:scope-change", refresh);
+    window.addEventListener("storage", refresh);
+    return () => {
+      window.removeEventListener("linecheck:update", refresh);
+      window.removeEventListener("linecheck:scope-change", refresh);
+      window.removeEventListener("storage", refresh);
+    };
+  }, [key, name, shell.date]);
+
 
   if (!section) return <div className="p-10">Section not found.</div>;
 
