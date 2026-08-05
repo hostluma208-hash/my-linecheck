@@ -29,6 +29,9 @@ export function AuthGate({ children }: { children: React.ReactNode }) {
         if (staff) {
           stopSync();
           setUserScope(staff.ownerId);
+          // Keep this device's local copy of the sub-account usable offline.
+          void requestPersistentStorage();
+          void rememberDeviceStaffAccount(staff);
           void startStaffSync(staff);
           if (active) setStatus("staff");
           return;
