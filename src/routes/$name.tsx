@@ -499,15 +499,33 @@ function SectionPage() {
   // Adopt storage changes made elsewhere (cross-device sync pull, another tab,
   // sign-in scope switch) instead of keeping a stale in-memory copy that would
   // later be written back over the fresh data.
+  //
+  // Guard: a pull must never *unmark* work done in the current shift/member
+  // session. Marks only reset when the shift or team member actually changes.
   useEffect(() => {
+    const markedCount = (s: SectionState) =>
+      Object.values(s.entries ?? {}).filter((e) => e?.[shell.shift]?.status).length;
+
     const refresh = () => {
       const raw = lsStore.getItem(key);
       const json = raw ?? JSON.stringify(loadSection(name, shell.date));
       try {
         if (lastSavedRef.current?.key !== key || lastSavedRef.current.json !== json) {
           const parsed = raw ? (JSON.parse(raw) as SectionState) : loadSection(name, shell.date);
-          lastSavedRef.current = { key, json };
-          setState(parsed);
+          setState((current) => {
+            if (markedCount(parsed) < markedCount(current)) {
+              // Incoming snapshot is older/emptier for this shift — re-assert
+              // the local marks instead of letting them disappear.
+              const localJson = JSON.stringify(current);
+              lastSavedRef.current = { key, json: localJson };
+              try {
+                lsStore.setItem(key, localJson);
+              } catch {}
+              return current;
+            }
+            lastSavedRef.current = { key, json };
+            return parsed;
+          });
         }
 
         // Category/item templates are synced independently from station marks.
@@ -527,7 +545,8 @@ function SectionPage() {
       window.removeEventListener("linecheck:scope-change", refresh);
       window.removeEventListener("storage", refresh);
     };
-  }, [key, name, shell.date, defaultStruct]);
+  }, [key, name, shell.date, shell.shift, defaultStruct]);
+
 
 
   if (!section) return <div className="p-10">Section not found.</div>;
