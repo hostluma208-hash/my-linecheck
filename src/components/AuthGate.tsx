@@ -6,6 +6,10 @@ import { setUserScope } from "@/lib/lsStore";
 import { startSync, stopSync } from "@/lib/sync";
 import { startStaffSync, stopStaffSync } from "@/lib/staffSync";
 import { getStaffSession, isStaffAllowedPath } from "@/lib/staffSession";
+import {
+  rememberDeviceStaffAccount,
+  requestPersistentStorage,
+} from "@/lib/deviceStore";
 import { isEmailAllowed } from "@/lib/allowlist";
 import { Loader2 } from "lucide-react";
 
