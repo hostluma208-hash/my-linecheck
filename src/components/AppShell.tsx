@@ -168,6 +168,10 @@ function Sidebar({
   useEffect(() => {
     const fn = () => setTick((t) => t + 1);
     window.addEventListener("storage", fn);
+    // `storage` does not fire in the tab that performed the write. Listen to
+    // the scoped store's same-tab signal as the authoritative immediate path,
+    // including account/PIN sub-account writes queued for cloud sync.
+    window.addEventListener("linecheck:local-write", fn);
     window.addEventListener("linecheck:update", fn);
     window.addEventListener("linecheck:scope-change", fn);
     // Install per-user theme sync + apply current stored theme.
@@ -177,6 +181,7 @@ function Sidebar({
     });
     return () => {
       window.removeEventListener("storage", fn);
+      window.removeEventListener("linecheck:local-write", fn);
       window.removeEventListener("linecheck:update", fn);
       window.removeEventListener("linecheck:scope-change", fn);
     };
