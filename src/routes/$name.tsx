@@ -521,7 +521,7 @@ function SectionPage() {
   // All was used for this exact station/shift/manager, immediately mark any
   // newly synced rows too so progress cannot fall below 100% afterward.
   useEffect(() => {
-    if (!shell.member || lsStore.getItem(markAllLockKey) !== "OK") return;
+    if (lsStore.getItem(markAllLockKey) !== "OK") return;
     const fresh = loadSection(name, shell.date);
     const completed = applyStatusToStruct(fresh, struct, shell.shift, "OK");
     const json = JSON.stringify(completed);
@@ -669,7 +669,7 @@ function SectionPage() {
     setStruct(freshStruct);
     setState(next);
     try {
-      if (status === "OK" && shell.member) lsStore.setItem(markAllLockKey, "OK");
+      if (status === "OK") lsStore.setItem(markAllLockKey, "OK");
       else lsStore.removeItem(markAllLockKey);
       lastSavedRef.current = { key, json };
       lsStore.setItem(key, json);
