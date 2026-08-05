@@ -17,6 +17,8 @@ import { StorageFullBanner } from "../components/StorageFullBanner";
 
 import { registerOfflineSupport } from "../lib/offline";
 import { runStorageHousekeeping } from "../lib/lsStore";
+import { uploadPendingPhotos } from "../lib/photoStore";
+
 
 
 function NotFoundComponent() {
