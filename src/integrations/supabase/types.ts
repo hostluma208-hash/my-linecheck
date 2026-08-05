@@ -38,6 +38,30 @@ export type Database = {
         }
         Relationships: []
       }
+      app_records: {
+        Row: {
+          created_at: string
+          key: string
+          owner_id: string
+          updated_at: string
+          value: string
+        }
+        Insert: {
+          created_at?: string
+          key: string
+          owner_id: string
+          updated_at?: string
+          value: string
+        }
+        Update: {
+          created_at?: string
+          key?: string
+          owner_id?: string
+          updated_at?: string
+          value?: string
+        }
+        Relationships: []
+      }
       shared_closings: {
         Row: {
           brand_name: string

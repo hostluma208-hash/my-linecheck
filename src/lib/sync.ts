@@ -92,13 +92,29 @@ async function pushNow() {
   pushing = true;
   refreshStatus();
   try {
-    const { error } = await supabase
-      .from("user_state")
-      .upsert(
-        { user_id: userAtStart, data, updated_at: new Date().toISOString() },
-        { onConflict: "user_id" },
-      );
-    if (error) throw error;
+    // One database row per record. Keys the server already knows about but
+    // that no longer exist locally are deleted; the rest are upserted.
+    const rows = Object.entries(data).map(([key, value]) => ({
+      owner_id: userAtStart,
+      key,
+      value,
+      updated_at: new Date().toISOString(),
+    }));
+    const removed = [...lastRemoteKeys].filter((k) => !(k in data));
+    if (rows.length) {
+      const { error } = await supabase
+        .from("app_records")
+        .upsert(rows, { onConflict: "owner_id,key" });
+      if (error) throw error;
+    }
+    if (removed.length) {
+      const { error } = await supabase
+        .from("app_records")
+        .delete()
+        .eq("owner_id", userAtStart)
+        .in("key", removed);
+      if (error) throw error;
+    }
     if (currentUserId !== userAtStart) return;
     // A key may be written again with the exact same JSON while this request is
     // in flight (rapid repeated Mark All). Value comparison cannot distinguish
@@ -108,6 +124,7 @@ async function pushNow() {
     );
     clearDirty(userAtStart, confirmedKeys);
     lastRemoteKeys = new Set(Object.keys(data));
+
     clearRetry();
   } catch (e) {
     console.warn("[sync] push failed", e);
@@ -161,19 +178,22 @@ async function pullFromServer() {
   );
   try {
     const { data, error } = await supabase
-      .from("user_state")
-      .select("data")
-      .eq("user_id", currentUserId)
-      .maybeSingle();
+      .from("app_records")
+      .select("key, value")
+      .eq("owner_id", currentUserId);
     if (error) throw error;
     // Account switched while the request was in flight — discard.
     if (currentUserId !== userAtStart) return;
-    const remote = (data?.data ?? null) as Record<string, string> | null;
+    const rows = (data ?? []) as { key: string; value: string }[];
+    const remote: Record<string, string> | null = rows.length
+      ? Object.fromEntries(rows.map((r) => [r.key, r.value]))
+      : null;
     if (!remote) {
       // No remote yet — push whatever we have locally so future devices see it.
       await pushNow();
       return;
     }
+
     // Unsynced local edits always win over the remote snapshot.
     const dirty = getDirty(userAtStart);
     let changed = false;
