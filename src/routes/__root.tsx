@@ -132,7 +132,13 @@ function RootComponent() {
   useEffect(() => {
     registerOfflineSupport();
     void runStorageHousekeeping();
+    // Photos captured while offline are moved to cloud storage once possible.
+    void uploadPendingPhotos();
+    const onOnline = () => void uploadPendingPhotos();
+    window.addEventListener("online", onOnline);
+    return () => window.removeEventListener("online", onOnline);
   }, []);
+
 
   return (
     <QueryClientProvider client={queryClient}>
