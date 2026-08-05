@@ -58,12 +58,30 @@ function AuthPage() {
         window.location.href = "/";
         return;
       }
-      const res = await staffLogin({ data: { name: who, pin } });
-      if (!res?.ok) {
+      // Offline-capable sub-account login: try the server, then fall back to
+      // this device's own saved record of the same name + PIN.
+      let session: {
+        id: string;
+        name: string;
+        ownerId: string;
+        pin: string;
+      } | null = null;
+      try {
+        const res = await staffLogin({ data: { name: who, pin } });
+        if (res?.ok) {
+          session = { id: res.id, name: res.name, ownerId: res.ownerId, pin };
+          await rememberDeviceStaffAccount(session);
+        }
+      } catch {
+        // network/offline — handled by the device fallback below
+      }
+      if (!session) session = await verifyDeviceStaffAccount(who, pin);
+      if (!session) {
         setMsg("Wrong name or PIN.");
         return;
       }
-      setStaffSession({ id: res.id, name: res.name, ownerId: res.ownerId, pin });
+      await requestPersistentStorage();
+      setStaffSession(session);
       window.location.href = "/receiving";
     } catch (err: any) {
       setMsg(err?.message || "Sign in failed");
