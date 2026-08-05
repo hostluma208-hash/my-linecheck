@@ -83,6 +83,35 @@ function sectionStructKey(name: string) {
   return `linecheck:section-items:${name}`;
 }
 
+function completionLockKey(name: string, date: string, shift: Slot, member: string) {
+  // Local sync metadata, intentionally outside the `linecheck:*` payload so an
+  // older remote snapshot cannot delete the guard before station data settles.
+  return `completion-lock:${name}:${date}:${shift}:${encodeURIComponent(member)}`;
+}
+
+function applyStatusToStruct(
+  source: SectionState,
+  categories: EditCategory[],
+  slot: Slot,
+  status: string,
+): SectionState {
+  const entries: SectionState["entries"] = { ...source.entries };
+  for (const category of categories) {
+    const seen = new Map<string, number>();
+    for (const item of category.items) {
+      const occ = seen.get(item.name) ?? 0;
+      seen.set(item.name, occ + 1);
+      const k = entryKey(category.group, item.name, occ);
+      const previous = entries[k] ?? {};
+      entries[k] = {
+        ...previous,
+        [slot]: { ...(previous[slot] ?? emptyEntry()), status },
+      } as SectionState["entries"][string];
+    }
+  }
+  return { ...source, entries };
+}
+
 function loadSectionStruct(name: string, fallback: EditCategory[]): EditCategory[] {
   try {
     const raw = lsStore.getItem(sectionStructKey(name));
@@ -183,6 +212,10 @@ function SectionPage() {
   }, [search.date, search.shift]);
 
   const key = useMemo(() => storageKey(name, shell.date), [name, shell.date]);
+  const markAllLockKey = useMemo(
+    () => completionLockKey(name, shell.date, shell.shift, shell.member),
+    [name, shell.date, shell.shift, shell.member],
+  );
   const tempKey = useMemo(
     () => `linecheck:temps:${name}:${shell.date}:${shell.shift}`,
     [name, shell.date, shell.shift],
@@ -484,6 +517,21 @@ function SectionPage() {
     setDraft(s);
   }, [name, defaultStruct]);
 
+  // A sub-account can receive its template a moment after its marks. If Mark
+  // All was used for this exact station/shift/manager, immediately mark any
+  // newly synced rows too so progress cannot fall below 100% afterward.
+  useEffect(() => {
+    if (lsStore.getItem(markAllLockKey) !== "OK") return;
+    const fresh = loadSection(name, shell.date);
+    const completed = applyStatusToStruct(fresh, struct, shell.shift, "OK");
+    const json = JSON.stringify(completed);
+    if (JSON.stringify(fresh) === json) return;
+    lastSavedRef.current = { key, json };
+    lsStore.setItem(key, json);
+    setState(completed);
+    window.dispatchEvent(new Event("linecheck:update"));
+  }, [key, markAllLockKey, name, shell.date, shell.member, shell.shift, struct]);
+
   useEffect(() => {
     // Skip the render that still holds the previous key's state.
     if (lastSavedRef.current && lastSavedRef.current.key !== key) return;
@@ -545,7 +593,7 @@ function SectionPage() {
       window.removeEventListener("linecheck:scope-change", refresh);
       window.removeEventListener("storage", refresh);
     };
-  }, [key, name, shell.date, shell.shift, defaultStruct]);
+  }, [key, name, shell.date, shell.shift, shell.member, defaultStruct]);
 
 
 
@@ -577,6 +625,8 @@ function SectionPage() {
   const canSave = missingNotes.length === 0;
 
   const setEntry = (group: string, item: string, occ: number, patch: Partial<Entry>) => {
+    // A deliberate item edit takes control back from the bulk-complete lock.
+    lsStore.removeItem(markAllLockKey);
     const k = entryKey(group, item, occ);
     // Commit the mark before updating the view. This keeps the progress ring,
     // overview, reloads, and sync queue on one authoritative stored snapshot.
@@ -614,28 +664,13 @@ function SectionPage() {
   const bulkSet = (status: string) => {
     const fresh = loadSection(name, shell.date);
     const freshStruct = loadSectionStruct(name, defaultStruct);
-    const freshCatItems = freshStruct.flatMap((category) => {
-      const seen = new Map<string, number>();
-      return category.items.map((item) => {
-        const occ = seen.get(item.name) ?? 0;
-        seen.set(item.name, occ + 1);
-        return { group: category.group, name: item.name, occ };
-      });
-    });
-    const entries: SectionState["entries"] = { ...fresh.entries };
-    for (const ci of freshCatItems) {
-      const k = entryKey(ci.group, ci.name, ci.occ);
-      const prev = entries[k] ?? {};
-      entries[k] = {
-        ...prev,
-        [slot]: { ...(prev[slot] ?? emptyEntry()), status },
-      } as SectionState["entries"][string];
-    }
-    const next: SectionState = { ...fresh, entries };
+    const next = applyStatusToStruct(fresh, freshStruct, slot, status);
     const json = JSON.stringify(next);
     setStruct(freshStruct);
     setState(next);
     try {
+      if (status === "OK") lsStore.setItem(markAllLockKey, "OK");
+      else lsStore.removeItem(markAllLockKey);
       lastSavedRef.current = { key, json };
       lsStore.setItem(key, json);
       window.dispatchEvent(new Event("linecheck:update"));
