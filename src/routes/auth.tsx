@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable";
 import { staffLogin } from "@/lib/staffAuth.functions";
+import { accountPinLogin } from "@/lib/accountPin.functions";
 import { setStaffSession } from "@/lib/staffSession";
 import { ChefHat, Loader2, KeyRound } from "lucide-react";
 
@@ -33,7 +34,26 @@ function AuthPage() {
     setBusy(true);
     setMsg(null);
     try {
-      const res = await staffLogin({ data: { name: pinName.trim(), pin } });
+      const who = pinName.trim();
+      if (who.includes("@")) {
+        // Account PIN login → real signed-in session for that account.
+        const res = await accountPinLogin({ data: { email: who, pin } });
+        if (!res?.ok) {
+          setMsg("Wrong email or PIN.");
+          return;
+        }
+        const { error } = await supabase.auth.verifyOtp({
+          type: "email",
+          token_hash: res.tokenHash,
+        });
+        if (error) {
+          setMsg(error.message);
+          return;
+        }
+        window.location.href = "/";
+        return;
+      }
+      const res = await staffLogin({ data: { name: who, pin } });
       if (!res?.ok) {
         setMsg("Wrong name or PIN.");
         return;
@@ -46,6 +66,7 @@ function AuthPage() {
       setBusy(false);
     }
   };
+
 
 
   useEffect(() => {
@@ -113,23 +134,26 @@ function AuthPage() {
               <KeyRound className="h-5 w-5" />
             </span>
             <div>
-              <h1 className="text-lg font-bold tracking-tight">Team access</h1>
+              <h1 className="text-lg font-bold tracking-tight">PIN sign in</h1>
               <p className="text-xs text-muted-foreground">
-                Receiving & Closing reports only
+                Account email, or team member name
               </p>
             </div>
           </div>
 
           <form onSubmit={onPinSubmit} className="space-y-3">
             <div>
-              <label className="mb-1 block text-xs font-semibold">Name</label>
+              <label className="mb-1 block text-xs font-semibold">Email or name</label>
               <input
                 required
+                autoComplete="username"
+                placeholder="you@example.com"
                 value={pinName}
                 onChange={(e) => setPinName(e.target.value)}
                 className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-foreground"
               />
             </div>
+
             <div>
               <label className="mb-1 block text-xs font-semibold">PIN</label>
               <input
@@ -256,7 +280,7 @@ function AuthPage() {
             }}
           >
             <KeyRound className="h-3.5 w-3.5" />
-            Team member? Sign in with name & PIN
+            Sign in with a PIN instead
           </button>
         </p>
 

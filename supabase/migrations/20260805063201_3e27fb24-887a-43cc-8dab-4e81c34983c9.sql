@@ -1,0 +1,1 @@
+ALTER TABLE public.allowed_emails ADD COLUMN IF NOT EXISTS pin_hash text;
