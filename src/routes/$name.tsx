@@ -590,11 +590,21 @@ function SectionPage() {
   };
 
   /** Apply a status to every item in the station, using the freshest stored
-   *  snapshot so a racing sync pull can't clobber the bulk change. */
+   *  state and category template so a sync/template update can't leave items
+   *  unmarked while the sidebar counts them in its progress denominator. */
   const bulkSet = (status: string) => {
     const fresh = loadSection(name, shell.date);
+    const freshStruct = loadSectionStruct(name, defaultStruct);
+    const freshCatItems = freshStruct.flatMap((category) => {
+      const seen = new Map<string, number>();
+      return category.items.map((item) => {
+        const occ = seen.get(item.name) ?? 0;
+        seen.set(item.name, occ + 1);
+        return { group: category.group, name: item.name, occ };
+      });
+    });
     const entries: SectionState["entries"] = { ...fresh.entries };
-    for (const ci of allCatItems) {
+    for (const ci of freshCatItems) {
       const k = entryKey(ci.group, ci.name, ci.occ);
       const prev = entries[k] ?? {};
       entries[k] = {
@@ -604,6 +614,7 @@ function SectionPage() {
     }
     const next: SectionState = { ...fresh, entries };
     const json = JSON.stringify(next);
+    setStruct(freshStruct);
     setState(next);
     try {
       lastSavedRef.current = { key, json };
