@@ -82,9 +82,15 @@ function ShiftDetail() {
       item: string;
       status: string;
       note: string;
+      photo?: string;
       flagged: boolean;
     };
-    const out: { section: string; items: Row[] }[] = [];
+    const out: {
+      section: string;
+      items: Row[];
+      comment: string;
+      commentPhotos: string[];
+    }[] = [];
     for (const sec of getEffectiveSections()) {
       const state = loadSection(sec.name, date);
       const items: Row[] = [];
@@ -97,15 +103,31 @@ function ShiftDetail() {
             item: it.name,
             status: e.status,
             note: e.note || "",
+            photo: e.photo,
             flagged: FLAG_STATUSES.has(e.status),
           });
         }
       }
-      if (items.length) out.push({ section: sec.name, items });
+      const comment =
+        lsStore.getItem(`linecheck:section-comment:${sec.name}:${date}:${shift}`)?.trim() || "";
+      let commentPhotos: string[] = [];
+      try {
+        const raw = lsStore.getItem(
+          `linecheck:section-comment-photos:${sec.name}:${date}:${shift}`,
+        );
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          if (Array.isArray(parsed))
+            commentPhotos = parsed.filter((x) => typeof x === "string" && x.length > 0);
+        }
+      } catch {}
+      if (items.length || comment || commentPhotos.length)
+        out.push({ section: sec.name, items, comment, commentPhotos });
     }
     return out;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [date, shift, tick]);
+
 
   const share = async () => {
     try {
