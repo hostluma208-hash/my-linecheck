@@ -1248,7 +1248,7 @@ function AccessPanel() {
       setError("Enter a valid email address.");
       return;
     }
-    if (emails.some((e) => e.toLowerCase() === raw)) {
+    if (emails.some((e) => e.email.toLowerCase() === raw)) {
       setError("This email is already on the list.");
       return;
     }
