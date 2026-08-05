@@ -15,10 +15,12 @@ import {
   getShifts,
   type Slot,
 } from "@/lib/lineCheck";
+import { lsStore } from "@/lib/lsStore";
 import {
   ArrowLeft,
   AlertTriangle,
   CheckCircle2,
+  MessageSquare,
   Share2,
   User,
   Calendar,
@@ -26,6 +28,7 @@ import {
   Edit3,
 } from "lucide-react";
 import { z } from "zod";
+
 
 const searchSchema = z.object({
   date: z.string(),
