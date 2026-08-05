@@ -268,9 +268,56 @@ function ShiftDetail() {
                         {it.status}
                       </span>
                     </div>
+                    {it.photo && (
+                      <a
+                        href={it.photo}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="mt-2 block w-fit overflow-hidden rounded-xl border border-border"
+                      >
+                        <img
+                          src={it.photo}
+                          alt={`${it.item} attachment`}
+                          loading="lazy"
+                          className="h-20 w-20 object-cover"
+                        />
+                      </a>
+                    )}
                   </li>
                 ))}
               </ul>
+              {(r.comment || r.commentPhotos.length > 0) && (
+                <div className="mt-2 rounded-2xl border border-border bg-muted/30 p-3">
+                  <p className="mb-1 inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                    <MessageSquare className="h-3 w-3" />
+                    Station comment & feedback
+                  </p>
+                  {r.comment && (
+                    <p className="whitespace-pre-wrap text-sm">{r.comment}</p>
+                  )}
+                  {r.commentPhotos.length > 0 && (
+                    <div className="mt-2 flex flex-wrap gap-2">
+                      {r.commentPhotos.map((src, i) => (
+                        <a
+                          key={i}
+                          href={src}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="overflow-hidden rounded-xl border border-border"
+                        >
+                          <img
+                            src={src}
+                            alt={`${r.section} comment attachment ${i + 1}`}
+                            loading="lazy"
+                            className="h-20 w-20 object-cover"
+                          />
+                        </a>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
+
             </section>
           ))}
         </div>
