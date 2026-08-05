@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable";
 import { staffLogin } from "@/lib/staffAuth.functions";
+import { accountPinLogin } from "@/lib/accountPin.functions";
 import { setStaffSession } from "@/lib/staffSession";
 import { ChefHat, Loader2, KeyRound } from "lucide-react";
 
