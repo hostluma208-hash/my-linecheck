@@ -134,23 +134,26 @@ function AuthPage() {
               <KeyRound className="h-5 w-5" />
             </span>
             <div>
-              <h1 className="text-lg font-bold tracking-tight">Team access</h1>
+              <h1 className="text-lg font-bold tracking-tight">PIN sign in</h1>
               <p className="text-xs text-muted-foreground">
-                Receiving & Closing reports only
+                Account email, or team member name
               </p>
             </div>
           </div>
 
           <form onSubmit={onPinSubmit} className="space-y-3">
             <div>
-              <label className="mb-1 block text-xs font-semibold">Name</label>
+              <label className="mb-1 block text-xs font-semibold">Email or name</label>
               <input
                 required
+                autoComplete="username"
+                placeholder="you@example.com"
                 value={pinName}
                 onChange={(e) => setPinName(e.target.value)}
                 className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-foreground"
               />
             </div>
+
             <div>
               <label className="mb-1 block text-xs font-semibold">PIN</label>
               <input
