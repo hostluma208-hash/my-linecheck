@@ -6,6 +6,10 @@ import { setUserScope } from "@/lib/lsStore";
 import { startSync, stopSync } from "@/lib/sync";
 import { startStaffSync, stopStaffSync } from "@/lib/staffSync";
 import { getStaffSession, isStaffAllowedPath } from "@/lib/staffSession";
+import {
+  rememberDeviceStaffAccount,
+  requestPersistentStorage,
+} from "@/lib/deviceStore";
 import { isEmailAllowed } from "@/lib/allowlist";
 import { Loader2 } from "lucide-react";
 
@@ -25,6 +29,9 @@ export function AuthGate({ children }: { children: React.ReactNode }) {
         if (staff) {
           stopSync();
           setUserScope(staff.ownerId);
+          // Keep this device's local copy of the sub-account usable offline.
+          void requestPersistentStorage();
+          void rememberDeviceStaffAccount(staff);
           void startStaffSync(staff);
           if (active) setStatus("staff");
           return;
@@ -51,6 +58,7 @@ export function AuthGate({ children }: { children: React.ReactNode }) {
       }
       stopStaffSync();
       setUserScope(session.user.id);
+      void requestPersistentStorage();
       void startSync(session.user.id);
       if (active) setStatus("signed-in");
     };
