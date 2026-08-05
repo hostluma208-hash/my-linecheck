@@ -86,6 +86,7 @@ async function pushNow() {
   }
   const sessionAtStart = session;
   const pushedKeys = getDirty(s);
+  const data = snapshot();
   pushing = true;
   refreshStatus();
   try {
@@ -93,11 +94,17 @@ async function pushNow() {
       data: {
         name: sessionAtStart.name,
         pin: sessionAtStart.pin,
-        patch: snapshot(),
+        patch: data,
       },
     });
     if (session?.id !== sessionAtStart.id) return;
-    clearDirty(s, pushedKeys);
+    // Do not acknowledge a station key that changed while this request was
+    // running. Keeping it dirty prevents a subsequent pull from replacing a
+    // newer Mark All result with the older remote snapshot.
+    const confirmedKeys = [...pushedKeys].filter(
+      (key) => lsStore.getItem(key) === data[key],
+    );
+    clearDirty(s, confirmedKeys);
     clearRetry();
   } catch (e) {
     console.warn("[staff-sync] push failed", e);

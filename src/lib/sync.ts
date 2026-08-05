@@ -97,7 +97,15 @@ async function pushNow() {
       );
     if (error) throw error;
     if (currentUserId !== userAtStart) return;
-    clearDirty(userAtStart, pushedKeys);
+    // A key may be written again while this request is in flight. Only clear
+    // the queue entry when the value currently in storage is exactly the one
+    // this request delivered; otherwise the newer edit must remain dirty and
+    // be sent by the next push. This is especially important for Mark All,
+    // which rewrites the same station key many times in quick succession.
+    const confirmedKeys = [...pushedKeys].filter(
+      (key) => lsStore.getItem(key) === data[key],
+    );
+    clearDirty(userAtStart, confirmedKeys);
     lastRemoteKeys = new Set(Object.keys(data));
     clearRetry();
   } catch (e) {
