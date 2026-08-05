@@ -15,12 +15,10 @@ import {
   getShifts,
   type Slot,
 } from "@/lib/lineCheck";
-import { lsStore } from "@/lib/lsStore";
 import {
   ArrowLeft,
   AlertTriangle,
   CheckCircle2,
-  MessageSquare,
   Share2,
   User,
   Calendar,
@@ -28,7 +26,6 @@ import {
   Edit3,
 } from "lucide-react";
 import { z } from "zod";
-
 
 const searchSchema = z.object({
   date: z.string(),
@@ -85,15 +82,9 @@ function ShiftDetail() {
       item: string;
       status: string;
       note: string;
-      photo?: string;
       flagged: boolean;
     };
-    const out: {
-      section: string;
-      items: Row[];
-      comment: string;
-      commentPhotos: string[];
-    }[] = [];
+    const out: { section: string; items: Row[] }[] = [];
     for (const sec of getEffectiveSections()) {
       const state = loadSection(sec.name, date);
       const items: Row[] = [];
@@ -106,31 +97,15 @@ function ShiftDetail() {
             item: it.name,
             status: e.status,
             note: e.note || "",
-            photo: e.photo,
             flagged: FLAG_STATUSES.has(e.status),
           });
         }
       }
-      const comment =
-        lsStore.getItem(`linecheck:section-comment:${sec.name}:${date}:${shift}`)?.trim() || "";
-      let commentPhotos: string[] = [];
-      try {
-        const raw = lsStore.getItem(
-          `linecheck:section-comment-photos:${sec.name}:${date}:${shift}`,
-        );
-        if (raw) {
-          const parsed = JSON.parse(raw);
-          if (Array.isArray(parsed))
-            commentPhotos = parsed.filter((x) => typeof x === "string" && x.length > 0);
-        }
-      } catch {}
-      if (items.length || comment || commentPhotos.length)
-        out.push({ section: sec.name, items, comment, commentPhotos });
+      if (items.length) out.push({ section: sec.name, items });
     }
     return out;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [date, shift, tick]);
-
 
   const share = async () => {
     try {
@@ -271,56 +246,9 @@ function ShiftDetail() {
                         {it.status}
                       </span>
                     </div>
-                    {it.photo && (
-                      <a
-                        href={it.photo}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="mt-2 block w-fit overflow-hidden rounded-xl border border-border"
-                      >
-                        <img
-                          src={it.photo}
-                          alt={`${it.item} attachment`}
-                          loading="lazy"
-                          className="h-20 w-20 object-cover"
-                        />
-                      </a>
-                    )}
                   </li>
                 ))}
               </ul>
-              {(r.comment || r.commentPhotos.length > 0) && (
-                <div className="mt-2 rounded-2xl border border-border bg-muted/30 p-3">
-                  <p className="mb-1 inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
-                    <MessageSquare className="h-3 w-3" />
-                    Station comment & feedback
-                  </p>
-                  {r.comment && (
-                    <p className="whitespace-pre-wrap text-sm">{r.comment}</p>
-                  )}
-                  {r.commentPhotos.length > 0 && (
-                    <div className="mt-2 flex flex-wrap gap-2">
-                      {r.commentPhotos.map((src, i) => (
-                        <a
-                          key={i}
-                          href={src}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="overflow-hidden rounded-xl border border-border"
-                        >
-                          <img
-                            src={src}
-                            alt={`${r.section} comment attachment ${i + 1}`}
-                            loading="lazy"
-                            className="h-20 w-20 object-cover"
-                          />
-                        </a>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              )}
-
             </section>
           ))}
         </div>
