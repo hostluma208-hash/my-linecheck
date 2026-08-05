@@ -584,11 +584,14 @@ function SectionPage() {
       } as SectionState["entries"][string];
     }
     const next: SectionState = { ...fresh, entries };
+    const json = JSON.stringify(next);
     setState(next);
     try {
-      lsStore.setItem(key, JSON.stringify(next));
+      lastSavedRef.current = { key, json };
+      lsStore.setItem(key, json);
       window.dispatchEvent(new Event("linecheck:update"));
     } catch {}
+
     setSavedFlash(true);
     setTimeout(() => setSavedFlash(false), 1400);
   };
