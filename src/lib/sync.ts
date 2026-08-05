@@ -7,7 +7,7 @@
 // and are pushed as soon as connectivity returns — including after a reload
 // or an app restart that happened while still offline.
 import { supabase } from "@/integrations/supabase/client";
-import { lsStore } from "@/lib/lsStore";
+import { getKeyRevision, lsStore } from "@/lib/lsStore";
 import {
   backoffDelay,
   clearDirty,
@@ -29,7 +29,6 @@ let currentUserId: string | null = null;
 let unsubWrite: (() => void) | null = null;
 let lastRemoteKeys = new Set<string>();
 let pollTimer: ReturnType<typeof setInterval> | null = null;
-let localRevision = 0;
 
 function collectSnapshot(): Record<string, string> {
   const out: Record<string, string> = {};
@@ -87,6 +86,9 @@ async function pushNow() {
   // Snapshot the dirty keys we're about to deliver; writes landing during the
   // request stay queued for the next push.
   const pushedKeys = getDirty(userAtStart);
+  const pushedRevisions = new Map(
+    [...pushedKeys].map((key) => [key, getKeyRevision(key)]),
+  );
   pushing = true;
   refreshStatus();
   try {
@@ -98,13 +100,11 @@ async function pushNow() {
       );
     if (error) throw error;
     if (currentUserId !== userAtStart) return;
-    // A key may be written again while this request is in flight. Only clear
-    // the queue entry when the value currently in storage is exactly the one
-    // this request delivered; otherwise the newer edit must remain dirty and
-    // be sent by the next push. This is especially important for Mark All,
-    // which rewrites the same station key many times in quick succession.
+    // A key may be written again with the exact same JSON while this request is
+    // in flight (rapid repeated Mark All). Value comparison cannot distinguish
+    // that newer action, so only acknowledge the exact per-key revision sent.
     const confirmedKeys = [...pushedKeys].filter(
-      (key) => lsStore.getItem(key) === data[key],
+      (key) => getKeyRevision(key) === pushedRevisions.get(key),
     );
     clearDirty(userAtStart, confirmedKeys);
     lastRemoteKeys = new Set(Object.keys(data));
@@ -141,9 +141,8 @@ function onBackOnline() {
 
 function onLocalWrite(e: Event) {
   if (suppressPush || !currentUserId) return;
-  const key = (e as CustomEvent<{ key?: string }>).detail?.key;
+  const key = (e as CustomEvent<{ key?: string; revision?: number }>).detail?.key;
   if (key && key.startsWith(PREFIX)) {
-    localRevision += 1;
     markDirty(currentUserId, key);
   }
   refreshStatus();
@@ -153,7 +152,13 @@ function onLocalWrite(e: Event) {
 async function pullFromServer() {
   if (!currentUserId) return;
   const userAtStart = currentUserId;
-  const revisionAtStart = localRevision;
+  const dirtyAtStart = getDirty(userAtStart);
+  const revisionsAtStart = new Map(
+    lsStore
+      .keys()
+      .filter((key) => key.startsWith(PREFIX))
+      .map((key) => [key, getKeyRevision(key)]),
+  );
   try {
     const { data, error } = await supabase
       .from("user_state")
@@ -163,13 +168,6 @@ async function pullFromServer() {
     if (error) throw error;
     // Account switched while the request was in flight — discard.
     if (currentUserId !== userAtStart) return;
-    // The response describes a snapshot from before a local edit. Even if a
-    // fast push has already acknowledged that edit and cleared its dirty key,
-    // this older pull must never be allowed to restore the previous value.
-    if (localRevision !== revisionAtStart) {
-      if (hasDirty(userAtStart)) void pushNow();
-      return;
-    }
     const remote = (data?.data ?? null) as Record<string, string> | null;
     if (!remote) {
       // No remote yet — push whatever we have locally so future devices see it.
@@ -184,7 +182,14 @@ async function pullFromServer() {
       const localKeys = new Set(lsStore.keys().filter((k) => k.startsWith(PREFIX)));
       for (const [k, v] of Object.entries(remote)) {
         if (typeof v === "string" && k.startsWith(PREFIX)) {
-          if (!dirty.has(k) && lsStore.getItem(k) !== v) {
+           const unchangedSinceRequest =
+             getKeyRevision(k) === (revisionsAtStart.get(k) ?? 0);
+           if (
+             !dirtyAtStart.has(k) &&
+             !dirty.has(k) &&
+             unchangedSinceRequest &&
+             lsStore.getItem(k) !== v
+           ) {
             lsStore.setItem(k, v);
             changed = true;
           }
@@ -195,7 +200,14 @@ async function pullFromServer() {
       // deleted on another device — mirror that deletion here. Keys never seen
       // on the server are local-only (unpushed) and stay intact.
       for (const k of localKeys) {
-        if (lastRemoteKeys.has(k) && !dirty.has(k)) {
+        const unchangedSinceRequest =
+          getKeyRevision(k) === (revisionsAtStart.get(k) ?? 0);
+        if (
+          lastRemoteKeys.has(k) &&
+          !dirtyAtStart.has(k) &&
+          !dirty.has(k) &&
+          unchangedSinceRequest
+        ) {
           lsStore.removeItem(k);
           changed = true;
         }
@@ -252,7 +264,6 @@ export async function startSync(userId: string) {
   stopSync();
   currentUserId = userId;
   lastRemoteKeys = new Set();
-  localRevision = 0;
   refreshStatus();
   if (typeof window !== "undefined" && !unsubWrite) {
     window.addEventListener("linecheck:local-write", onLocalWrite);
@@ -287,7 +298,6 @@ export async function startSync(userId: string) {
 export function stopSync() {
   currentUserId = null;
   lastRemoteKeys = new Set();
-  localRevision = 0;
   if (pushTimer) {
     clearTimeout(pushTimer);
     pushTimer = null;

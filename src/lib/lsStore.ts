@@ -4,6 +4,7 @@
 
 let currentUid = "guest";
 const listeners = new Set<() => void>();
+const REVISION_PREFIX = "linecheck:revision:";
 
 export function setUserScope(uid: string | null) {
   const next = uid || "guest";
@@ -37,10 +38,33 @@ function safe(): Storage | null {
   }
 }
 
-function emitWrite(key: string) {
+function revisionStorageKey(key: string) {
+  return `${REVISION_PREFIX}${currentUid}:${encodeURIComponent(key)}`;
+}
+
+/**
+ * A durable, monotonic revision for one logical key in the active account.
+ * It changes even when the serialized value is identical, which lets sync
+ * distinguish a newer repeated Mark All action from the copy already in flight.
+ */
+export function getKeyRevision(key: string): number {
+  const s = safe();
+  if (!s) return 0;
+  const value = Number(s.getItem(revisionStorageKey(key)) ?? "0");
+  return Number.isSafeInteger(value) && value >= 0 ? value : 0;
+}
+
+function bumpKeyRevision(key: string): number {
+  const s = safe();
+  const next = getKeyRevision(key) + 1;
+  if (s) s.setItem(revisionStorageKey(key), String(next));
+  return next;
+}
+
+function emitWrite(key: string, revision: number) {
   if (typeof window !== "undefined") {
     window.dispatchEvent(
-      new CustomEvent("linecheck:local-write", { detail: { key } }),
+      new CustomEvent("linecheck:local-write", { detail: { key, revision } }),
     );
   }
 }
@@ -53,12 +77,12 @@ export const lsStore = {
   setItem(key: string, value: string) {
     const s = safe();
     if (s) s.setItem(scopedKey(key), value);
-    emitWrite(key);
+    emitWrite(key, bumpKeyRevision(key));
   },
   removeItem(key: string) {
     const s = safe();
     if (s) s.removeItem(scopedKey(key));
-    emitWrite(key);
+    emitWrite(key, bumpKeyRevision(key));
   },
   /** List raw (un-prefixed) keys belonging to the current user. */
   keys(): string[] {

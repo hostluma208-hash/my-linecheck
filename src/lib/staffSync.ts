@@ -5,7 +5,7 @@
 // Offline behaviour mirrors `sync.ts`: local writes are queued durably, win
 // over remote values on the next pull, and are retried with backoff until the
 // server confirms them.
-import { lsStore } from "@/lib/lsStore";
+import { getKeyRevision, lsStore } from "@/lib/lsStore";
 import type { StaffSession } from "@/lib/staffSession";
 import { staffPullState, staffPushState } from "@/lib/staffAuth.functions";
 import {
@@ -28,7 +28,6 @@ let retryAttempt = 0;
 let pushing = false;
 let unsub: (() => void) | null = null;
 let pollTimer: ReturnType<typeof setInterval> | null = null;
-let localRevision = 0;
 
 function scope() {
   return session ? `staff:${session.id}` : null;
@@ -88,6 +87,9 @@ async function pushNow() {
   const sessionAtStart = session;
   const pushedKeys = getDirty(s);
   const data = snapshot();
+  const pushedRevisions = new Map(
+    [...pushedKeys].map((key) => [key, getKeyRevision(key)]),
+  );
   pushing = true;
   refreshStatus();
   try {
@@ -99,11 +101,10 @@ async function pushNow() {
       },
     });
     if (session?.id !== sessionAtStart.id) return;
-    // Do not acknowledge a station key that changed while this request was
-    // running. Keeping it dirty prevents a subsequent pull from replacing a
-    // newer Mark All result with the older remote snapshot.
+    // Same-value repeated writes still represent newer Mark All actions. Only
+    // acknowledge the exact per-key revision included in this request.
     const confirmedKeys = [...pushedKeys].filter(
-      (key) => lsStore.getItem(key) === data[key],
+      (key) => getKeyRevision(key) === pushedRevisions.get(key),
     );
     clearDirty(s, confirmedKeys);
     clearRetry();
@@ -138,9 +139,8 @@ function schedulePush() {
 function onWrite(e: Event) {
   const s = scope();
   if (suppress || !s) return;
-  const key = (e as CustomEvent<{ key?: string }>).detail?.key;
+  const key = (e as CustomEvent<{ key?: string; revision?: number }>).detail?.key;
   if (key && key.startsWith(PREFIX)) {
-    localRevision += 1;
     markDirty(s, key);
   }
   refreshStatus();
@@ -159,19 +159,18 @@ async function pullNow() {
   const s = scope();
   if (!session || !s || isOffline()) return;
   const sessionAtStart = session;
-  const revisionAtStart = localRevision;
+  const dirtyAtStart = getDirty(s);
+  const revisionsAtStart = new Map(
+    lsStore
+      .keys()
+      .filter((key) => key.startsWith(PREFIX))
+      .map((key) => [key, getKeyRevision(key)]),
+  );
   try {
     const res = await staffPullState({
       data: { name: sessionAtStart.name, pin: sessionAtStart.pin },
     });
     if (session?.id !== sessionAtStart.id) return;
-    // Ignore a remote response requested before a newer local edit. The edit
-    // may already have been pushed and acknowledged, so dirty keys alone are
-    // not sufficient protection against this stale response.
-    if (localRevision !== revisionAtStart) {
-      if (hasDirty(s)) void pushNow();
-      return;
-    }
     const remote = res?.ok ? res.state : null;
     // Unsynced local edits always win over the remote snapshot.
     const dirty = getDirty(s);
@@ -180,10 +179,14 @@ async function pullNow() {
       suppress = true;
       try {
         for (const [k, v] of Object.entries(remote)) {
+          const unchangedSinceRequest =
+            getKeyRevision(k) === (revisionsAtStart.get(k) ?? 0);
           if (
             typeof v === "string" &&
             k.startsWith(PREFIX) &&
+            !dirtyAtStart.has(k) &&
             !dirty.has(k) &&
+            unchangedSinceRequest &&
             lsStore.getItem(k) !== v
           ) {
             lsStore.setItem(k, v);
@@ -218,7 +221,6 @@ export async function startStaffSync(s: StaffSession) {
   if (session && session.id === s.id) return;
   stopStaffSync();
   session = s;
-  localRevision = 0;
   refreshStatus();
   if (typeof window !== "undefined" && !unsub) {
     window.addEventListener("linecheck:local-write", onWrite);
@@ -250,7 +252,6 @@ export async function startStaffSync(s: StaffSession) {
 
 export function stopStaffSync() {
   session = null;
-  localRevision = 0;
   if (timer) {
     clearTimeout(timer);
     timer = null;
