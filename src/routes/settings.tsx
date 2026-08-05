@@ -8,6 +8,7 @@ import { ADMIN_EMAIL, isAdminEmail } from "@/lib/allowlist";
 
 
 import { hashPinBrowser } from "@/lib/staffSession";
+import { setAccountPin } from "@/lib/accountPin.functions";
 import {
   ArrowLeft,
   Settings as SettingsIcon,
