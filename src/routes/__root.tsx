@@ -133,6 +133,8 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <OfflineBanner />
+      <StorageFullBanner />
+
       <AuthGate>
         {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
         <Outlet />
