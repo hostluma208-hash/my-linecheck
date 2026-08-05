@@ -57,9 +57,13 @@ export function getKeyRevision(key: string): number {
 function bumpKeyRevision(key: string): number {
   const s = safe();
   const next = getKeyRevision(key) + 1;
-  if (s) s.setItem(revisionStorageKey(key), String(next));
+  // Revision bookkeeping must never break a write when storage is full.
+  try {
+    if (s) s.setItem(revisionStorageKey(key), String(next));
+  } catch {}
   return next;
 }
+
 
 function emitWrite(key: string, revision: number) {
   if (typeof window !== "undefined") {
