@@ -626,9 +626,10 @@ export function dayHistory(date: string): DayHistory {
   let flagged = 0;
   let totalItems = 0;
   let checkedItems = 0;
-  for (const sec of getEffectiveSections()) {
+  for (const secName of historySectionNames(date)) {
+    const sec = { name: secName };
     const state = loadSection(sec.name, date);
-    const cats = effectiveCategorizedItems(sec.name);
+    const cats = historyCategories(sec.name, date);
     let anyTouched = false;
     let allDone = true;
     let secTotal = 0;
