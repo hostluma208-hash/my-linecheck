@@ -1,11 +1,21 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import {
   sharedClosingPayloadSchema,
   type SharedClosingPayload,
 } from "@/lib/shareClosing";
-import { Calendar, ClipboardCheck, Clock, Loader2, User } from "lucide-react";
+import {
+  Calendar,
+  ChevronLeft,
+  ChevronRight,
+  ClipboardCheck,
+  Clock,
+  Loader2,
+  User,
+  X,
+} from "lucide-react";
+
 
 export const Route = createFileRoute("/c/$id")({
   head: () => ({
