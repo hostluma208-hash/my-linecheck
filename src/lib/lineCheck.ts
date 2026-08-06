@@ -266,16 +266,36 @@ export function structSnapshotKey(name: string, date: string) {
   return `linecheck:struct-snap:${name}:${date}`;
 }
 
+/** Remove duplicate item names across the whole snapshot (an item can only
+ *  belong to one category) and drop empty categories. Guards against older
+ *  snapshots that got inflated by group renames during sync. */
+function dedupeSnapshot(cats: HistoryCategory[]): HistoryCategory[] {
+  const seen = new Set<string>();
+  const out: HistoryCategory[] = [];
+  for (const c of cats) {
+    const items: { name: string }[] = [];
+    for (const it of c.items) {
+      if (!it?.name || seen.has(it.name)) continue;
+      seen.add(it.name);
+      items.push({ name: it.name });
+    }
+    if (items.length) out.push({ group: c.group, items });
+  }
+  return out;
+}
+
 function readSnapshot(name: string, date: string): HistoryCategory[] | null {
   try {
     const raw = lsStore.getItem(structSnapshotKey(name, date));
     if (!raw) return null;
     const arr = JSON.parse(raw);
     if (!Array.isArray(arr)) return null;
-    return arr.map((c: { group?: string; items?: { name: string }[] }, i: number) => ({
-      group: c.group ?? `Group ${i + 1}`,
-      items: Array.isArray(c.items) ? c.items.map((it) => ({ name: it.name })) : [],
-    }));
+    return dedupeSnapshot(
+      arr.map((c: { group?: string; items?: { name: string }[] }, i: number) => ({
+        group: c.group ?? `Group ${i + 1}`,
+        items: Array.isArray(c.items) ? c.items.map((it) => ({ name: it.name })) : [],
+      })),
+    );
   } catch {
     return null;
   }
@@ -290,39 +310,39 @@ export function ensureStructSnapshot(
   cats: HistoryCategory[],
 ) {
   try {
+    const incomingCats = dedupeSnapshot(cats);
     const existing = readSnapshot(name, date);
     if (!existing) {
-      lsStore.setItem(
-        structSnapshotKey(name, date),
-        JSON.stringify(cats.map((c) => ({ group: c.group, items: c.items.map((i) => ({ name: i.name })) }))),
-      );
+      lsStore.setItem(structSnapshotKey(name, date), JSON.stringify(incomingCats));
       return;
     }
     const merged: HistoryCategory[] = existing.map((c) => ({
       group: c.group,
       items: [...c.items],
     }));
+    // An item name may exist only once across the entire snapshot, so a group
+    // rename can never duplicate the whole station's item list.
+    const seen = new Set<string>();
+    for (const c of merged) for (const it of c.items) seen.add(it.name);
     let changed = false;
-    for (const cat of cats) {
+    for (const cat of incomingCats) {
+      const newItems = cat.items.filter((it) => !seen.has(it.name));
+      if (!newItems.length) continue;
       let target = merged.find((c) => c.group === cat.group);
       if (!target) {
         target = { group: cat.group, items: [] };
         merged.push(target);
+      }
+      for (const it of newItems) {
+        seen.add(it.name);
+        target.items.push({ name: it.name });
         changed = true;
       }
-      const counts = new Map<string, number>();
-      for (const it of target.items) counts.set(it.name, (counts.get(it.name) ?? 0) + 1);
-      const incoming = new Map<string, number>();
-      for (const it of cat.items) incoming.set(it.name, (incoming.get(it.name) ?? 0) + 1);
-      for (const [itemName, n] of incoming) {
-        const have = counts.get(itemName) ?? 0;
-        for (let i = have; i < n; i++) {
-          target.items.push({ name: itemName });
-          changed = true;
-        }
-      }
     }
-    if (changed) lsStore.setItem(structSnapshotKey(name, date), JSON.stringify(merged));
+    const normalized = dedupeSnapshot(merged);
+    if (changed || normalized.length !== existing.length) {
+      lsStore.setItem(structSnapshotKey(name, date), JSON.stringify(normalized));
+    }
   } catch {}
 }
 
