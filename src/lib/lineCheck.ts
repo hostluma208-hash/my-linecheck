@@ -248,131 +248,6 @@ export type ShiftHistory = {
   stations: ShiftHistoryStation[];
 };
 
-/* ---------------------------------------------------------------------------
- * History structure snapshots
- *
- * History must stay exactly as it was recorded: later template edits
- * (rearranging categories/items, renaming, deleting, or adding new ones)
- * must never change a past day's records. To guarantee that, the structure
- * used on a given date is snapshotted per station+date the first time that
- * day is written to, and history reads the snapshot instead of the live
- * template. New items added later are appended to that day's snapshot only
- * while it is still being worked on (i.e. when they get written that day).
- * ------------------------------------------------------------------------- */
-
-export type HistoryCategory = { group: string; items: { name: string }[] };
-
-export function structSnapshotKey(name: string, date: string) {
-  return `linecheck:struct-snap:${name}:${date}`;
-}
-
-/** Remove duplicate item names across the whole snapshot (an item can only
- *  belong to one category) and drop empty categories. Guards against older
- *  snapshots that got inflated by group renames during sync. */
-function dedupeSnapshot(cats: HistoryCategory[]): HistoryCategory[] {
-  const seen = new Set<string>();
-  const out: HistoryCategory[] = [];
-  for (const c of cats) {
-    const items: { name: string }[] = [];
-    for (const it of c.items) {
-      if (!it?.name || seen.has(it.name)) continue;
-      seen.add(it.name);
-      items.push({ name: it.name });
-    }
-    if (items.length) out.push({ group: c.group, items });
-  }
-  return out;
-}
-
-function readSnapshot(name: string, date: string): HistoryCategory[] | null {
-  try {
-    const raw = lsStore.getItem(structSnapshotKey(name, date));
-    if (!raw) return null;
-    const arr = JSON.parse(raw);
-    if (!Array.isArray(arr)) return null;
-    return dedupeSnapshot(
-      arr.map((c: { group?: string; items?: { name: string }[] }, i: number) => ({
-        group: c.group ?? `Group ${i + 1}`,
-        items: Array.isArray(c.items) ? c.items.map((it) => ({ name: it.name })) : [],
-      })),
-    );
-  } catch {
-    return null;
-  }
-}
-
-/** Persist (or extend) the structure snapshot for a station on a date.
- *  Existing groups/items keep their recorded order; only genuinely new
- *  entries are appended, so rearranging or deleting never alters history. */
-export function ensureStructSnapshot(
-  name: string,
-  date: string,
-  cats: HistoryCategory[],
-) {
-  try {
-    const incomingCats = dedupeSnapshot(cats);
-    const existing = readSnapshot(name, date);
-    if (!existing) {
-      lsStore.setItem(structSnapshotKey(name, date), JSON.stringify(incomingCats));
-      return;
-    }
-    const merged: HistoryCategory[] = existing.map((c) => ({
-      group: c.group,
-      items: [...c.items],
-    }));
-    // An item name may exist only once across the entire snapshot, so a group
-    // rename can never duplicate the whole station's item list.
-    const seen = new Set<string>();
-    for (const c of merged) for (const it of c.items) seen.add(it.name);
-    let changed = false;
-    for (const cat of incomingCats) {
-      const newItems = cat.items.filter((it) => !seen.has(it.name));
-      if (!newItems.length) continue;
-      let target = merged.find((c) => c.group === cat.group);
-      if (!target) {
-        target = { group: cat.group, items: [] };
-        merged.push(target);
-      }
-      for (const it of newItems) {
-        seen.add(it.name);
-        target.items.push({ name: it.name });
-        changed = true;
-      }
-    }
-    const normalized = dedupeSnapshot(merged);
-    if (changed || normalized.length !== existing.length) {
-      lsStore.setItem(structSnapshotKey(name, date), JSON.stringify(normalized));
-    }
-  } catch {}
-}
-
-/** Categories to use when rendering history for a station on a date. */
-export function historyCategories(name: string, date: string): HistoryCategory[] {
-  return readSnapshot(name, date) ?? effectiveCategorizedItems(name);
-}
-
-/** Station names relevant to a given date: everything recorded that day
- *  (even if since deleted from the template), plus current stations. */
-export function historySectionNames(date: string): string[] {
-  const names: string[] = [];
-  const add = (n: string) => {
-    if (n && !names.includes(n)) names.push(n);
-  };
-  for (const s of getEffectiveSections()) add(s.name);
-  try {
-    for (const k of lsStore.keys()) {
-      if (!k.endsWith(`:${date}`)) continue;
-      if (k.startsWith("linecheck:struct-snap:")) {
-        add(k.slice("linecheck:struct-snap:".length, k.length - date.length - 1));
-      } else if (k.startsWith("linecheck:") && !k.startsWith("linecheck:settings:")) {
-        const rest = k.slice("linecheck:".length, k.length - date.length - 1);
-        if (rest && !rest.includes(":")) add(rest);
-      }
-    }
-  } catch {}
-  return names;
-}
-
 export function shiftHistory(date: string, slot: Slot): ShiftHistory {
   let stationsTouched = 0;
   let stationsComplete = 0;
@@ -380,10 +255,9 @@ export function shiftHistory(date: string, slot: Slot): ShiftHistory {
   let totalItems = 0;
   let checkedItems = 0;
   const stations: ShiftHistoryStation[] = [];
-  for (const secName of historySectionNames(date)) {
-    const sec = { name: secName };
+  for (const sec of getEffectiveSections()) {
     const state = loadSection(sec.name, date);
-    const cats = historyCategories(sec.name, date);
+    const cats = effectiveCategorizedItems(sec.name);
     let anyTouched = false;
     let allDone = true;
     let secTotal = 0;
@@ -419,13 +293,7 @@ export function shiftHistory(date: string, slot: Slot): ShiftHistory {
         }
       }
     }
-    let hasComment = false;
-    try {
-      const c = lsStore.getItem(`linecheck:section-comment:${sec.name}:${date}:${slot}`);
-      const ph = lsStore.getItem(`linecheck:section-comment-photos:${sec.name}:${date}:${slot}`);
-      hasComment = !!(c && c.trim()) || !!(ph && ph !== "[]");
-    } catch {}
-    if (anyTouched || hasComment) {
+    if (anyTouched) {
       stationsTouched++;
       stations.push({
         name: sec.name,
@@ -586,10 +454,9 @@ export type FlaggedRow = {
 
 export function allFlagged(slot: Slot, date = todayISO()): FlaggedRow[] {
   const rows: FlaggedRow[] = [];
-  for (const secName of historySectionNames(date)) {
-    const sec = { name: secName };
+  for (const sec of getEffectiveSections()) {
     const state = loadSection(sec.name, date);
-    for (const cat of historyCategories(sec.name, date)) {
+    for (const cat of effectiveCategorizedItems(sec.name)) {
       const seen = new Map<string, number>();
       for (const item of cat.items) {
         const occ = seen.get(item.name) ?? 0;
@@ -652,10 +519,9 @@ export function dayHistory(date: string): DayHistory {
   let flagged = 0;
   let totalItems = 0;
   let checkedItems = 0;
-  for (const secName of historySectionNames(date)) {
-    const sec = { name: secName };
+  for (const sec of getEffectiveSections()) {
     const state = loadSection(sec.name, date);
-    const cats = historyCategories(sec.name, date);
+    const cats = effectiveCategorizedItems(sec.name);
     let anyTouched = false;
     let allDone = true;
     let secTotal = 0;

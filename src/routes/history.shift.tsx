@@ -9,8 +9,8 @@ import {
   loadMember,
   SLOT_LABEL,
   shiftHistory,
-  historySectionNames,
-  historyCategories,
+  getEffectiveSections,
+  effectiveCategorizedItems,
   readEntry,
   getShifts,
   type Slot,
@@ -94,11 +94,10 @@ function ShiftDetail() {
       comment: string;
       commentPhotos: string[];
     }[] = [];
-    for (const secName of historySectionNames(date)) {
-      const sec = { name: secName };
+    for (const sec of getEffectiveSections()) {
       const state = loadSection(sec.name, date);
       const items: Row[] = [];
-      for (const cat of historyCategories(sec.name, date)) {
+      for (const cat of effectiveCategorizedItems(sec.name)) {
         for (const it of cat.items) {
           const e = readEntry(state, cat.group, it.name, shift);
           if (!e?.status) continue;

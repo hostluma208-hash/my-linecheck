@@ -665,18 +665,25 @@ function SortableStationRow({
           {renameError}
         </p>
       )}
-      {open && st.items.length > 0 && (
+      {open && (
         <div className="border-t border-border px-12 py-3">
-          <ul className="grid grid-cols-2 gap-1.5 text-xs">
-            {st.items.map((it) => (
-              <li
-                key={it.name}
-                className="rounded-md bg-muted/50 px-2 py-1 text-muted-foreground"
-              >
-                {it.name}
-              </li>
-            ))}
-          </ul>
+          {st.items.length === 0 ? (
+            <p className="text-xs text-muted-foreground">
+              No categories yet. Open this station from the dashboard and use{" "}
+              <span className="font-semibold">Edit Categories</span> to add items.
+            </p>
+          ) : (
+            <ul className="grid grid-cols-2 gap-1.5 text-xs">
+              {st.items.map((it) => (
+                <li
+                  key={it.name}
+                  className="rounded-md bg-muted/50 px-2 py-1 text-muted-foreground"
+                >
+                  {it.name}
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
       )}
     </li>
