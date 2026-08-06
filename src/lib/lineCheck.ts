@@ -560,9 +560,10 @@ export type FlaggedRow = {
 
 export function allFlagged(slot: Slot, date = todayISO()): FlaggedRow[] {
   const rows: FlaggedRow[] = [];
-  for (const sec of getEffectiveSections()) {
+  for (const secName of historySectionNames(date)) {
+    const sec = { name: secName };
     const state = loadSection(sec.name, date);
-    for (const cat of effectiveCategorizedItems(sec.name)) {
+    for (const cat of historyCategories(sec.name, date)) {
       const seen = new Map<string, number>();
       for (const item of cat.items) {
         const occ = seen.get(item.name) ?? 0;
