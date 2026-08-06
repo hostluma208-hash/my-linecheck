@@ -13,6 +13,7 @@ import {
   type ShiftHistoryStation,
   type Slot,
 } from "@/lib/lineCheck";
+import { lsStore } from "@/lib/lsStore";
 
 import {
   ArrowLeft,
@@ -470,6 +471,22 @@ function StationRow({
   expanded: boolean;
   onToggle: () => void;
 }) {
+  const { comment, commentPhotos } = useMemo(() => {
+    const comment =
+      lsStore.getItem(`linecheck:section-comment:${station.name}:${date}:${slot}`)?.trim() || "";
+    let commentPhotos: string[] = [];
+    try {
+      const raw = lsStore.getItem(
+        `linecheck:section-comment-photos:${station.name}:${date}:${slot}`,
+      );
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        if (Array.isArray(parsed))
+          commentPhotos = parsed.filter((x) => typeof x === "string" && x.length > 0);
+      }
+    } catch {}
+    return { comment, commentPhotos };
+  }, [station.name, date, slot]);
 
   return (
     <div className="rounded-2xl border border-border bg-muted/30">
@@ -554,6 +571,33 @@ function StationRow({
                 </li>
               ))}
             </ul>
+          )}
+          {(comment || commentPhotos.length > 0) && (
+            <div className="mt-3 rounded-xl border border-border bg-card p-2.5">
+              <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                Station comment & feedback
+              </p>
+              {comment && <p className="mt-1 whitespace-pre-wrap text-xs">{comment}</p>}
+              {commentPhotos.length > 0 && (
+                <div className="mt-2 flex flex-wrap gap-2">
+                  {commentPhotos.map((src, i) => (
+                    <a
+                      key={i}
+                      href={src}
+                      target="_blank"
+                      rel="noreferrer"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <img
+                        src={src}
+                        alt={`${station.name} comment attachment ${i + 1}`}
+                        className="h-16 w-16 rounded-lg border border-border object-cover"
+                      />
+                    </a>
+                  ))}
+                </div>
+              )}
+            </div>
           )}
           <Link
             to="/$name"
