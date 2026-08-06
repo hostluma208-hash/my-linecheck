@@ -399,7 +399,13 @@ export function shiftHistory(date: string, slot: Slot): ShiftHistory {
         }
       }
     }
-    if (anyTouched) {
+    let hasComment = false;
+    try {
+      const c = lsStore.getItem(`linecheck:section-comment:${sec.name}:${date}:${slot}`);
+      const ph = lsStore.getItem(`linecheck:section-comment-photos:${sec.name}:${date}:${slot}`);
+      hasComment = !!(c && c.trim()) || !!(ph && ph !== "[]");
+    } catch {}
+    if (anyTouched || hasComment) {
       stationsTouched++;
       stations.push({
         name: sec.name,
