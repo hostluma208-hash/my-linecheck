@@ -1,8 +1,8 @@
 import { z } from "zod";
 import { supabase } from "@/integrations/supabase/client";
 import {
-  effectiveCategorizedItems,
-  getEffectiveSections,
+  historyCategories,
+  historySectionNames,
   loadSection,
   loadMember,
   shiftHistory,
@@ -70,7 +70,8 @@ export type SharedShiftPayload = z.infer<typeof sharedShiftPayloadSchema>;
 function buildPayload(date: string, slot: Slot): SharedShiftPayload {
   const tempUnit =
     (lsStore.getItem("linecheck:settings:temp-unit") as "F" | "C" | null) || "F";
-  const sections = getEffectiveSections().map((s) => {
+  const sections = historySectionNames(date).map((name) => {
+    const s = { name };
     let temps: Record<string, string> = {};
     try {
       const raw = lsStore.getItem(`linecheck:temps:${s.name}:${date}:${slot}`);
@@ -91,7 +92,7 @@ function buildPayload(date: string, slot: Slot): SharedShiftPayload {
     return {
       name: s.name,
       state: loadSection(s.name, date),
-      categories: effectiveCategorizedItems(s.name),
+      categories: historyCategories(s.name, date),
       temps,
       tempUnit: (tempUnit === "C" ? "C" : "F") as "F" | "C",
       comment,

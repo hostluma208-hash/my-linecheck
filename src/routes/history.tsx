@@ -3,7 +3,7 @@ import { stationSlug } from "@/lib/slug";
 import { useEffect, useMemo, useState } from "react";
 import { AppShell, useShellState } from "@/components/AppShell";
 import {
-  SECTIONS,
+  getEffectiveSections,
   listHistoryDates,
   shiftHistory,
   clearAllHistory,
@@ -171,7 +171,7 @@ function HistoryPage() {
             onChange={setStation}
             options={[
               { value: "ALL", label: "All Stations" },
-              ...SECTIONS.map((s) => ({ value: s.name, label: s.name })),
+              ...getEffectiveSections().map((s) => ({ value: s.name, label: s.name })),
             ]}
           />
           <FilterSelect
