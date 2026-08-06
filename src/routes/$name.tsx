@@ -19,6 +19,7 @@ import {
   getShiftLabel,
   getEffectiveSections,
   effectiveCategorizedItems,
+  ensureStructSnapshot,
   type Entry,
   type SectionState,
   type Slot,
@@ -543,6 +544,17 @@ function SectionPage() {
       window.dispatchEvent(new Event("linecheck:update"));
     } catch {}
   }, [key, state]);
+
+  // Freeze the structure used on this date once work is recorded, so later
+  // template edits (rearrange / rename / delete / add) never rewrite history.
+  useEffect(() => {
+    if (struct.length === 0) return;
+    const hasMarks = Object.values(state.entries ?? {}).some((e) =>
+      Object.values(e ?? {}).some((v) => v?.status),
+    );
+    if (!hasMarks) return;
+    ensureStructSnapshot(name, shell.date, struct);
+  }, [name, shell.date, state, struct]);
 
   // Adopt storage changes made elsewhere (cross-device sync pull, another tab,
   // sign-in scope switch) instead of keeping a stale in-memory copy that would
