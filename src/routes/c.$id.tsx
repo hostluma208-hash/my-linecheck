@@ -222,7 +222,7 @@ function SharedClosingView() {
               {c.photos.map((src, i) => (
                 <button
                   key={i}
-                  onClick={() => setViewer(src)}
+                  onClick={() => setViewer(i)}
                   className="aspect-square overflow-hidden rounded-lg border border-border"
                 >
                   <img src={src} alt={`Photo ${i + 1}`} className="h-full w-full object-cover" />
