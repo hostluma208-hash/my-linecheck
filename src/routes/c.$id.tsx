@@ -1,11 +1,21 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import {
   sharedClosingPayloadSchema,
   type SharedClosingPayload,
 } from "@/lib/shareClosing";
-import { Calendar, ClipboardCheck, Clock, Loader2, User } from "lucide-react";
+import {
+  Calendar,
+  ChevronLeft,
+  ChevronRight,
+  ClipboardCheck,
+  Clock,
+  Loader2,
+  User,
+  X,
+} from "lucide-react";
+
 
 export const Route = createFileRoute("/c/$id")({
   head: () => ({
@@ -31,7 +41,26 @@ function SharedClosingView() {
     brand: string;
     updated_at: string;
   } | null>(null);
-  const [viewer, setViewer] = useState<string | null>(null);
+  const [viewer, setViewer] = useState<number | null>(null);
+
+  const photoCount = data?.payload.photos.length ?? 0;
+  const step = useCallback(
+    (delta: number) =>
+      setViewer((i) => (i === null || photoCount === 0 ? i : (i + delta + photoCount) % photoCount)),
+    [photoCount],
+  );
+
+  useEffect(() => {
+    if (viewer === null) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "ArrowRight") step(1);
+      else if (e.key === "ArrowLeft") step(-1);
+      else if (e.key === "Escape") setViewer(null);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [viewer, step]);
+
 
   useEffect(() => {
     let active = true;
@@ -193,7 +222,7 @@ function SharedClosingView() {
               {c.photos.map((src, i) => (
                 <button
                   key={i}
-                  onClick={() => setViewer(src)}
+                  onClick={() => setViewer(i)}
                   className="aspect-square overflow-hidden rounded-lg border border-border"
                 >
                   <img src={src} alt={`Photo ${i + 1}`} className="h-full w-full object-cover" />
@@ -204,16 +233,64 @@ function SharedClosingView() {
         )}
       </main>
 
-      {viewer && (
+      {viewer !== null && c.photos[viewer] && (
         <div
           role="dialog"
           aria-modal="true"
           onClick={() => setViewer(null)}
           className="fixed inset-0 z-50 grid place-items-center bg-black/80 p-4"
         >
-          <img src={viewer} alt="Photo" className="max-h-full max-w-full rounded-lg" />
+          <button
+            aria-label="Close"
+            onClick={(e) => {
+              e.stopPropagation();
+              setViewer(null);
+            }}
+            className="absolute right-4 top-4 grid h-10 w-10 place-items-center rounded-full bg-white/10 text-white backdrop-blur"
+          >
+            <X className="h-5 w-5" />
+          </button>
+
+          {c.photos.length > 1 && (
+            <button
+              aria-label="Previous photo"
+              onClick={(e) => {
+                e.stopPropagation();
+                step(-1);
+              }}
+              className="absolute left-2 top-1/2 grid h-11 w-11 -translate-y-1/2 place-items-center rounded-full bg-white/10 text-white backdrop-blur sm:left-4"
+            >
+              <ChevronLeft className="h-6 w-6" />
+            </button>
+          )}
+
+          <img
+            src={c.photos[viewer]}
+            alt={`Photo ${viewer + 1}`}
+            onClick={(e) => e.stopPropagation()}
+            className="max-h-full max-w-full rounded-lg"
+          />
+
+          {c.photos.length > 1 && (
+            <>
+              <button
+                aria-label="Next photo"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  step(1);
+                }}
+                className="absolute right-2 top-1/2 grid h-11 w-11 -translate-y-1/2 place-items-center rounded-full bg-white/10 text-white backdrop-blur sm:right-4"
+              >
+                <ChevronRight className="h-6 w-6" />
+              </button>
+              <span className="absolute bottom-5 left-1/2 -translate-x-1/2 rounded-full bg-white/10 px-3 py-1 text-xs font-semibold text-white backdrop-blur">
+                {viewer + 1} / {c.photos.length}
+              </span>
+            </>
+          )}
         </div>
       )}
+
     </div>
   );
 }
