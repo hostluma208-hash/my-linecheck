@@ -41,7 +41,26 @@ function SharedClosingView() {
     brand: string;
     updated_at: string;
   } | null>(null);
-  const [viewer, setViewer] = useState<string | null>(null);
+  const [viewer, setViewer] = useState<number | null>(null);
+
+  const photoCount = data?.payload.photos.length ?? 0;
+  const step = useCallback(
+    (delta: number) =>
+      setViewer((i) => (i === null || photoCount === 0 ? i : (i + delta + photoCount) % photoCount)),
+    [photoCount],
+  );
+
+  useEffect(() => {
+    if (viewer === null) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "ArrowRight") step(1);
+      else if (e.key === "ArrowLeft") step(-1);
+      else if (e.key === "Escape") setViewer(null);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [viewer, step]);
+
 
   useEffect(() => {
     let active = true;
