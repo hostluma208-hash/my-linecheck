@@ -310,39 +310,39 @@ export function ensureStructSnapshot(
   cats: HistoryCategory[],
 ) {
   try {
+    const incomingCats = dedupeSnapshot(cats);
     const existing = readSnapshot(name, date);
     if (!existing) {
-      lsStore.setItem(
-        structSnapshotKey(name, date),
-        JSON.stringify(cats.map((c) => ({ group: c.group, items: c.items.map((i) => ({ name: i.name })) }))),
-      );
+      lsStore.setItem(structSnapshotKey(name, date), JSON.stringify(incomingCats));
       return;
     }
     const merged: HistoryCategory[] = existing.map((c) => ({
       group: c.group,
       items: [...c.items],
     }));
+    // An item name may exist only once across the entire snapshot, so a group
+    // rename can never duplicate the whole station's item list.
+    const seen = new Set<string>();
+    for (const c of merged) for (const it of c.items) seen.add(it.name);
     let changed = false;
-    for (const cat of cats) {
+    for (const cat of incomingCats) {
+      const newItems = cat.items.filter((it) => !seen.has(it.name));
+      if (!newItems.length) continue;
       let target = merged.find((c) => c.group === cat.group);
       if (!target) {
         target = { group: cat.group, items: [] };
         merged.push(target);
+      }
+      for (const it of newItems) {
+        seen.add(it.name);
+        target.items.push({ name: it.name });
         changed = true;
       }
-      const counts = new Map<string, number>();
-      for (const it of target.items) counts.set(it.name, (counts.get(it.name) ?? 0) + 1);
-      const incoming = new Map<string, number>();
-      for (const it of cat.items) incoming.set(it.name, (incoming.get(it.name) ?? 0) + 1);
-      for (const [itemName, n] of incoming) {
-        const have = counts.get(itemName) ?? 0;
-        for (let i = have; i < n; i++) {
-          target.items.push({ name: itemName });
-          changed = true;
-        }
-      }
     }
-    if (changed) lsStore.setItem(structSnapshotKey(name, date), JSON.stringify(merged));
+    const normalized = dedupeSnapshot(merged);
+    if (changed || normalized.length !== existing.length) {
+      lsStore.setItem(structSnapshotKey(name, date), JSON.stringify(normalized));
+    }
   } catch {}
 }
 
