@@ -266,16 +266,36 @@ export function structSnapshotKey(name: string, date: string) {
   return `linecheck:struct-snap:${name}:${date}`;
 }
 
+/** Remove duplicate item names across the whole snapshot (an item can only
+ *  belong to one category) and drop empty categories. Guards against older
+ *  snapshots that got inflated by group renames during sync. */
+function dedupeSnapshot(cats: HistoryCategory[]): HistoryCategory[] {
+  const seen = new Set<string>();
+  const out: HistoryCategory[] = [];
+  for (const c of cats) {
+    const items: { name: string }[] = [];
+    for (const it of c.items) {
+      if (!it?.name || seen.has(it.name)) continue;
+      seen.add(it.name);
+      items.push({ name: it.name });
+    }
+    if (items.length) out.push({ group: c.group, items });
+  }
+  return out;
+}
+
 function readSnapshot(name: string, date: string): HistoryCategory[] | null {
   try {
     const raw = lsStore.getItem(structSnapshotKey(name, date));
     if (!raw) return null;
     const arr = JSON.parse(raw);
     if (!Array.isArray(arr)) return null;
-    return arr.map((c: { group?: string; items?: { name: string }[] }, i: number) => ({
-      group: c.group ?? `Group ${i + 1}`,
-      items: Array.isArray(c.items) ? c.items.map((it) => ({ name: it.name })) : [],
-    }));
+    return dedupeSnapshot(
+      arr.map((c: { group?: string; items?: { name: string }[] }, i: number) => ({
+        group: c.group ?? `Group ${i + 1}`,
+        items: Array.isArray(c.items) ? c.items.map((it) => ({ name: it.name })) : [],
+      })),
+    );
   } catch {
     return null;
   }
