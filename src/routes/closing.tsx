@@ -10,6 +10,7 @@ import {
   ChevronDown,
   ChevronUp,
   ClipboardCheck,
+  Download,
   Image as ImageIcon,
   Pencil,
 
@@ -19,6 +20,7 @@ import {
   X,
 } from "lucide-react";
 import { publishSharedClosing } from "@/lib/shareClosing";
+import { downloadClosingSnapshot } from "@/lib/closingSnapshot";
 
 export const Route = createFileRoute("/closing")({
   head: () => ({
