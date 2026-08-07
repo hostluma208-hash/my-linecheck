@@ -3,8 +3,9 @@ import { useEffect, useMemo, useState } from "react";
 import { AppShell, useShellState } from "@/components/AppShell";
 import { lsStore } from "@/lib/lsStore";
 import { savePhoto } from "@/lib/photoStore";
-import { Camera, Trash2, X, PackageCheck, Plus, ChevronDown, ChevronUp, Pencil, Image as ImageIcon, Check as CheckIcon, Share2 } from "lucide-react";
+import { Camera, Trash2, X, PackageCheck, Plus, ChevronDown, ChevronUp, Pencil, Image as ImageIcon, Check as CheckIcon, Share2, Download } from "lucide-react";
 import { publishSharedReceiving } from "@/lib/shareReceiving";
+import { downloadReceivingSnapshot } from "@/lib/receivingSnapshot";
 
 export const Route = createFileRoute("/receiving")({
   head: () => ({
@@ -615,6 +616,11 @@ function ReceivingPage() {
                             className="inline-flex items-center gap-1.5 rounded-lg border border-input bg-background px-3 py-1.5 text-xs font-medium hover:bg-accent">
                             <Pencil className="h-3.5 w-3.5" />
                             Edit
+                          </button>
+                          <button onClick={() => downloadReceivingSnapshot(r)}
+                            className="inline-flex items-center gap-1.5 rounded-lg border border-input bg-background px-3 py-1.5 text-xs font-medium hover:bg-accent">
+                            <Download className="h-3.5 w-3.5" />
+                            Download PNG
                           </button>
                           <button onClick={() => shareRecord(r)}
 
