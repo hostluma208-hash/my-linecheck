@@ -10,6 +10,7 @@ import {
   ChevronDown,
   ChevronUp,
   ClipboardCheck,
+  Download,
   Image as ImageIcon,
   Pencil,
 
@@ -19,6 +20,7 @@ import {
   X,
 } from "lucide-react";
 import { publishSharedClosing } from "@/lib/shareClosing";
+import { downloadClosingSnapshot } from "@/lib/closingSnapshot";
 
 export const Route = createFileRoute("/closing")({
   head: () => ({
@@ -874,6 +876,13 @@ function ClosingPage() {
                           >
                             <Pencil className="h-3.5 w-3.5" />
                             Edit
+                          </button>
+                          <button
+                            onClick={() => downloadClosingSnapshot(r)}
+                            className="inline-flex items-center gap-1.5 rounded-lg border border-input bg-background px-3 py-1.5 text-xs font-medium hover:bg-accent"
+                          >
+                            <Download className="h-3.5 w-3.5" />
+                            Download snapshot
                           </button>
                           <button
 
