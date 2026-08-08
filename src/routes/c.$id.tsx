@@ -225,7 +225,7 @@ function SharedClosingView() {
                   onClick={() => setViewer(i)}
                   className="aspect-square overflow-hidden rounded-lg border border-border"
                 >
-                  <img src={src} alt={`Photo ${i + 1}`} className="h-full w-full object-cover" />
+                  <img src={src} alt={`Closing report photo ${i + 1} of ${c.photos.length}`} className="h-full w-full object-cover" />
                 </button>
               ))}
             </div>
@@ -266,7 +266,7 @@ function SharedClosingView() {
 
           <img
             src={c.photos[viewer]}
-            alt={`Photo ${viewer + 1}`}
+            alt={`Closing report photo ${viewer + 1} of ${c.photos.length}`}
             onClick={(e) => e.stopPropagation()}
             className="max-h-full max-w-full rounded-lg"
           />
