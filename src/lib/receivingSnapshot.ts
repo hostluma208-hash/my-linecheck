@@ -25,7 +25,8 @@ export type ReceivingSnapshotRecord = {
 const W = 900;
 const PAD = 48;
 const CONTENT = W - PAD * 2;
-const SCALE = 2;
+// Render at 3x device pixels so text and photos stay crisp when zoomed/printed.
+const SCALE = 3;
 
 const INK = "#111114";
 const MUTED = "#6b6b74";
@@ -144,6 +145,8 @@ export async function buildReceivingSnapshotPng(
   const ctx = canvas.getContext("2d")!;
   ctx.scale(SCALE, SCALE);
   ctx.textBaseline = "alphabetic";
+  ctx.imageSmoothingEnabled = true;
+  ctx.imageSmoothingQuality = "high";
 
   ctx.fillStyle = BG;
   ctx.fillRect(0, 0, W, H);
