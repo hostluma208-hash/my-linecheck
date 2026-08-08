@@ -39,10 +39,22 @@ export const Route = createFileRoute("/history")({
       { title: "Shift History — Line Check 2026" },
       {
         name: "description",
-        content: "Past line checks, completion trends, and recurring issues.",
+        content:
+          "Browse completed line checks by date, shift and station: completion trends, recurring issues and flagged items across your kitchen history.",
       },
+      { property: "og:title", content: "Shift History — Line Check 2026" },
+      {
+        property: "og:description",
+        content:
+          "Review past line checks with completion trends, recurring issues and station-level detail.",
+      },
+      { property: "og:type", content: "website" },
+      { property: "og:url", content: "https://my-linecheck.lovable.app/history" },
+      { name: "twitter:card", content: "summary" },
     ],
+    links: [{ rel: "canonical", href: "https://my-linecheck.lovable.app/history" }],
   }),
+
   component: HistoryPage,
 });
 
