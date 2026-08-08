@@ -21,14 +21,23 @@ export const Route = createFileRoute("/c/$id")({
   head: () => ({
     meta: [
       { title: "Shared Closing Report — Line Check" },
-      { name: "description", content: "Read-only shared closing report." },
+      {
+        name: "description",
+        content:
+          "Read-only closing report for a kitchen shift: closing checklist status, team on duty, manager notes and attached station photos.",
+      },
       { property: "og:title", content: "Shared Closing Report — Line Check" },
-      { property: "og:description", content: "Read-only shared closing report." },
+      {
+        property: "og:description",
+        content:
+          "Closing checklist status, team on duty, notes and photos for a single kitchen shift.",
+      },
       { property: "og:type", content: "article" },
       { name: "twitter:card", content: "summary" },
       { name: "robots", content: "noindex" },
     ],
   }),
+
   component: SharedClosingView,
 });
 

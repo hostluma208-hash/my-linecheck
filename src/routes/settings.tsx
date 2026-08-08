@@ -53,9 +53,25 @@ export const Route = createFileRoute("/settings")({
   head: () => ({
     meta: [
       { title: "Settings — Line Check 2026" },
-      { name: "description", content: "Manage stations, items, team members and status options." },
+      {
+        name: "description",
+        content:
+          "Configure your kitchen line check: stations and items, team members, shift slots, status options, shelves, containers and account access.",
+      },
+      { property: "og:title", content: "Settings — Line Check 2026" },
+      {
+        property: "og:description",
+        content:
+          "Manage stations, items, team members, shifts, status options and account access for your kitchen.",
+      },
+      { property: "og:type", content: "website" },
+      { property: "og:url", content: "https://my-linecheck.lovable.app/settings" },
+      { name: "twitter:card", content: "summary" },
+      { name: "robots", content: "noindex" },
     ],
+    links: [{ rel: "canonical", href: "https://my-linecheck.lovable.app/settings" }],
   }),
+
   component: SettingsPage,
 });
 

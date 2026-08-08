@@ -27,11 +27,22 @@ export const Route = createFileRoute("/")({
       { title: "Shift Overview — Line Check 2026" },
       {
         name: "description",
-        content: "Kitchen shift readiness dashboard: station progress and flagged items.",
+        content:
+          "Track kitchen shift readiness in real time: station-by-station progress, flagged items, temperatures and open issues for every opening, mid and closing shift.",
       },
-      { property: "og:title", content: "Shift Overview — Line Check 2026" },
+      { property: "og:title", content: "Shift Overview Dashboard — Line Check 2026" },
+      {
+        property: "og:description",
+        content:
+          "See station progress, flagged items and shift readiness at a glance across every kitchen station.",
+      },
+      { property: "og:type", content: "website" },
+      { property: "og:url", content: "https://my-linecheck.lovable.app/" },
+      { name: "twitter:card", content: "summary" },
     ],
+    links: [{ rel: "canonical", href: "https://my-linecheck.lovable.app/" }],
   }),
+
   component: Dashboard,
 });
 
