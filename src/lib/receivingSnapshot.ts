@@ -145,6 +145,8 @@ export async function buildReceivingSnapshotPng(
   const ctx = canvas.getContext("2d")!;
   ctx.scale(SCALE, SCALE);
   ctx.textBaseline = "alphabetic";
+  ctx.imageSmoothingEnabled = true;
+  ctx.imageSmoothingQuality = "high";
 
   ctx.fillStyle = BG;
   ctx.fillRect(0, 0, W, H);

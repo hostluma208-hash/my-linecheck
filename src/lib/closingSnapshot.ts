@@ -129,6 +129,8 @@ export async function buildClosingSnapshotPng(r: ClosingSnapshotRecord): Promise
   const ctx = canvas.getContext("2d")!;
   ctx.scale(SCALE, SCALE);
   ctx.textBaseline = "alphabetic";
+  ctx.imageSmoothingEnabled = true;
+  ctx.imageSmoothingQuality = "high";
 
   ctx.fillStyle = BG;
   ctx.fillRect(0, 0, W, H);
