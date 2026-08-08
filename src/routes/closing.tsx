@@ -13,13 +13,10 @@ import {
   Download,
   Image as ImageIcon,
   Pencil,
-
   Plus,
-  Share2,
   Trash2,
   X,
 } from "lucide-react";
-import { publishSharedClosing } from "@/lib/shareClosing";
 import { downloadClosingSnapshot } from "@/lib/closingSnapshot";
 
 export const Route = createFileRoute("/closing")({
@@ -371,19 +368,6 @@ function ClosingPage() {
     saveRecords(next);
   }
 
-  async function shareRecord(r: ClosingRecord) {
-    try {
-      const url = await publishSharedClosing(r);
-      try {
-        await navigator.clipboard.writeText(url);
-        alert(`Public link copied to clipboard:\n${url}`);
-      } catch {
-        prompt("Public share link:", url);
-      }
-    } catch (e) {
-      alert(`Could not create share link: ${(e as Error).message}`);
-    }
-  }
 
   return (
     <AppShell {...shell}>
@@ -883,14 +867,6 @@ function ClosingPage() {
                           >
                             <Download className="h-3.5 w-3.5" />
                             Download PNG
-                          </button>
-                          <button
-
-                            onClick={() => shareRecord(r)}
-                            className="inline-flex items-center gap-1.5 rounded-lg border border-input bg-background px-3 py-1.5 text-xs font-medium hover:bg-accent"
-                          >
-                            <Share2 className="h-3.5 w-3.5" />
-                            Copy public link
                           </button>
                           <button
                             onClick={() => deleteRecord(r.id)}
