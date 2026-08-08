@@ -3,8 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 import { AppShell, useShellState } from "@/components/AppShell";
 import { lsStore } from "@/lib/lsStore";
 import { savePhoto } from "@/lib/photoStore";
-import { Camera, Trash2, X, PackageCheck, Plus, ChevronDown, ChevronUp, Pencil, Image as ImageIcon, Check as CheckIcon, Share2, Download } from "lucide-react";
-import { publishSharedReceiving } from "@/lib/shareReceiving";
+import { Camera, Trash2, X, PackageCheck, Plus, ChevronDown, ChevronUp, Pencil, Image as ImageIcon, Check as CheckIcon, Download } from "lucide-react";
 import { downloadReceivingSnapshot } from "@/lib/receivingSnapshot";
 
 export const Route = createFileRoute("/receiving")({
@@ -321,19 +320,6 @@ function ReceivingPage() {
     saveRecords(next);
   }
 
-  async function shareRecord(r: ReceivingRecord) {
-    try {
-      const url = await publishSharedReceiving(r);
-      try {
-        await navigator.clipboard.writeText(url);
-        alert(`Public link copied to clipboard:\n${url}`);
-      } catch {
-        prompt("Public share link:", url);
-      }
-    } catch (e) {
-      alert(`Could not create share link: ${(e as Error).message}`);
-    }
-  }
 
   return (
     <AppShell {...shell}>
@@ -621,12 +607,6 @@ function ReceivingPage() {
                             className="inline-flex items-center gap-1.5 rounded-lg border border-input bg-background px-3 py-1.5 text-xs font-medium hover:bg-accent">
                             <Download className="h-3.5 w-3.5" />
                             Download PNG
-                          </button>
-                          <button onClick={() => shareRecord(r)}
-
-                            className="inline-flex items-center gap-1.5 rounded-lg border border-input bg-background px-3 py-1.5 text-xs font-medium hover:bg-accent">
-                            <Share2 className="h-3.5 w-3.5" />
-                            Copy public link
                           </button>
                           <button onClick={() => deleteRecord(r.id)}
                             className="inline-flex items-center gap-1.5 rounded-lg border border-destructive/30 bg-destructive/5 px-3 py-1.5 text-xs font-medium text-destructive hover:bg-destructive/10">
