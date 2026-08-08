@@ -169,7 +169,7 @@ function SharedReceivingView() {
                   onClick={() => setViewer(src)}
                   className="aspect-square overflow-hidden rounded-lg border border-border"
                 >
-                  <img src={src} alt={`Photo ${i + 1}`} className="h-full w-full object-cover" />
+                  <img src={src} alt={`Receiving checklist photo ${i + 1} of ${r.photos.length}`} className="h-full w-full object-cover" />
                 </button>
               ))}
             </div>
@@ -184,7 +184,7 @@ function SharedReceivingView() {
           onClick={() => setViewer(null)}
           className="fixed inset-0 z-50 grid place-items-center bg-black/80 p-4"
         >
-          <img src={viewer} alt="Photo" className="max-h-full max-w-full rounded-lg" />
+          <img src={viewer} alt="Receiving checklist photo full view" className="max-h-full max-w-full rounded-lg" />
         </div>
       )}
     </div>

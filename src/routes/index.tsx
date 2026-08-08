@@ -109,7 +109,10 @@ function Dashboard() {
       )}
       {/* Hero readiness card */}
       <section className="rounded-3xl border border-border bg-card p-6 lg:p-8">
-        <p className="text-sm text-muted-foreground">
+        <h1 className="text-sm font-bold uppercase tracking-[0.18em] text-muted-foreground">
+          Shift Overview Dashboard
+        </h1>
+        <p className="mt-1 text-sm text-muted-foreground">
           {greeting}, <span className="font-medium text-foreground">{name}</span>.
         </p>
         <p className="mt-1 text-sm">
