@@ -12,9 +12,3 @@ Allow: /
 
 User-agent: *
 Allow: /
-Disallow: /settings
-Disallow: /s/
-Disallow: /c/
-Disallow: /r/
-
-Sitemap: https://my-linecheck.lovable.app/sitemap.xml

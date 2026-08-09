@@ -26,24 +26,11 @@ import {
 export const Route = createFileRoute("/s/$id")({
   head: () => ({
     meta: [
-      { title: "Shared Shift Report — Line Check" },
-      {
-        name: "description",
-        content:
-          "Read-only shared line check report showing station completion, flagged items, temperatures and staff notes for a single kitchen shift.",
-      },
-      { property: "og:title", content: "Shared Shift Report — Line Check" },
-      {
-        property: "og:description",
-        content:
-          "Read-only kitchen shift report: station completion, flagged items, temperatures and notes.",
-      },
-      { property: "og:type", content: "article" },
-      { name: "twitter:card", content: "summary" },
+      { title: "Shared Shift — Line Check" },
+      { name: "description", content: "Read-only shared shift report." },
       { name: "robots", content: "noindex" },
     ],
   }),
-
   component: SharedView,
 });
 

@@ -9,7 +9,6 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as ReceivingRouteImport } from './routes/receiving'
 import { Route as HistoryRouteImport } from './routes/history'
@@ -22,11 +21,6 @@ import { Route as RIdRouteImport } from './routes/r.$id'
 import { Route as HistoryShiftRouteImport } from './routes/history.shift'
 import { Route as CIdRouteImport } from './routes/c.$id'
 
-const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
-  id: '/sitemap.xml',
-  path: '/sitemap.xml',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const SettingsRoute = SettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
@@ -91,7 +85,6 @@ export interface FileRoutesByFullPath {
   '/history': typeof HistoryRouteWithChildren
   '/receiving': typeof ReceivingRoute
   '/settings': typeof SettingsRoute
-  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/c/$id': typeof CIdRoute
   '/history/shift': typeof HistoryShiftRoute
   '/r/$id': typeof RIdRoute
@@ -105,7 +98,6 @@ export interface FileRoutesByTo {
   '/history': typeof HistoryRouteWithChildren
   '/receiving': typeof ReceivingRoute
   '/settings': typeof SettingsRoute
-  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/c/$id': typeof CIdRoute
   '/history/shift': typeof HistoryShiftRoute
   '/r/$id': typeof RIdRoute
@@ -120,7 +112,6 @@ export interface FileRoutesById {
   '/history': typeof HistoryRouteWithChildren
   '/receiving': typeof ReceivingRoute
   '/settings': typeof SettingsRoute
-  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/c/$id': typeof CIdRoute
   '/history/shift': typeof HistoryShiftRoute
   '/r/$id': typeof RIdRoute
@@ -136,7 +127,6 @@ export interface FileRouteTypes {
     | '/history'
     | '/receiving'
     | '/settings'
-    | '/sitemap.xml'
     | '/c/$id'
     | '/history/shift'
     | '/r/$id'
@@ -150,7 +140,6 @@ export interface FileRouteTypes {
     | '/history'
     | '/receiving'
     | '/settings'
-    | '/sitemap.xml'
     | '/c/$id'
     | '/history/shift'
     | '/r/$id'
@@ -164,7 +153,6 @@ export interface FileRouteTypes {
     | '/history'
     | '/receiving'
     | '/settings'
-    | '/sitemap.xml'
     | '/c/$id'
     | '/history/shift'
     | '/r/$id'
@@ -179,7 +167,6 @@ export interface RootRouteChildren {
   HistoryRoute: typeof HistoryRouteWithChildren
   ReceivingRoute: typeof ReceivingRoute
   SettingsRoute: typeof SettingsRoute
-  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   CIdRoute: typeof CIdRoute
   RIdRoute: typeof RIdRoute
   SIdRoute: typeof SIdRoute
@@ -187,13 +174,6 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/sitemap.xml': {
-      id: '/sitemap.xml'
-      path: '/sitemap.xml'
-      fullPath: '/sitemap.xml'
-      preLoaderRoute: typeof SitemapDotxmlRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/settings': {
       id: '/settings'
       path: '/settings'
@@ -293,7 +273,6 @@ const rootRouteChildren: RootRouteChildren = {
   HistoryRoute: HistoryRouteWithChildren,
   ReceivingRoute: ReceivingRoute,
   SettingsRoute: SettingsRoute,
-  SitemapDotxmlRoute: SitemapDotxmlRoute,
   CIdRoute: CIdRoute,
   RIdRoute: RIdRoute,
   SIdRoute: SIdRoute,

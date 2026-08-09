@@ -141,26 +141,12 @@ export const Route = createFileRoute("/$name")({
         shift: z.string().optional(),
       })
       .parse(s),
-  head: ({ params }) => {
-    const station = params.name.replace(/-/g, " ");
-    return {
-      meta: [
-        { title: `${station} — Line Check` },
-        {
-          name: "description",
-          content: `Run the ${station} line check: mark every item OK or flagged, log temperatures, add photos and notes, then track completion for the current shift.`,
-        },
-        { property: "og:title", content: `${station} Line Check` },
-        {
-          property: "og:description",
-          content: `Item-by-item ${station} checks with temperatures, photos, notes and live completion progress.`,
-        },
-        { property: "og:type", content: "website" },
-        { name: "twitter:card", content: "summary" },
-      ],
-    };
-  },
-
+  head: ({ params }) => ({
+    meta: [
+      { title: `${params.name.replace(/-/g, " ")} — Line Check` },
+      { name: "description", content: `Line check for ${params.name.replace(/-/g, " ")} section.` },
+    ],
+  }),
   component: SectionPage,
   notFoundComponent: () => <div className="p-10">Section not found.</div>,
   errorComponent: ({ error, reset }) => {

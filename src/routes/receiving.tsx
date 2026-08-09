@@ -493,7 +493,7 @@ function ReceivingPage() {
               <div className="grid grid-cols-3 gap-2 sm:grid-cols-4">
                 {form.photos.map((src, i) => (
                   <div key={i} className="relative aspect-square overflow-hidden rounded-lg border border-border">
-                    <img src={src} alt={`Receiving delivery photo ${i + 1} of ${form.photos.length}`}
+                    <img src={src} alt={`Delivery photo ${i + 1}`}
                       className="h-full w-full cursor-zoom-in object-cover"
                       onClick={() => setViewer(src)} />
                     <button onClick={() => removePhoto(i)} aria-label="Remove photo"
@@ -591,7 +591,7 @@ function ReceivingPage() {
                             {r.photos.map((src, i) => (
                               <button key={i} onClick={() => setViewer(src)}
                                 className="aspect-square overflow-hidden rounded-lg border border-border">
-                                <img src={src} alt={`Receiving record photo ${i + 1} of ${r.photos.length}`} className="h-full w-full object-cover" />
+                                <img src={src} alt={`Photo ${i + 1}`} className="h-full w-full object-cover" />
                               </button>
                             ))}
                           </div>
@@ -627,7 +627,7 @@ function ReceivingPage() {
       {viewer && (
         <div role="dialog" aria-modal="true" onClick={() => setViewer(null)}
           className="fixed inset-0 z-50 grid place-items-center bg-black/80 p-4">
-          <img src={viewer} alt="Receiving photo full view" className="max-h-full max-w-full rounded-lg" />
+          <img src={viewer} alt="Photo" className="max-h-full max-w-full rounded-lg" />
           <button onClick={(e) => { e.stopPropagation(); setViewer(null); }} aria-label="Close"
             className="absolute right-4 top-4 rounded-full bg-white/90 p-2 text-black hover:bg-white">
             <X className="h-5 w-5" />

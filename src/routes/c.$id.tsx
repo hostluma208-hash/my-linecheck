@@ -21,23 +21,14 @@ export const Route = createFileRoute("/c/$id")({
   head: () => ({
     meta: [
       { title: "Shared Closing Report — Line Check" },
-      {
-        name: "description",
-        content:
-          "Read-only closing report for a kitchen shift: closing checklist status, team on duty, manager notes and attached station photos.",
-      },
+      { name: "description", content: "Read-only shared closing report." },
       { property: "og:title", content: "Shared Closing Report — Line Check" },
-      {
-        property: "og:description",
-        content:
-          "Closing checklist status, team on duty, notes and photos for a single kitchen shift.",
-      },
+      { property: "og:description", content: "Read-only shared closing report." },
       { property: "og:type", content: "article" },
       { name: "twitter:card", content: "summary" },
       { name: "robots", content: "noindex" },
     ],
   }),
-
   component: SharedClosingView,
 });
 
@@ -234,7 +225,7 @@ function SharedClosingView() {
                   onClick={() => setViewer(i)}
                   className="aspect-square overflow-hidden rounded-lg border border-border"
                 >
-                  <img src={src} alt={`Closing report photo ${i + 1} of ${c.photos.length}`} className="h-full w-full object-cover" />
+                  <img src={src} alt={`Photo ${i + 1}`} className="h-full w-full object-cover" />
                 </button>
               ))}
             </div>
@@ -275,7 +266,7 @@ function SharedClosingView() {
 
           <img
             src={c.photos[viewer]}
-            alt={`Closing report photo ${viewer + 1} of ${c.photos.length}`}
+            alt={`Photo ${viewer + 1}`}
             onClick={(e) => e.stopPropagation()}
             className="max-h-full max-w-full rounded-lg"
           />

@@ -27,22 +27,11 @@ export const Route = createFileRoute("/")({
       { title: "Shift Overview — Line Check 2026" },
       {
         name: "description",
-        content:
-          "Track kitchen shift readiness in real time: station-by-station progress, flagged items, temperatures and open issues for every opening, mid and closing shift.",
+        content: "Kitchen shift readiness dashboard: station progress and flagged items.",
       },
-      { property: "og:title", content: "Shift Overview Dashboard — Line Check 2026" },
-      {
-        property: "og:description",
-        content:
-          "See station progress, flagged items and shift readiness at a glance across every kitchen station.",
-      },
-      { property: "og:type", content: "website" },
-      { property: "og:url", content: "https://my-linecheck.lovable.app/" },
-      { name: "twitter:card", content: "summary" },
+      { property: "og:title", content: "Shift Overview — Line Check 2026" },
     ],
-    links: [{ rel: "canonical", href: "https://my-linecheck.lovable.app/" }],
   }),
-
   component: Dashboard,
 });
 
@@ -120,10 +109,7 @@ function Dashboard() {
       )}
       {/* Hero readiness card */}
       <section className="rounded-3xl border border-border bg-card p-6 lg:p-8">
-        <h1 className="text-sm font-bold uppercase tracking-[0.18em] text-muted-foreground">
-          Shift Overview Dashboard
-        </h1>
-        <p className="mt-1 text-sm text-muted-foreground">
+        <p className="text-sm text-muted-foreground">
           {greeting}, <span className="font-medium text-foreground">{name}</span>.
         </p>
         <p className="mt-1 text-sm">
