@@ -18,6 +18,7 @@ import {
   X,
 } from "lucide-react";
 import { downloadClosingSnapshot } from "@/lib/closingSnapshot";
+import { downloadClosingSnapshotPdf } from "@/lib/snapshotPdf";
 
 export const Route = createFileRoute("/closing")({
   head: () => ({
