@@ -609,6 +609,11 @@ function ReceivingPage() {
                             <Download className="h-3.5 w-3.5" />
                             Download PNG
                           </button>
+                          <button onClick={() => downloadReceivingSnapshotPdf(r)}
+                            className="inline-flex items-center gap-1.5 rounded-lg border border-input bg-background px-3 py-1.5 text-xs font-medium hover:bg-accent">
+                            <Download className="h-3.5 w-3.5" />
+                            Download PDF
+                          </button>
                           <button onClick={() => deleteRecord(r.id)}
                             className="inline-flex items-center gap-1.5 rounded-lg border border-destructive/30 bg-destructive/5 px-3 py-1.5 text-xs font-medium text-destructive hover:bg-destructive/10">
                             <Trash2 className="h-3.5 w-3.5" />
