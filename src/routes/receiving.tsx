@@ -5,6 +5,7 @@ import { lsStore } from "@/lib/lsStore";
 import { savePhoto } from "@/lib/photoStore";
 import { Camera, Trash2, X, PackageCheck, Plus, ChevronDown, ChevronUp, Pencil, Image as ImageIcon, Check as CheckIcon, Download } from "lucide-react";
 import { downloadReceivingSnapshot } from "@/lib/receivingSnapshot";
+import { downloadReceivingSnapshotPdf } from "@/lib/snapshotPdf";
 
 export const Route = createFileRoute("/receiving")({
   head: () => ({
