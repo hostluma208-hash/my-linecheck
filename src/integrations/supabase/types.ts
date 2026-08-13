@@ -185,6 +185,44 @@ export type Database = {
         }
         Relationships: []
       }
+      staff_sessions: {
+        Row: {
+          created_at: string
+          expires_at: string
+          id: string
+          last_used_at: string
+          owner_id: string
+          staff_id: string
+          token_hash: string
+        }
+        Insert: {
+          created_at?: string
+          expires_at?: string
+          id?: string
+          last_used_at?: string
+          owner_id: string
+          staff_id: string
+          token_hash: string
+        }
+        Update: {
+          created_at?: string
+          expires_at?: string
+          id?: string
+          last_used_at?: string
+          owner_id?: string
+          staff_id?: string
+          token_hash?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "staff_sessions_staff_id_fkey"
+            columns: ["staff_id"]
+            isOneToOne: false
+            referencedRelation: "staff_logins"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_state: {
         Row: {
           data: Json
