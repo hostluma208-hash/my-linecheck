@@ -339,7 +339,7 @@ function ClosingPage() {
       );
       setRecords(next);
       saveRecords(next);
-      resetForm();
+      // Keep the form loaded so the saved data stays visible until cleared.
       return;
     }
     const rec: ClosingRecord = {
@@ -357,7 +357,9 @@ function ClosingPage() {
     const next = [rec, ...records];
     setRecords(next);
     saveRecords(next);
-    resetForm();
+    // Stay on the saved report: further saves update it instead of adding a new entry.
+    setEditingId(rec.id);
+
   }
 
 
