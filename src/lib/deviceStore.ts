@@ -71,6 +71,15 @@ export async function rememberDeviceStaffAccount(session: StaffSession, pin: str
   void requestPersistentStorage();
 }
 
+/** Refresh the stored session token for an already-known sub-account. */
+export function rememberDeviceStaffToken(session: StaffSession) {
+  const list = readAccounts();
+  const idx = list.findIndex((a) => a.id === session.id);
+  if (idx === -1) return;
+  list[idx] = { ...list[idx], token: session.token, lastLoginAt: Date.now() };
+  writeAccounts(list);
+}
+
 /** Offline fallback: verify a name + PIN against this device's own records. */
 export async function verifyDeviceStaffAccount(
   name: string,

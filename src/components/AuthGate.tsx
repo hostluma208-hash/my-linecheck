@@ -7,7 +7,7 @@ import { startSync, stopSync } from "@/lib/sync";
 import { startStaffSync, stopStaffSync } from "@/lib/staffSync";
 import { getStaffSession, isStaffAllowedPath } from "@/lib/staffSession";
 import {
-  rememberDeviceStaffAccount,
+  rememberDeviceStaffToken,
   requestPersistentStorage,
 } from "@/lib/deviceStore";
 import { isEmailAllowed } from "@/lib/allowlist";
@@ -31,7 +31,7 @@ export function AuthGate({ children }: { children: React.ReactNode }) {
           setUserScope(staff.ownerId);
           // Keep this device's local copy of the sub-account usable offline.
           void requestPersistentStorage();
-          void rememberDeviceStaffAccount(staff);
+          rememberDeviceStaffToken(staff);
           void startStaffSync(staff);
           if (active) setStatus("staff");
           return;
