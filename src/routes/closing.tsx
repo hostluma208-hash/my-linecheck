@@ -7,8 +7,6 @@ import { STAFF, getEffectiveSections } from "@/lib/lineCheck";
 import {
   Camera,
   Check as CheckIcon,
-  ChevronDown,
-  ChevronUp,
   ClipboardCheck,
   Download,
   Image as ImageIcon,
@@ -17,6 +15,8 @@ import {
   Trash2,
   X,
 } from "lucide-react";
+
+
 import { downloadClosingSnapshot } from "@/lib/closingSnapshot";
 
 export const Route = createFileRoute("/closing")({
@@ -178,8 +178,8 @@ function ClosingPage() {
   const [newItem, setNewItem] = useState("");
   const [editKey, setEditKey] = useState<string | null>(null);
   const [editVal, setEditVal] = useState("");
-  const [expanded, setExpanded] = useState<string | null>(null);
   const [viewer, setViewer] = useState<string | null>(null);
+
 
 
   useEffect(() => {
@@ -262,11 +262,8 @@ function ClosingPage() {
     }));
   }
 
-  const sorted = useMemo(
-    () => [...records].sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1)),
-    [records],
-  );
   const doneCount = template.filter((i) => form.checks[i]).length;
+
 
   async function addPhoto(file: File | null | undefined) {
     if (!file) return;
@@ -299,23 +296,8 @@ function ClosingPage() {
     });
   }
 
-  function editRecord(r: ClosingRecord) {
-    setEditingId(r.id);
-    setForm({
-      date: r.date,
-      time: r.time,
-      branch: r.branch,
-      closedBy: r.closedBy,
-      crew: (r.crew ?? []).map((c) => ({ member: c.member, stations: [...c.stations] })),
-      checks: { ...r.checks },
-      notes: r.notes,
-      photos: [...r.photos],
-    });
-    setExpanded(null);
-    if (typeof window !== "undefined") window.scrollTo({ top: 0, behavior: "smooth" });
-  }
-
   function submit() {
+
     const crew = form.crew.filter((c) => c.member.trim());
     if (!form.closedBy.trim() && crew.length === 0) {
       alert("Please select at least one team member closing.");
@@ -363,15 +345,8 @@ function ClosingPage() {
   }
 
 
-  function deleteRecord(id: string) {
-    if (!confirm("Delete this closing report?")) return;
-    const next = records.filter((r) => r.id !== id);
-    setRecords(next);
-    saveRecords(next);
-  }
-
-
   return (
+
     <AppShell {...shell}>
       <div className="mx-auto w-full max-w-4xl px-4 py-6">
         <header className="mb-6 flex items-center gap-3">
@@ -757,150 +732,6 @@ function ClosingPage() {
           </div>
         </section>
 
-        {/* History */}
-        <section className="mt-8">
-          <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
-            SNAPSHOT ({sorted.length})
-          </h2>
-          {sorted.length === 0 ? (
-            <p className="rounded-2xl border border-dashed border-border bg-card/40 px-4 py-8 text-center text-sm text-muted-foreground">
-              No closing reports saved yet.
-            </p>
-          ) : (
-            <ul className="space-y-2">
-              {sorted.map((r) => {
-                const open = expanded === r.id;
-                const items = Object.keys(r.checks || {});
-                const done = items.filter((i) => r.checks[i]).length;
-                return (
-                  <li key={r.id} className="rounded-2xl border border-border bg-card">
-                    <button
-                      onClick={() => setExpanded(open ? null : r.id)}
-                      className="flex w-full items-center gap-3 px-4 py-3 text-left"
-                    >
-                      <div className="min-w-0 flex-1">
-                        <p className="truncate text-sm font-semibold text-foreground">
-                          {r.date} · {r.time}
-                          {r.branch ? ` · ${r.branch}` : ""}
-                        </p>
-                        <p className="truncate text-xs text-muted-foreground">
-                          Closed by: {r.closedBy || "—"} · {done}/{items.length} checked
-                        </p>
-                      </div>
-                      {r.photos.length > 0 && (
-                        <span className="rounded-full bg-secondary px-2 py-0.5 text-xs font-medium text-secondary-foreground">
-                          {r.photos.length} 📷
-                        </span>
-                      )}
-                      {open ? (
-                        <ChevronUp className="h-4 w-4" />
-                      ) : (
-                        <ChevronDown className="h-4 w-4" />
-                      )}
-                    </button>
-
-                    {open && (
-                      <div className="space-y-4 border-t border-border px-4 py-3">
-                        <dl className="grid gap-2 text-sm sm:grid-cols-2">
-                          <Info label="Date / Time" value={`${r.date} ${r.time}`} />
-                          <Info label="Branch" value={r.branch} />
-                          <Info label="Closed by" value={r.closedBy} />
-                        </dl>
-
-                        {(r.crew ?? []).length > 0 && (
-                          <div>
-                            <div className="mb-1 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                              Closing team
-                            </div>
-                            <ul className="space-y-1 text-sm">
-                              {(r.crew ?? []).map((c) => (
-                                <li key={c.member}>
-                                  <span className="font-semibold">{c.member}</span>
-                                  {": "}
-                                  <span className="text-muted-foreground">
-                                    {c.stations.length ? c.stations.join(", ") : "No station listed"}
-                                  </span>
-                                </li>
-                              ))}
-                            </ul>
-                          </div>
-                        )}
-
-                        <div>
-                          <div className="mb-1 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                            Checklist
-                          </div>
-                          <ul className="space-y-1 text-sm">
-                            {items.map((it) => (
-                              <li key={it} className="flex items-center gap-2">
-                                <span
-                                  className={`grid h-4 w-4 place-items-center rounded border ${
-                                    r.checks[it]
-                                      ? "border-primary bg-primary text-primary-foreground"
-                                      : "border-input bg-background"
-                                  }`}
-                                >
-                                  {r.checks[it] ? "✓" : ""}
-                                </span>
-                                <span>{it}</span>
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-
-                        {r.notes && (
-                          <div>
-                            <div className="text-xs uppercase tracking-wide text-muted-foreground">
-                              Notes
-                            </div>
-                            <div className="whitespace-pre-wrap text-sm text-foreground">
-                              {r.notes}
-                            </div>
-                          </div>
-                        )}
-
-                        {r.photos.length > 0 && (
-                          <div className="grid grid-cols-3 gap-2 sm:grid-cols-4">
-                            {r.photos.map((src, i) => (
-                              <button
-                                key={i}
-                                onClick={() => setViewer(src)}
-                                className="aspect-square overflow-hidden rounded-lg border border-border"
-                              >
-                                <img
-                                  src={src}
-                                  alt={`Photo ${i + 1}`}
-                                  className="h-full w-full object-cover"
-                                />
-                              </button>
-                            ))}
-                          </div>
-                        )}
-
-                        <div className="flex flex-wrap justify-end gap-2">
-                          <button
-                            onClick={() => editRecord(r)}
-                            className="inline-flex items-center gap-1.5 rounded-lg border border-input bg-background px-3 py-1.5 text-xs font-medium hover:bg-accent"
-                          >
-                            <Pencil className="h-3.5 w-3.5" />
-                            Edit
-                          </button>
-                          <button
-                            onClick={() => deleteRecord(r.id)}
-                            className="inline-flex items-center gap-1.5 rounded-lg border border-destructive/30 bg-destructive/5 px-3 py-1.5 text-xs font-medium text-destructive hover:bg-destructive/10"
-                          >
-                            <Trash2 className="h-3.5 w-3.5" />
-                            Delete
-                          </button>
-                        </div>
-                      </div>
-                    )}
-                  </li>
-                );
-              })}
-            </ul>
-          )}
-        </section>
       </div>
 
       {viewer && (
