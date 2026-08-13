@@ -8,7 +8,7 @@ import { ADMIN_EMAIL, isAdminEmail } from "@/lib/allowlist";
 
 
 import { hashPinBrowser } from "@/lib/staffSession";
-import { setAccountPin } from "@/lib/accountPin.functions";
+import { setAccountPin, listAllowedAccounts } from "@/lib/accountPin.functions";
 import {
   ArrowLeft,
   Settings as SettingsIcon,
@@ -1226,14 +1226,13 @@ function AccessPanel() {
   const load = async () => {
     setLoading(true);
     setError(null);
-    const { data, error } = await supabase
-      .from("allowed_emails")
-      .select("email, pin_hash")
-      .order("email");
-    if (error) setError(error.message);
-    setEmails(
-      (data ?? []).map((r: any) => ({ email: r.email as string, hasPin: !!r.pin_hash })),
-    );
+    try {
+      // PIN hashes stay server-side; we only receive a boolean "has PIN" flag.
+      const rows = await listAllowedAccounts({ data: null });
+      setEmails(rows);
+    } catch (e: any) {
+      setError(e?.message || "Could not load accounts");
+    }
     setLoading(false);
   };
 
