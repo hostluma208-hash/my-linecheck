@@ -736,7 +736,7 @@ function ClosingPage() {
         {/* History */}
         <section className="mt-8">
           <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
-            History ({sorted.length})
+            SNAPSHOT ({sorted.length})
           </h2>
           {sorted.length === 0 ? (
             <p className="rounded-2xl border border-dashed border-border bg-card/40 px-4 py-8 text-center text-sm text-muted-foreground">
