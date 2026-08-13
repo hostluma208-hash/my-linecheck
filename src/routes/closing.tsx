@@ -178,8 +178,8 @@ function ClosingPage() {
   const [newItem, setNewItem] = useState("");
   const [editKey, setEditKey] = useState<string | null>(null);
   const [editVal, setEditVal] = useState("");
-  const [expanded, setExpanded] = useState<string | null>(null);
   const [viewer, setViewer] = useState<string | null>(null);
+
 
 
   useEffect(() => {
