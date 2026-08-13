@@ -296,23 +296,8 @@ function ClosingPage() {
     });
   }
 
-  function editRecord(r: ClosingRecord) {
-    setEditingId(r.id);
-    setForm({
-      date: r.date,
-      time: r.time,
-      branch: r.branch,
-      closedBy: r.closedBy,
-      crew: (r.crew ?? []).map((c) => ({ member: c.member, stations: [...c.stations] })),
-      checks: { ...r.checks },
-      notes: r.notes,
-      photos: [...r.photos],
-    });
-    setExpanded(null);
-    if (typeof window !== "undefined") window.scrollTo({ top: 0, behavior: "smooth" });
-  }
-
   function submit() {
+
     const crew = form.crew.filter((c) => c.member.trim());
     if (!form.closedBy.trim() && crew.length === 0) {
       alert("Please select at least one team member closing.");
