@@ -345,15 +345,8 @@ function ClosingPage() {
   }
 
 
-  function deleteRecord(id: string) {
-    if (!confirm("Delete this closing report?")) return;
-    const next = records.filter((r) => r.id !== id);
-    setRecords(next);
-    saveRecords(next);
-  }
-
-
   return (
+
     <AppShell {...shell}>
       <div className="mx-auto w-full max-w-4xl px-4 py-6">
         <header className="mb-6 flex items-center gap-3">
