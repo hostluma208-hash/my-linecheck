@@ -18,6 +18,8 @@ export type DeviceStaffAccount = {
   name: string;
   ownerId: string;
   pinHash: string;
+  /** Last session token issued for this account (revocable, expires server-side). */
+  token?: string;
   lastLoginAt: number;
 };
 
@@ -54,14 +56,15 @@ export function listDeviceStaffAccounts(): DeviceStaffAccount[] {
 }
 
 /** Remember a verified sub-account so it can sign in on this device offline. */
-export async function rememberDeviceStaffAccount(session: StaffSession) {
-  const pinHash = await hashPinBrowser(session.name, session.pin);
+export async function rememberDeviceStaffAccount(session: StaffSession, pin: string) {
+  const pinHash = await hashPinBrowser(session.name, pin);
   const rest = readAccounts().filter((a) => a.id !== session.id);
   rest.push({
     id: session.id,
     name: session.name,
     ownerId: session.ownerId,
     pinHash,
+    token: session.token,
     lastLoginAt: Date.now(),
   });
   writeAccounts(rest);
@@ -79,7 +82,12 @@ export async function verifyDeviceStaffAccount(
   const hash = await hashPinBrowser(name, pin);
   const match = candidates.find((a) => a.pinHash === hash);
   return match
-    ? { id: match.id, name: match.name, ownerId: match.ownerId, pin }
+    ? {
+        id: match.id,
+        name: match.name,
+        ownerId: match.ownerId,
+        token: match.token ?? "",
+      }
     : null;
 }
 

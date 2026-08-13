@@ -43,8 +43,7 @@ export async function publishSharedClosing(
   if (staff) {
     const { id } = await staffPublishShare({
       data: {
-        name: staff.name,
-        pin: staff.pin,
+        token: staff.token,
         kind: "closing",
         record_id: record.id,
         brand_name,
