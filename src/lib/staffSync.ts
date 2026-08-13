@@ -95,8 +95,7 @@ async function pushNow() {
   try {
     await staffPushState({
       data: {
-        name: sessionAtStart.name,
-        pin: sessionAtStart.pin,
+        token: sessionAtStart.token,
         patch: data,
       },
     });
@@ -168,7 +167,7 @@ async function pullNow() {
   );
   try {
     const res = await staffPullState({
-      data: { name: sessionAtStart.name, pin: sessionAtStart.pin },
+      data: { token: sessionAtStart.token },
     });
     if (session?.id !== sessionAtStart.id) return;
     const remote = res?.ok ? res.state : null;

@@ -64,13 +64,13 @@ function AuthPage() {
         id: string;
         name: string;
         ownerId: string;
-        pin: string;
+        token: string;
       } | null = null;
       try {
         const res = await staffLogin({ data: { name: who, pin } });
         if (res?.ok) {
-          session = { id: res.id, name: res.name, ownerId: res.ownerId, pin };
-          await rememberDeviceStaffAccount(session);
+          session = { id: res.id, name: res.name, ownerId: res.ownerId, token: res.token };
+          await rememberDeviceStaffAccount(session, pin);
         }
       } catch {
         // network/offline — handled by the device fallback below

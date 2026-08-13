@@ -333,7 +333,15 @@ function SignOutButton({ collapsed }: { collapsed: boolean }) {
     };
   }, []);
   const handle = async () => {
+    const staff = getStaffSession();
     clearStaffSession();
+    if (staff?.token) {
+      try {
+        const { staffLogout } = await import("@/lib/staffAuth.functions");
+        await staffLogout({ data: { token: staff.token } });
+      } catch {}
+    }
+
     const { supabase } = await import("@/integrations/supabase/client");
     await supabase.auth.signOut();
     window.location.href = "/auth";

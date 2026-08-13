@@ -6,7 +6,8 @@ export type StaffSession = {
   id: string;
   name: string;
   ownerId: string;
-  pin: string;
+  /** Short-lived, revocable session token (never the PIN itself). */
+  token: string;
 };
 
 const KEY = "linecheck:staff-session";
@@ -16,7 +17,7 @@ export function getStaffSession(): StaffSession | null {
     const raw = localStorage.getItem(KEY);
     if (!raw) return null;
     const s = JSON.parse(raw);
-    if (s && s.id && s.name && s.ownerId && s.pin) return s as StaffSession;
+    if (s && s.id && s.name && s.ownerId && s.token) return s as StaffSession;
   } catch {}
   return null;
 }

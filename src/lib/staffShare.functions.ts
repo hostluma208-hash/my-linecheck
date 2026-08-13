@@ -1,7 +1,8 @@
 import { createServerFn } from "@tanstack/react-start";
-import type { Creds } from "@/lib/staffAuth.server";
 
-type Input = Creds & {
+
+type Input = {
+  token: string;
   kind: "receiving" | "closing";
   record_id: string;
   brand_name: string;
@@ -12,8 +13,8 @@ type Input = Creds & {
 export const staffPublishShare = createServerFn({ method: "POST" })
   .inputValidator((input: Input) => input)
   .handler(async ({ data }) => {
-    const { validCreds, verifyStaff } = await import("@/lib/staffAuth.server");
-    const row = await verifyStaff(validCreds(data));
+    const { validToken, verifyStaffToken } = await import("@/lib/staffAuth.server");
+    const row = await verifyStaffToken(validToken(data));
     if (!row) throw new Error("Invalid team member session");
     const kind = data.kind === "closing" ? "closing" : "receiving";
     const record_id = String(data.record_id ?? "").slice(0, 200);

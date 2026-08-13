@@ -45,8 +45,7 @@ export async function publishSharedReceiving(
   if (staff) {
     const { id } = await staffPublishShare({
       data: {
-        name: staff.name,
-        pin: staff.pin,
+        token: staff.token,
         kind: "receiving",
         record_id: record.id,
         brand_name,
