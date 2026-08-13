@@ -339,7 +339,7 @@ function ClosingPage() {
       );
       setRecords(next);
       saveRecords(next);
-      resetForm();
+      // Keep the form loaded so the saved data stays visible until cleared.
       return;
     }
     const rec: ClosingRecord = {
@@ -357,7 +357,9 @@ function ClosingPage() {
     const next = [rec, ...records];
     setRecords(next);
     saveRecords(next);
-    resetForm();
+    // Stay on the saved report: further saves update it instead of adding a new entry.
+    setEditingId(rec.id);
+
   }
 
 
@@ -713,15 +715,37 @@ function ClosingPage() {
           <div className="mt-4 flex flex-wrap items-center justify-end gap-2">
             {editingId && (
               <span className="mr-auto rounded-full bg-secondary px-3 py-1 text-xs font-semibold text-secondary-foreground">
-                Editing saved report
+                Saved report
               </span>
             )}
+            <button
+              onClick={() =>
+                downloadClosingSnapshot({
+                  id: editingId || "current",
+                  date: form.date,
+                  time: form.time,
+                  branch: form.branch.trim(),
+                  closedBy:
+                    form.closedBy.trim() ||
+                    form.crew.filter((c) => c.member.trim()).map((c) => c.member).join(", "),
+                  crew: form.crew.filter((c) => c.member.trim()),
+                  checks: form.checks,
+                  notes: form.notes.trim(),
+                  photos: form.photos,
+                })
+              }
+              className="inline-flex items-center gap-1.5 rounded-lg border border-input bg-background px-4 py-2 text-sm font-medium hover:bg-accent"
+            >
+              <Download className="h-4 w-4" />
+              Download PNG
+            </button>
             <button
               onClick={resetForm}
               className="rounded-lg border border-input bg-background px-4 py-2 text-sm font-medium hover:bg-accent"
             >
-              {editingId ? "Cancel edit" : "Clear"}
+              Clear
             </button>
+
             <button
               onClick={submit}
               className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:opacity-90"
@@ -860,13 +884,6 @@ function ClosingPage() {
                           >
                             <Pencil className="h-3.5 w-3.5" />
                             Edit
-                          </button>
-                          <button
-                            onClick={() => downloadClosingSnapshot(r)}
-                            className="inline-flex items-center gap-1.5 rounded-lg border border-input bg-background px-3 py-1.5 text-xs font-medium hover:bg-accent"
-                          >
-                            <Download className="h-3.5 w-3.5" />
-                            Download PNG
                           </button>
                           <button
                             onClick={() => deleteRecord(r.id)}
