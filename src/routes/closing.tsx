@@ -262,11 +262,8 @@ function ClosingPage() {
     }));
   }
 
-  const sorted = useMemo(
-    () => [...records].sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1)),
-    [records],
-  );
   const doneCount = template.filter((i) => form.checks[i]).length;
+
 
   async function addPhoto(file: File | null | undefined) {
     if (!file) return;
