@@ -75,3 +75,23 @@ export const accountPinLogin = createServerFn({ method: "POST" })
     if (!tokenHash) throw new Error("Could not start session");
     return { ok: true as const, email: row.email, tokenHash };
   });
+
+/** Admin-only: list allow-listed accounts with a boolean PIN flag (never the hash). */
+export const listAllowedAccounts = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator(() => null)
+  .handler(async ({ context }) => {
+    const { data: isAdmin, error: roleErr } = await context.supabase.rpc("is_admin");
+    if (roleErr) throw roleErr;
+    if (!isAdmin) throw new Error("Forbidden");
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data, error } = await supabaseAdmin
+      .from("allowed_emails")
+      .select("email, pin_hash")
+      .order("email");
+    if (error) throw error;
+    return (data ?? []).map((r) => ({
+      email: r.email as string,
+      hasPin: !!r.pin_hash,
+    }));
+  });
