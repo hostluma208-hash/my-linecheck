@@ -7,15 +7,13 @@ import { STAFF, getEffectiveSections } from "@/lib/lineCheck";
 import {
   Camera,
   Check as CheckIcon,
-  ChevronDown,
-  ChevronUp,
-  ClipboardCheck,
   Download,
   Image as ImageIcon,
   Pencil,
   Plus,
   Trash2,
   X,
+
 } from "lucide-react";
 import { downloadClosingSnapshot } from "@/lib/closingSnapshot";
 
