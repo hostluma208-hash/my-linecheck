@@ -1,9 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { AppShell, useShellState } from "@/components/AppShell";
 import { lsStore } from "@/lib/lsStore";
 import { savePhoto } from "@/lib/photoStore";
-import { Camera, Trash2, X, PackageCheck, Plus, ChevronDown, ChevronUp, Pencil, Image as ImageIcon, Check as CheckIcon, Download } from "lucide-react";
+import { Camera, Check as CheckIcon, Download, Image as ImageIcon, PackageCheck, Pencil, Plus, Trash2, X } from "lucide-react";
 import { downloadReceivingSnapshot } from "@/lib/receivingSnapshot";
 
 export const Route = createFileRoute("/receiving")({
@@ -153,7 +153,6 @@ function ReceivingPage() {
     };
   }, []);
 
-  const [expanded, setExpanded] = useState<string | null>(null);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [viewer, setViewer] = useState<string | null>(null);
 
@@ -203,10 +202,6 @@ function ReceivingPage() {
   };
 
 
-  const sorted = useMemo(
-    () => [...records].sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1)),
-    [records],
-  );
 
   async function addPhoto(file: File | null | undefined) {
     if (!file) return;
@@ -247,29 +242,6 @@ function ReceivingPage() {
     });
   }
 
-  function editRecord(r: ReceivingRecord) {
-    setEditingId(r.id);
-    setForm({
-      date: r.date,
-      time: r.time,
-      branch: r.branch,
-      driver: r.driver,
-      deliveryNote: r.deliveryNote,
-      purchaseOrder: r.purchaseOrder,
-      chillerCarTemp: r.chillerCarTemp,
-      productTemp: r.productTemp,
-      tempChecks: { ...r.tempChecks },
-      quantityChecks: { ...r.quantityChecks },
-      qualityChecks: { ...r.qualityChecks },
-      receiverName: r.receiverName,
-      signature: r.signature ?? "",
-      comments: r.comments,
-      checkedBy: r.checkedBy,
-      photos: [...r.photos],
-    });
-    setExpanded(null);
-    if (typeof window !== "undefined") window.scrollTo({ top: 0, behavior: "smooth" });
-  }
 
   function submit() {
     if (!form.receiverName.trim() && !form.checkedBy.trim()) {
@@ -298,7 +270,7 @@ function ReceivingPage() {
       const next = records.map((r) => (r.id === editingId ? { ...r, ...values } : r));
       setRecords(next);
       saveRecords(next);
-      resetForm();
+      // Keep the form loaded so the saved data stays visible until cleared.
       return;
     }
     const rec: ReceivingRecord = {
@@ -309,16 +281,11 @@ function ReceivingPage() {
     const next = [rec, ...records];
     setRecords(next);
     saveRecords(next);
-    resetForm();
+    // Stay on the saved report: further saves update it instead of adding a new entry.
+    setEditingId(rec.id);
   }
 
 
-  function deleteRecord(id: string) {
-    if (!confirm("Delete this receiving record?")) return;
-    const next = records.filter((r) => r.id !== id);
-    setRecords(next);
-    saveRecords(next);
-  }
 
 
   return (
@@ -509,12 +476,39 @@ function ReceivingPage() {
           <div className="mt-4 flex flex-wrap items-center justify-end gap-2">
             {editingId && (
               <span className="mr-auto rounded-full bg-secondary px-3 py-1 text-xs font-semibold text-secondary-foreground">
-                Editing saved delivery
+                Saved delivery
               </span>
             )}
+            <button
+              onClick={() =>
+                downloadReceivingSnapshot({
+                  id: editingId || "current",
+                  date: form.date,
+                  time: form.time,
+                  branch: form.branch.trim(),
+                  driver: form.driver.trim(),
+                  deliveryNote: form.deliveryNote.trim(),
+                  purchaseOrder: form.purchaseOrder.trim(),
+                  chillerCarTemp: form.chillerCarTemp.trim(),
+                  productTemp: form.productTemp.trim(),
+                  tempChecks: form.tempChecks,
+                  quantityChecks: form.quantityChecks,
+                  qualityChecks: form.qualityChecks,
+                  receiverName: form.receiverName.trim(),
+                  signature: form.signature.trim(),
+                  comments: form.comments.trim(),
+                  checkedBy: (form.checkedBy || form.receiverName).trim(),
+                  photos: form.photos,
+                })
+              }
+              className="inline-flex items-center gap-1.5 rounded-lg border border-input bg-background px-4 py-2 text-sm font-medium hover:bg-accent"
+            >
+              <Download className="h-4 w-4" />
+              Download PNG
+            </button>
             <button onClick={resetForm}
               className="rounded-lg border border-input bg-background px-4 py-2 text-sm font-medium hover:bg-accent">
-              {editingId ? "Cancel edit" : "Clear"}
+              Clear
             </button>
             <button onClick={submit}
               className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:opacity-90">
@@ -525,103 +519,6 @@ function ReceivingPage() {
           </div>
         </section>
 
-        {/* History */}
-        <section className="mt-8">
-          <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
-            History ({sorted.length})
-          </h2>
-          {sorted.length === 0 ? (
-            <p className="rounded-2xl border border-dashed border-border bg-card/40 px-4 py-8 text-center text-sm text-muted-foreground">
-              No deliveries logged yet.
-            </p>
-          ) : (
-            <ul className="space-y-2">
-              {sorted.map((r) => {
-                const open = expanded === r.id;
-                return (
-                  <li key={r.id} className="rounded-2xl border border-border bg-card">
-                    <button onClick={() => setExpanded(open ? null : r.id)}
-                      className="flex w-full items-center gap-3 px-4 py-3 text-left">
-                      <div className="min-w-0 flex-1">
-                        <p className="truncate text-sm font-semibold text-foreground">
-                          {r.date} · {r.time}{r.branch ? ` · ${r.branch}` : ""}
-                        </p>
-                        <p className="truncate text-xs text-muted-foreground">
-                          Receiver: {r.receiverName || r.checkedBy || "—"}
-                          {r.driver ? ` · Driver: ${r.driver}` : ""}
-                          {r.deliveryNote ? ` · Note: ${r.deliveryNote}` : ""}
-                        </p>
-                      </div>
-                      {r.photos.length > 0 && (
-                        <span className="rounded-full bg-secondary px-2 py-0.5 text-xs font-medium text-secondary-foreground">
-                          {r.photos.length} 📷
-                        </span>
-                      )}
-                      {open ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
-                    </button>
-
-                    {open && (
-                      <div className="space-y-4 border-t border-border px-4 py-3">
-                        <dl className="grid gap-2 text-sm sm:grid-cols-2">
-                          <Info label="Date / Time" value={`${r.date} ${r.time}`} />
-                          <Info label="Branch" value={r.branch} />
-                          <Info label="Driver" value={r.driver} />
-                          <Info label="Delivery Note / Invoice #" value={r.deliveryNote} />
-                          <Info label="Purchase Order #" value={r.purchaseOrder} />
-                          <Info label="Chiller Car Temp" value={r.chillerCarTemp ? `${r.chillerCarTemp} °C` : ""} />
-                          <Info label="Product Temp" value={r.productTemp ? `${r.productTemp} °C` : ""} />
-                          <Info label="Checked by" value={r.checkedBy} />
-                          <Info label="Receiver" value={r.receiverName} />
-                          <Info label="Signature" value={r.signature} />
-                        </dl>
-
-                        <ChecklistView title="1. Temperature Check" items={Object.keys(r.tempChecks || {})} checks={r.tempChecks} />
-                        <ChecklistView title="2. Quantity Check" items={Object.keys(r.quantityChecks || {})} checks={r.quantityChecks} />
-                        <ChecklistView title="3. Quality Check" items={Object.keys(r.qualityChecks || {})} checks={r.qualityChecks} />
-
-                        {r.comments && (
-                          <div>
-                            <div className="text-xs uppercase tracking-wide text-muted-foreground">Comments</div>
-                            <div className="text-sm text-foreground">{r.comments}</div>
-                          </div>
-                        )}
-
-                        {r.photos.length > 0 && (
-                          <div className="grid grid-cols-3 gap-2 sm:grid-cols-4">
-                            {r.photos.map((src, i) => (
-                              <button key={i} onClick={() => setViewer(src)}
-                                className="aspect-square overflow-hidden rounded-lg border border-border">
-                                <img src={src} alt={`Photo ${i + 1}`} className="h-full w-full object-cover" />
-                              </button>
-                            ))}
-                          </div>
-                        )}
-
-                        <div className="flex flex-wrap justify-end gap-2">
-                          <button onClick={() => editRecord(r)}
-                            className="inline-flex items-center gap-1.5 rounded-lg border border-input bg-background px-3 py-1.5 text-xs font-medium hover:bg-accent">
-                            <Pencil className="h-3.5 w-3.5" />
-                            Edit
-                          </button>
-                          <button onClick={() => downloadReceivingSnapshot(r)}
-                            className="inline-flex items-center gap-1.5 rounded-lg border border-input bg-background px-3 py-1.5 text-xs font-medium hover:bg-accent">
-                            <Download className="h-3.5 w-3.5" />
-                            Download PNG
-                          </button>
-                          <button onClick={() => deleteRecord(r.id)}
-                            className="inline-flex items-center gap-1.5 rounded-lg border border-destructive/30 bg-destructive/5 px-3 py-1.5 text-xs font-medium text-destructive hover:bg-destructive/10">
-                            <Trash2 className="h-3.5 w-3.5" />
-                            Delete
-                          </button>
-                        </div>
-                      </div>
-                    )}
-                  </li>
-                );
-              })}
-            </ul>
-          )}
-        </section>
       </div>
 
       {viewer && (
@@ -652,65 +549,6 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
   );
 }
 
-function Info({ label, value }: { label: string; value?: string }) {
-  return (
-    <div>
-      <dt className="text-xs uppercase tracking-wide text-muted-foreground">{label}</dt>
-      <dd className="text-foreground">{value || "—"}</dd>
-    </div>
-  );
-}
-
-function ChecklistBlock({ title, children }: { title: string; children: React.ReactNode }) {
-  return (
-    <div className="mt-4 rounded-xl border border-border bg-background/40 p-3">
-      <h3 className="mb-2 text-sm font-semibold text-foreground">{title}</h3>
-      {children}
-    </div>
-  );
-}
-
-function CheckList({
-  items, checks, onToggle,
-}: { items: string[]; checks: Checks; onToggle: (key: string) => void }) {
-  return (
-    <ul className="mt-2 space-y-1.5">
-      {items.map((it) => (
-        <li key={it}>
-          <label className="flex cursor-pointer items-center gap-2 text-sm text-foreground">
-            <input
-              type="checkbox"
-              checked={!!checks[it]}
-              onChange={() => onToggle(it)}
-              className="h-4 w-4 rounded border-input accent-primary"
-            />
-            <span>{it}</span>
-          </label>
-        </li>
-      ))}
-    </ul>
-  );
-}
-
-function ChecklistView({
-  title, items, checks,
-}: { title: string; items: string[]; checks: Checks }) {
-  return (
-    <div>
-      <div className="mb-1 text-xs font-semibold uppercase tracking-wide text-muted-foreground">{title}</div>
-      <ul className="space-y-1 text-sm">
-        {items.map((it) => (
-          <li key={it} className="flex items-center gap-2">
-            <span className={`grid h-4 w-4 place-items-center rounded border ${checks?.[it] ? "border-primary bg-primary text-primary-foreground" : "border-input bg-background"}`}>
-              {checks?.[it] ? "✓" : ""}
-            </span>
-            <span>{it}</span>
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
-}
 
 function EditableChecklistBlock({
   title, items, checks, onToggle, onAdd, onRename, onRemove, children,
