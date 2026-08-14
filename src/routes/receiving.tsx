@@ -549,65 +549,6 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
   );
 }
 
-function Info({ label, value }: { label: string; value?: string }) {
-  return (
-    <div>
-      <dt className="text-xs uppercase tracking-wide text-muted-foreground">{label}</dt>
-      <dd className="text-foreground">{value || "—"}</dd>
-    </div>
-  );
-}
-
-function ChecklistBlock({ title, children }: { title: string; children: React.ReactNode }) {
-  return (
-    <div className="mt-4 rounded-xl border border-border bg-background/40 p-3">
-      <h3 className="mb-2 text-sm font-semibold text-foreground">{title}</h3>
-      {children}
-    </div>
-  );
-}
-
-function CheckList({
-  items, checks, onToggle,
-}: { items: string[]; checks: Checks; onToggle: (key: string) => void }) {
-  return (
-    <ul className="mt-2 space-y-1.5">
-      {items.map((it) => (
-        <li key={it}>
-          <label className="flex cursor-pointer items-center gap-2 text-sm text-foreground">
-            <input
-              type="checkbox"
-              checked={!!checks[it]}
-              onChange={() => onToggle(it)}
-              className="h-4 w-4 rounded border-input accent-primary"
-            />
-            <span>{it}</span>
-          </label>
-        </li>
-      ))}
-    </ul>
-  );
-}
-
-function ChecklistView({
-  title, items, checks,
-}: { title: string; items: string[]; checks: Checks }) {
-  return (
-    <div>
-      <div className="mb-1 text-xs font-semibold uppercase tracking-wide text-muted-foreground">{title}</div>
-      <ul className="space-y-1 text-sm">
-        {items.map((it) => (
-          <li key={it} className="flex items-center gap-2">
-            <span className={`grid h-4 w-4 place-items-center rounded border ${checks?.[it] ? "border-primary bg-primary text-primary-foreground" : "border-input bg-background"}`}>
-              {checks?.[it] ? "✓" : ""}
-            </span>
-            <span>{it}</span>
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
-}
 
 function EditableChecklistBlock({
   title, items, checks, onToggle, onAdd, onRename, onRemove, children,
