@@ -476,12 +476,39 @@ function ReceivingPage() {
           <div className="mt-4 flex flex-wrap items-center justify-end gap-2">
             {editingId && (
               <span className="mr-auto rounded-full bg-secondary px-3 py-1 text-xs font-semibold text-secondary-foreground">
-                Editing saved delivery
+                Saved delivery
               </span>
             )}
+            <button
+              onClick={() =>
+                downloadReceivingSnapshot({
+                  id: editingId || "current",
+                  date: form.date,
+                  time: form.time,
+                  branch: form.branch.trim(),
+                  driver: form.driver.trim(),
+                  deliveryNote: form.deliveryNote.trim(),
+                  purchaseOrder: form.purchaseOrder.trim(),
+                  chillerCarTemp: form.chillerCarTemp.trim(),
+                  productTemp: form.productTemp.trim(),
+                  tempChecks: form.tempChecks,
+                  quantityChecks: form.quantityChecks,
+                  qualityChecks: form.qualityChecks,
+                  receiverName: form.receiverName.trim(),
+                  signature: form.signature.trim(),
+                  comments: form.comments.trim(),
+                  checkedBy: (form.checkedBy || form.receiverName).trim(),
+                  photos: form.photos,
+                })
+              }
+              className="inline-flex items-center gap-1.5 rounded-lg border border-input bg-background px-4 py-2 text-sm font-medium hover:bg-accent"
+            >
+              <Download className="h-4 w-4" />
+              Download PNG
+            </button>
             <button onClick={resetForm}
               className="rounded-lg border border-input bg-background px-4 py-2 text-sm font-medium hover:bg-accent">
-              {editingId ? "Cancel edit" : "Clear"}
+              Clear
             </button>
             <button onClick={submit}
               className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:opacity-90">
