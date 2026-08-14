@@ -153,7 +153,6 @@ function ReceivingPage() {
     };
   }, []);
 
-  const [expanded, setExpanded] = useState<string | null>(null);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [viewer, setViewer] = useState<string | null>(null);
 
@@ -203,10 +202,6 @@ function ReceivingPage() {
   };
 
 
-  const sorted = useMemo(
-    () => [...records].sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1)),
-    [records],
-  );
 
   async function addPhoto(file: File | null | undefined) {
     if (!file) return;
