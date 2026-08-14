@@ -270,7 +270,7 @@ function ReceivingPage() {
       const next = records.map((r) => (r.id === editingId ? { ...r, ...values } : r));
       setRecords(next);
       saveRecords(next);
-      resetForm();
+      // Keep the form loaded so the saved data stays visible until cleared.
       return;
     }
     const rec: ReceivingRecord = {
@@ -281,7 +281,8 @@ function ReceivingPage() {
     const next = [rec, ...records];
     setRecords(next);
     saveRecords(next);
-    resetForm();
+    // Stay on the saved report: further saves update it instead of adding a new entry.
+    setEditingId(rec.id);
   }
 
 
