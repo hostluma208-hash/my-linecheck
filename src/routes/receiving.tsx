@@ -242,29 +242,6 @@ function ReceivingPage() {
     });
   }
 
-  function editRecord(r: ReceivingRecord) {
-    setEditingId(r.id);
-    setForm({
-      date: r.date,
-      time: r.time,
-      branch: r.branch,
-      driver: r.driver,
-      deliveryNote: r.deliveryNote,
-      purchaseOrder: r.purchaseOrder,
-      chillerCarTemp: r.chillerCarTemp,
-      productTemp: r.productTemp,
-      tempChecks: { ...r.tempChecks },
-      quantityChecks: { ...r.quantityChecks },
-      qualityChecks: { ...r.qualityChecks },
-      receiverName: r.receiverName,
-      signature: r.signature ?? "",
-      comments: r.comments,
-      checkedBy: r.checkedBy,
-      photos: [...r.photos],
-    });
-    setExpanded(null);
-    if (typeof window !== "undefined") window.scrollTo({ top: 0, behavior: "smooth" });
-  }
 
   function submit() {
     if (!form.receiverName.trim() && !form.checkedBy.trim()) {
