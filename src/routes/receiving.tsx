@@ -286,12 +286,6 @@ function ReceivingPage() {
   }
 
 
-  function deleteRecord(id: string) {
-    if (!confirm("Delete this receiving record?")) return;
-    const next = records.filter((r) => r.id !== id);
-    setRecords(next);
-    saveRecords(next);
-  }
 
 
   return (
