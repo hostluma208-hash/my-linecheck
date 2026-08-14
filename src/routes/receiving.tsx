@@ -1,9 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { AppShell, useShellState } from "@/components/AppShell";
 import { lsStore } from "@/lib/lsStore";
 import { savePhoto } from "@/lib/photoStore";
-import { Camera, Trash2, X, PackageCheck, Plus, ChevronDown, ChevronUp, Pencil, Image as ImageIcon, Check as CheckIcon, Download } from "lucide-react";
+import { Camera, Check as CheckIcon, Download, Image as ImageIcon, PackageCheck, Pencil, Plus, Trash2, X } from "lucide-react";
 import { downloadReceivingSnapshot } from "@/lib/receivingSnapshot";
 
 export const Route = createFileRoute("/receiving")({
