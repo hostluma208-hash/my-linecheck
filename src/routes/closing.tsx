@@ -201,7 +201,7 @@ function ClosingPage() {
     };
   }, []);
 
-  const [form, setForm] = useState(() => {
+  const [form, setForm] = useState<ClosingForm>(() => {
     const { date, time } = nowParts();
     return {
       date,
@@ -220,6 +220,25 @@ function ClosingPage() {
   const [editKey, setEditKey] = useState<string | null>(null);
   const [editVal, setEditVal] = useState("");
   const [viewer, setViewer] = useState<string | null>(null);
+  // Draft restore runs after hydration so the server and client markup match.
+  const [draftLoaded, setDraftLoaded] = useState(false);
+
+  useEffect(() => {
+    const draft = loadDraft();
+    if (draft) {
+      setForm(draft.form);
+      setEditingId(draft.editingId);
+    }
+    setDraftLoaded(true);
+  }, []);
+
+  useEffect(() => {
+    if (!draftLoaded) return;
+    try {
+      lsStore.setItem(DRAFT_KEY, JSON.stringify({ form, editingId }), { quiet: true });
+    } catch {}
+  }, [form, editingId, draftLoaded]);
+
 
 
 
