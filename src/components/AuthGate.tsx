@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useRouterState } from "@tanstack/react-router";
 import type { Session } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
-import { setUserScope } from "@/lib/lsStore";
+import { runStorageHousekeeping, setUserScope } from "@/lib/lsStore";
 import { startSync, stopSync } from "@/lib/sync";
 import { startStaffSync, stopStaffSync } from "@/lib/staffSync";
 import { getStaffSession, isStaffAllowedPath } from "@/lib/staffSession";
@@ -31,6 +31,9 @@ export function AuthGate({ children }: { children: React.ReactNode }) {
           setUserScope(staff.ownerId);
           // Keep this device's local copy of the sub-account usable offline.
           void requestPersistentStorage();
+          // Free space before the sub-account pulls its data down, so a full
+          // device doesn't warn the moment a PIN login starts syncing.
+          void runStorageHousekeeping();
           rememberDeviceStaffToken(staff);
           void startStaffSync(staff);
           if (active) setStatus("staff");
