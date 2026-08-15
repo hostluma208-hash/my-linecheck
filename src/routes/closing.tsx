@@ -354,6 +354,7 @@ function ClosingPage() {
       notes: "",
       photos: [],
     });
+    lsStore.removeItem(DRAFT_KEY);
   }
 
   function submit() {
