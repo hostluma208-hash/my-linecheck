@@ -112,6 +112,47 @@ function emptyChecks(items: string[]): Checks {
   return Object.fromEntries(items.map((i) => [i, false]));
 }
 
+// The in-progress report is kept on the device so a refresh never loses it.
+// It is only removed when the user taps Clear.
+const DRAFT_KEY = "linecheck:closing-draft";
+
+type ClosingForm = {
+  date: string;
+  time: string;
+  branch: string;
+  closedBy: string;
+  crew: CrewEntry[];
+  checks: Checks;
+  notes: string;
+  photos: string[];
+};
+
+function loadDraft(): { form: ClosingForm; editingId: string | null } | null {
+  try {
+    const raw = lsStore.getItem(DRAFT_KEY);
+    if (!raw) return null;
+    const d = JSON.parse(raw);
+    if (!d || typeof d !== "object" || !d.form) return null;
+    const f = d.form;
+    return {
+      form: {
+        date: String(f.date ?? ""),
+        time: String(f.time ?? ""),
+        branch: String(f.branch ?? ""),
+        closedBy: String(f.closedBy ?? ""),
+        crew: Array.isArray(f.crew) ? f.crew : [],
+        checks: f.checks && typeof f.checks === "object" ? f.checks : {},
+        notes: String(f.notes ?? ""),
+        photos: Array.isArray(f.photos) ? f.photos : [],
+      },
+      editingId: typeof d.editingId === "string" ? d.editingId : null,
+    };
+  } catch {
+    return null;
+  }
+}
+
+
 function ClosingPage() {
   const shell = useShellState("Closing Report");
   const [records, setRecords] = useState<ClosingRecord[]>(() => loadRecords());
@@ -160,7 +201,7 @@ function ClosingPage() {
     };
   }, []);
 
-  const [form, setForm] = useState(() => {
+  const [form, setForm] = useState<ClosingForm>(() => {
     const { date, time } = nowParts();
     return {
       date,
@@ -179,6 +220,25 @@ function ClosingPage() {
   const [editKey, setEditKey] = useState<string | null>(null);
   const [editVal, setEditVal] = useState("");
   const [viewer, setViewer] = useState<string | null>(null);
+  // Draft restore runs after hydration so the server and client markup match.
+  const [draftLoaded, setDraftLoaded] = useState(false);
+
+  useEffect(() => {
+    const draft = loadDraft();
+    if (draft) {
+      setForm(draft.form);
+      setEditingId(draft.editingId);
+    }
+    setDraftLoaded(true);
+  }, []);
+
+  useEffect(() => {
+    if (!draftLoaded) return;
+    try {
+      lsStore.setItem(DRAFT_KEY, JSON.stringify({ form, editingId }), { quiet: true });
+    } catch {}
+  }, [form, editingId, draftLoaded]);
+
 
 
 
@@ -294,6 +354,7 @@ function ClosingPage() {
       notes: "",
       photos: [],
     });
+    lsStore.removeItem(DRAFT_KEY);
   }
 
   function submit() {
