@@ -212,7 +212,7 @@ export const lsStore = {
     const s = safe();
     return s ? s.getItem(scopedKey(key)) : null;
   },
-  setItem(key: string, value: string) {
+  setItem(key: string, value: string, opts?: { quiet?: boolean }) {
     const s = safe();
     if (s) {
       const full = scopedKey(key);
@@ -232,13 +232,18 @@ export const lsStore = {
           }
         }
         if (!saved) {
+          // Quiet writes are background sync mirrors: the device simply keeps
+          // its current copy instead of alarming the user mid-login.
+          if (opts?.quiet) return false;
           notifyStorageFull();
           throw e;
         }
       }
     }
     emitWrite(key, bumpKeyRevision(key));
+    return true;
   },
+
   removeItem(key: string) {
     const s = safe();
     if (s) s.removeItem(scopedKey(key));
