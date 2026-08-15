@@ -188,8 +188,7 @@ async function pullNow() {
             unchangedSinceRequest &&
             lsStore.getItem(k) !== v
           ) {
-            lsStore.setItem(k, v);
-            changed = true;
+            if (lsStore.setItem(k, v, { quiet: true })) changed = true;
           }
         }
       } finally {
