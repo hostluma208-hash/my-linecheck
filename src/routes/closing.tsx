@@ -99,8 +99,11 @@ function emptyChecks(items: string[]): Checks {
 }
 
 // The in-progress report is kept on the device so a refresh never loses it.
-// It is only removed when the user taps Clear.
-const DRAFT_KEY = "linecheck:closing-draft";
+// It is only removed when the user taps Clear. The key intentionally avoids the
+// "linecheck:" prefix so it is never mirrored to cloud storage.
+const DRAFT_KEY = "local:closing-draft";
+const LEGACY_DRAFT_KEY = "linecheck:closing-draft";
+
 
 type ClosingForm = {
   date: string;
