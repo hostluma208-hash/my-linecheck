@@ -40,7 +40,6 @@ export const Route = createFileRoute("/closing")({
   component: ClosingPage,
 });
 
-const LS_KEY = "linecheck:closing";
 const TEMPLATE_KEY = "linecheck:closing-template";
 
 const DEFAULT_ITEMS = [
@@ -87,19 +86,6 @@ type ClosingRecord = {
   photos: string[];
 };
 
-function loadRecords(): ClosingRecord[] {
-  try {
-    const raw = lsStore.getItem(LS_KEY);
-    if (!raw) return [];
-    const arr = JSON.parse(raw);
-    return Array.isArray(arr) ? arr : [];
-  } catch {
-    return [];
-  }
-}
-function saveRecords(list: ClosingRecord[]) {
-  lsStore.setItem(LS_KEY, JSON.stringify(list));
-}
 function nowParts() {
   const d = new Date();
   const pad = (n: number) => String(n).padStart(2, "0");
@@ -113,8 +99,11 @@ function emptyChecks(items: string[]): Checks {
 }
 
 // The in-progress report is kept on the device so a refresh never loses it.
-// It is only removed when the user taps Clear.
-const DRAFT_KEY = "linecheck:closing-draft";
+// It is only removed when the user taps Clear. The key intentionally avoids the
+// "linecheck:" prefix so it is never mirrored to cloud storage.
+const DRAFT_KEY = "local:closing-draft";
+const LEGACY_DRAFT_KEY = "linecheck:closing-draft";
+
 
 type ClosingForm = {
   date: string;
@@ -127,9 +116,9 @@ type ClosingForm = {
   photos: string[];
 };
 
-function loadDraft(): { form: ClosingForm; editingId: string | null } | null {
+function loadDraft(): { form: ClosingForm } | null {
   try {
-    const raw = lsStore.getItem(DRAFT_KEY);
+    const raw = lsStore.getItem(DRAFT_KEY) ?? lsStore.getItem(LEGACY_DRAFT_KEY);
     if (!raw) return null;
     const d = JSON.parse(raw);
     if (!d || typeof d !== "object" || !d.form) return null;
@@ -145,7 +134,6 @@ function loadDraft(): { form: ClosingForm; editingId: string | null } | null {
         notes: String(f.notes ?? ""),
         photos: Array.isArray(f.photos) ? f.photos : [],
       },
-      editingId: typeof d.editingId === "string" ? d.editingId : null,
     };
   } catch {
     return null;
@@ -155,7 +143,6 @@ function loadDraft(): { form: ClosingForm; editingId: string | null } | null {
 
 function ClosingPage() {
   const shell = useShellState("Closing Report");
-  const [records, setRecords] = useState<ClosingRecord[]>(() => loadRecords());
   const [template, setTemplate] = useState<string[]>(() => loadTemplate());
   // Manager / team list managed in Settings → Manager tab
   const [members, setMembers] = useState<string[]>(STAFF);
@@ -215,7 +202,6 @@ function ClosingPage() {
     };
   });
   const [editing, setEditing] = useState(false);
-  const [editingId, setEditingId] = useState<string | null>(null);
   const [newItem, setNewItem] = useState("");
   const [editKey, setEditKey] = useState<string | null>(null);
   const [editVal, setEditVal] = useState("");
@@ -225,26 +211,27 @@ function ClosingPage() {
 
   useEffect(() => {
     const draft = loadDraft();
-    if (draft) {
-      setForm(draft.form);
-      setEditingId(draft.editingId);
-    }
+    if (draft) setForm(draft.form);
+    // Drop the old synced report list so it stops consuming device/cloud storage.
+    if (lsStore.getItem("linecheck:closing") != null) lsStore.removeItem("linecheck:closing");
+    if (lsStore.getItem(LEGACY_DRAFT_KEY) != null) lsStore.removeItem(LEGACY_DRAFT_KEY);
     setDraftLoaded(true);
   }, []);
+
 
   useEffect(() => {
     if (!draftLoaded) return;
     try {
-      lsStore.setItem(DRAFT_KEY, JSON.stringify({ form, editingId }), { quiet: true });
+      lsStore.setItem(DRAFT_KEY, JSON.stringify({ form }), { quiet: true });
     } catch {}
-  }, [form, editingId, draftLoaded]);
+  }, [form, draftLoaded]);
+
 
 
 
 
   useEffect(() => {
     const refresh = () => {
-      setRecords(loadRecords());
       setTemplate(loadTemplate());
     };
     window.addEventListener("linecheck:update", refresh);
@@ -294,7 +281,8 @@ function ClosingPage() {
     updateTemplate((arr) => arr.filter((x) => x !== name));
   }
 
-  const stationNames = useMemo(() => getEffectiveSections().map((s) => s.name), [records]);
+  const stationNames = useMemo(() => getEffectiveSections().map((s) => s.name), []);
+
 
   function addCrew(member: string) {
     setForm((f) =>
@@ -343,7 +331,6 @@ function ClosingPage() {
 
   function resetForm() {
     const { date, time } = nowParts();
-    setEditingId(null);
     setForm({
       date,
       time,
@@ -355,55 +342,9 @@ function ClosingPage() {
       photos: [],
     });
     lsStore.removeItem(DRAFT_KEY);
+    lsStore.removeItem(LEGACY_DRAFT_KEY);
   }
 
-  function submit() {
-
-    const crew = form.crew.filter((c) => c.member.trim());
-    if (!form.closedBy.trim() && crew.length === 0) {
-      alert("Please select at least one team member closing.");
-      return;
-    }
-    if (editingId) {
-      const next = records.map((r) =>
-        r.id === editingId
-          ? {
-              ...r,
-              date: form.date,
-              time: form.time,
-              branch: form.branch.trim(),
-              closedBy: form.closedBy.trim() || crew.map((c) => c.member).join(", "),
-              crew,
-              checks: form.checks,
-              notes: form.notes.trim(),
-              photos: form.photos,
-            }
-          : r,
-      );
-      setRecords(next);
-      saveRecords(next);
-      // Keep the form loaded so the saved data stays visible until cleared.
-      return;
-    }
-    const rec: ClosingRecord = {
-      id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
-      createdAt: new Date().toISOString(),
-      date: form.date,
-      time: form.time,
-      branch: form.branch.trim(),
-      closedBy: form.closedBy.trim() || crew.map((c) => c.member).join(", "),
-      crew,
-      checks: form.checks,
-      notes: form.notes.trim(),
-      photos: form.photos,
-    };
-    const next = [rec, ...records];
-    setRecords(next);
-    saveRecords(next);
-    // Stay on the saved report: further saves update it instead of adding a new entry.
-    setEditingId(rec.id);
-
-  }
 
 
   return (
@@ -749,15 +690,10 @@ function ClosingPage() {
           </div>
 
           <div className="mt-4 flex flex-wrap items-center justify-end gap-2">
-            {editingId && (
-              <span className="mr-auto rounded-full bg-secondary px-3 py-1 text-xs font-semibold text-secondary-foreground">
-                Saved report
-              </span>
-            )}
             <button
               onClick={() =>
                 downloadClosingSnapshot({
-                  id: editingId || "current",
+                  id: "current",
                   date: form.date,
                   time: form.time,
                   branch: form.branch.trim(),
@@ -781,16 +717,8 @@ function ClosingPage() {
             >
               Clear
             </button>
-
-            <button
-              onClick={submit}
-              className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:opacity-90"
-            >
-              {editingId ? <CheckIcon className="h-4 w-4" /> : <Plus className="h-4 w-4" />}
-              {editingId ? "Update report" : "Save closing report"}
-            </button>
-
           </div>
+
         </section>
 
       </div>
