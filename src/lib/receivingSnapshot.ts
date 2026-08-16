@@ -91,7 +91,7 @@ export async function buildReceivingSnapshotPng(
   ].filter(([, v]) => v) as [string, string][];
 
   const photos = (
-    await Promise.all((r.photos || []).slice(0, 12).map((p) => loadImage(p)))
+    await Promise.all((r.photos || []).map((p) => loadImage(p)))
   ).filter(Boolean) as HTMLImageElement[];
 
   const m = document.createElement("canvas").getContext("2d")!;
