@@ -118,7 +118,7 @@ type ClosingForm = {
 
 function loadDraft(): { form: ClosingForm } | null {
   try {
-    const raw = lsStore.getItem(DRAFT_KEY);
+    const raw = lsStore.getItem(DRAFT_KEY) ?? lsStore.getItem(LEGACY_DRAFT_KEY);
     if (!raw) return null;
     const d = JSON.parse(raw);
     if (!d || typeof d !== "object" || !d.form) return null;
@@ -338,6 +338,7 @@ function ClosingPage() {
       photos: [],
     });
     lsStore.removeItem(DRAFT_KEY);
+    lsStore.removeItem(LEGACY_DRAFT_KEY);
   }
 
 
