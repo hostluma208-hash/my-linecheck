@@ -212,8 +212,12 @@ function ClosingPage() {
   useEffect(() => {
     const draft = loadDraft();
     if (draft) setForm(draft.form);
+    // Drop the old synced report list so it stops consuming device/cloud storage.
+    if (lsStore.getItem("linecheck:closing") != null) lsStore.removeItem("linecheck:closing");
+    if (lsStore.getItem(LEGACY_DRAFT_KEY) != null) lsStore.removeItem(LEGACY_DRAFT_KEY);
     setDraftLoaded(true);
   }, []);
+
 
   useEffect(() => {
     if (!draftLoaded) return;
