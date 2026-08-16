@@ -749,15 +749,10 @@ function ClosingPage() {
           </div>
 
           <div className="mt-4 flex flex-wrap items-center justify-end gap-2">
-            {editingId && (
-              <span className="mr-auto rounded-full bg-secondary px-3 py-1 text-xs font-semibold text-secondary-foreground">
-                Saved report
-              </span>
-            )}
             <button
               onClick={() =>
                 downloadClosingSnapshot({
-                  id: editingId || "current",
+                  id: "current",
                   date: form.date,
                   time: form.time,
                   branch: form.branch.trim(),
@@ -781,16 +776,8 @@ function ClosingPage() {
             >
               Clear
             </button>
-
-            <button
-              onClick={submit}
-              className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:opacity-90"
-            >
-              {editingId ? <CheckIcon className="h-4 w-4" /> : <Plus className="h-4 w-4" />}
-              {editingId ? "Update report" : "Save closing report"}
-            </button>
-
           </div>
+
         </section>
 
       </div>
