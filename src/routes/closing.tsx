@@ -11,7 +11,6 @@ import {
   Download,
   Image as ImageIcon,
   Pencil,
-  Plus,
   Trash2,
   X,
 } from "lucide-react";
@@ -40,7 +39,6 @@ export const Route = createFileRoute("/closing")({
   component: ClosingPage,
 });
 
-const LS_KEY = "linecheck:closing";
 const TEMPLATE_KEY = "linecheck:closing-template";
 
 const DEFAULT_ITEMS = [
@@ -87,19 +85,6 @@ type ClosingRecord = {
   photos: string[];
 };
 
-function loadRecords(): ClosingRecord[] {
-  try {
-    const raw = lsStore.getItem(LS_KEY);
-    if (!raw) return [];
-    const arr = JSON.parse(raw);
-    return Array.isArray(arr) ? arr : [];
-  } catch {
-    return [];
-  }
-}
-function saveRecords(list: ClosingRecord[]) {
-  lsStore.setItem(LS_KEY, JSON.stringify(list));
-}
 function nowParts() {
   const d = new Date();
   const pad = (n: number) => String(n).padStart(2, "0");
@@ -127,7 +112,7 @@ type ClosingForm = {
   photos: string[];
 };
 
-function loadDraft(): { form: ClosingForm; editingId: string | null } | null {
+function loadDraft(): { form: ClosingForm } | null {
   try {
     const raw = lsStore.getItem(DRAFT_KEY);
     if (!raw) return null;
@@ -145,7 +130,6 @@ function loadDraft(): { form: ClosingForm; editingId: string | null } | null {
         notes: String(f.notes ?? ""),
         photos: Array.isArray(f.photos) ? f.photos : [],
       },
-      editingId: typeof d.editingId === "string" ? d.editingId : null,
     };
   } catch {
     return null;
@@ -155,7 +139,6 @@ function loadDraft(): { form: ClosingForm; editingId: string | null } | null {
 
 function ClosingPage() {
   const shell = useShellState("Closing Report");
-  const [records, setRecords] = useState<ClosingRecord[]>(() => loadRecords());
   const [template, setTemplate] = useState<string[]>(() => loadTemplate());
   // Manager / team list managed in Settings → Manager tab
   const [members, setMembers] = useState<string[]>(STAFF);
