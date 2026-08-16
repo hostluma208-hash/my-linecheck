@@ -343,7 +343,6 @@ function ClosingPage() {
 
   function resetForm() {
     const { date, time } = nowParts();
-    setEditingId(null);
     setForm({
       date,
       time,
@@ -357,53 +356,6 @@ function ClosingPage() {
     lsStore.removeItem(DRAFT_KEY);
   }
 
-  function submit() {
-
-    const crew = form.crew.filter((c) => c.member.trim());
-    if (!form.closedBy.trim() && crew.length === 0) {
-      alert("Please select at least one team member closing.");
-      return;
-    }
-    if (editingId) {
-      const next = records.map((r) =>
-        r.id === editingId
-          ? {
-              ...r,
-              date: form.date,
-              time: form.time,
-              branch: form.branch.trim(),
-              closedBy: form.closedBy.trim() || crew.map((c) => c.member).join(", "),
-              crew,
-              checks: form.checks,
-              notes: form.notes.trim(),
-              photos: form.photos,
-            }
-          : r,
-      );
-      setRecords(next);
-      saveRecords(next);
-      // Keep the form loaded so the saved data stays visible until cleared.
-      return;
-    }
-    const rec: ClosingRecord = {
-      id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
-      createdAt: new Date().toISOString(),
-      date: form.date,
-      time: form.time,
-      branch: form.branch.trim(),
-      closedBy: form.closedBy.trim() || crew.map((c) => c.member).join(", "),
-      crew,
-      checks: form.checks,
-      notes: form.notes.trim(),
-      photos: form.photos,
-    };
-    const next = [rec, ...records];
-    setRecords(next);
-    saveRecords(next);
-    // Stay on the saved report: further saves update it instead of adding a new entry.
-    setEditingId(rec.id);
-
-  }
 
 
   return (
