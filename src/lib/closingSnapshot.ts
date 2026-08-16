@@ -67,7 +67,7 @@ export async function buildClosingSnapshotPng(r: ClosingSnapshotRecord): Promise
   const crew = r.crew ?? [];
 
   const photos = (
-    await Promise.all((r.photos || []).slice(0, 12).map((p) => loadImage(p)))
+    await Promise.all((r.photos || []).map((p) => loadImage(p)))
   ).filter(Boolean) as HTMLImageElement[];
 
   // measuring context
