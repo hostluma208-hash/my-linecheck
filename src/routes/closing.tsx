@@ -11,6 +11,7 @@ import {
   Download,
   Image as ImageIcon,
   Pencil,
+  Plus,
   Trash2,
   X,
 } from "lucide-react";
