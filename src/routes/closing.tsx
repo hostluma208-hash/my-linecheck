@@ -215,7 +215,6 @@ function ClosingPage() {
     };
   });
   const [editing, setEditing] = useState(false);
-  const [editingId, setEditingId] = useState<string | null>(null);
   const [newItem, setNewItem] = useState("");
   const [editKey, setEditKey] = useState<string | null>(null);
   const [editVal, setEditVal] = useState("");
@@ -225,19 +224,17 @@ function ClosingPage() {
 
   useEffect(() => {
     const draft = loadDraft();
-    if (draft) {
-      setForm(draft.form);
-      setEditingId(draft.editingId);
-    }
+    if (draft) setForm(draft.form);
     setDraftLoaded(true);
   }, []);
 
   useEffect(() => {
     if (!draftLoaded) return;
     try {
-      lsStore.setItem(DRAFT_KEY, JSON.stringify({ form, editingId }), { quiet: true });
+      lsStore.setItem(DRAFT_KEY, JSON.stringify({ form }), { quiet: true });
     } catch {}
-  }, [form, editingId, draftLoaded]);
+  }, [form, draftLoaded]);
+
 
 
 
