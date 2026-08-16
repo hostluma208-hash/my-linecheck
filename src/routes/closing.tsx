@@ -244,7 +244,6 @@ function ClosingPage() {
 
   useEffect(() => {
     const refresh = () => {
-      setRecords(loadRecords());
       setTemplate(loadTemplate());
     };
     window.addEventListener("linecheck:update", refresh);
@@ -294,7 +293,8 @@ function ClosingPage() {
     updateTemplate((arr) => arr.filter((x) => x !== name));
   }
 
-  const stationNames = useMemo(() => getEffectiveSections().map((s) => s.name), [records]);
+  const stationNames = useMemo(() => getEffectiveSections().map((s) => s.name), []);
+
 
   function addCrew(member: string) {
     setForm((f) =>
