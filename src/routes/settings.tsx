@@ -1671,7 +1671,7 @@ function PinAccessPanel() {
       <h3 className="text-sm font-bold">Team PIN access</h3>
       <p className="mt-1 text-xs text-muted-foreground">
         Create a simple name + PIN login for a team member. They can only open
-        the Receiving and Closing reports — no dashboard, stations or settings.
+        the Closing report — no dashboard, stations or settings.
       </p>
 
       <form onSubmit={add} className="mt-4 flex flex-wrap gap-2">

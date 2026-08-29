@@ -87,7 +87,6 @@ export function AuthGate({ children }: { children: React.ReactNode }) {
   const isPublic =
     pathname === "/auth" ||
     pathname.startsWith("/s/") ||
-    pathname.startsWith("/r/") ||
     pathname.startsWith("/c/");
 
   useEffect(() => {
@@ -95,7 +94,7 @@ export function AuthGate({ children }: { children: React.ReactNode }) {
       navigate({ to: "/auth", replace: true });
     }
     if (status === "staff" && !isPublic && !isStaffAllowedPath(pathname)) {
-      navigate({ to: "/receiving", replace: true });
+      navigate({ to: "/closing", replace: true });
     }
   }, [status, isPublic, pathname, navigate]);
 
