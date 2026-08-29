@@ -16,7 +16,6 @@ import {
   LayoutDashboard,
   History,
   Settings,
-  PackageCheck,
   ClipboardCheck,
   ChevronLeft,
   Calendar,
