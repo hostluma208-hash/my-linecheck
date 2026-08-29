@@ -811,6 +811,7 @@ function PeoplePanel({
       setName("");
       return;
     }
+    dirty.current = true;
     setMembers((m) => [n, ...m]);
     setName("");
   };
