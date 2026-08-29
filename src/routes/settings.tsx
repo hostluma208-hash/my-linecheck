@@ -794,8 +794,12 @@ function PeoplePanel({
 }) {
   const [members, setMembers] = useState<string[]>(() => loadJSON(storageKey, defaults));
   const [name, setName] = useState("");
+  const dirty = useRef(false);
 
   useEffect(() => {
+    // Never persist on mount — that would push a possibly-empty list to the
+    // cloud and wipe names on other devices before sync has pulled them down.
+    if (!dirty.current) return;
     lsStore.setItem(storageKey, JSON.stringify(members));
     window.dispatchEvent(new Event(updateEvent));
   }, [members, storageKey, updateEvent]);
@@ -807,6 +811,7 @@ function PeoplePanel({
       setName("");
       return;
     }
+    dirty.current = true;
     setMembers((m) => [n, ...m]);
     setName("");
   };
@@ -839,7 +844,10 @@ function PeoplePanel({
             <Users className="h-4 w-4 text-muted-foreground" />
             <span className="font-semibold tracking-tight">{m}</span>
             <button
-              onClick={() => setMembers((arr) => arr.filter((_, j) => j !== i))}
+              onClick={() => {
+                dirty.current = true;
+                setMembers((arr) => arr.filter((_, j) => j !== i));
+              }}
               className="ml-auto grid h-7 w-7 place-items-center rounded-md text-muted-foreground hover:bg-danger-soft hover:text-danger"
               aria-label="Delete"
             >
