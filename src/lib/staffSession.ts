@@ -35,7 +35,7 @@ export function clearStaffSession() {
 }
 
 /** Routes a PIN user is allowed to open. */
-export const STAFF_PATHS = ["/receiving", "/closing"];
+export const STAFF_PATHS = ["/closing"];
 
 export function isStaffAllowedPath(pathname: string) {
   return STAFF_PATHS.some((p) => pathname === p || pathname.startsWith(p + "/"));

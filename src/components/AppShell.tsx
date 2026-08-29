@@ -16,7 +16,6 @@ import {
   LayoutDashboard,
   History,
   Settings,
-  PackageCheck,
   ClipboardCheck,
   ChevronLeft,
   Calendar,
@@ -198,7 +197,7 @@ function Sidebar({
     setIsStaff(!!getStaffSession());
   }, []);
 
-  const RESERVED_PATHS = ["", "auth", "history", "receiving", "closing", "settings", "r", "s", "c", "section"];
+  const RESERVED_PATHS = ["", "auth", "history", "closing", "settings", "s", "c", "section"];
 
   const firstSeg = loc.pathname.split("/")[1] ?? "";
   const sectionMatch = RESERVED_PATHS.includes(firstSeg) ? null : ([null, firstSeg] as const);
@@ -249,7 +248,6 @@ function Sidebar({
             <NavItem to="/history" icon={History} label="History" active={loc.pathname === "/history"} collapsed={collapsed} activeColor={activeDayColor} />
           </>
         )}
-        <NavItem to="/receiving" icon={PackageCheck} label="Receiving" active={loc.pathname === "/receiving"} collapsed={collapsed} activeColor={activeDayColor} />
         <NavItem to="/closing" icon={ClipboardCheck} label="Closing Report" active={loc.pathname === "/closing"} collapsed={collapsed} activeColor={activeDayColor} />
         {!isStaff && (
           <NavItem to="/settings" icon={Settings} label="Settings" active={loc.pathname === "/settings"} collapsed={collapsed} activeColor={activeDayColor} />
