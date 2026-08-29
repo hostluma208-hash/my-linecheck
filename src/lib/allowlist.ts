@@ -1,6 +1,10 @@
 import { supabase } from "@/integrations/supabase/client";
 
-export const ADMIN_EMAILS = ["jero.cp15@gmail.com"];
+export const ADMIN_EMAILS = [
+  "jero.cp15@gmail.com",
+  "hostluma208@gmail.com",
+  "lumajabriya@gmail.com",
+];
 export const ADMIN_EMAIL = ADMIN_EMAILS[0];
 
 const CACHE_KEY = "linecheck:allowlist:ok";
