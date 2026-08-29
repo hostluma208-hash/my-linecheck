@@ -794,8 +794,12 @@ function PeoplePanel({
 }) {
   const [members, setMembers] = useState<string[]>(() => loadJSON(storageKey, defaults));
   const [name, setName] = useState("");
+  const dirty = useRef(false);
 
   useEffect(() => {
+    // Never persist on mount — that would push a possibly-empty list to the
+    // cloud and wipe names on other devices before sync has pulled them down.
+    if (!dirty.current) return;
     lsStore.setItem(storageKey, JSON.stringify(members));
     window.dispatchEvent(new Event(updateEvent));
   }, [members, storageKey, updateEvent]);
