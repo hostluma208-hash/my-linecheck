@@ -1,6 +1,6 @@
 // Simple "name + PIN" team-member session, stored in this browser only.
-// PIN users get read/write access to Receiving and Closing reports of the
-// account (owner) that created their PIN login.
+// PIN users get read/write access to the Closing report of the account
+// (owner) that created their PIN login.
 
 export type StaffSession = {
   id: string;
