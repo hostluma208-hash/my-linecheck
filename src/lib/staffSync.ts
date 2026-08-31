@@ -235,6 +235,7 @@ export async function startStaffSync(s: StaffSession) {
   if (session && session.id === s.id) return;
   stopStaffSync();
   session = s;
+  syncedKeys = new Set();
   refreshStatus();
   if (typeof window !== "undefined" && !unsub) {
     window.addEventListener("linecheck:local-write", onWrite);
@@ -266,6 +267,7 @@ export async function startStaffSync(s: StaffSession) {
 
 export function stopStaffSync() {
   session = null;
+  syncedKeys = new Set();
   if (timer) {
     clearTimeout(timer);
     timer = null;
