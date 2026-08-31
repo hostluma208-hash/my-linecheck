@@ -189,6 +189,8 @@ async function pullNow() {
     const dirty = getDirty(s);
     let changed = false;
     if (remote) {
+      for (const k of Object.keys(remote)) syncedKeys.add(k);
+
       suppress = true;
       try {
         for (const [k, v] of Object.entries(remote)) {
