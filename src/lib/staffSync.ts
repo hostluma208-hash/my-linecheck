@@ -33,15 +33,21 @@ function scope() {
   return session ? `staff:${session.id}` : null;
 }
 
-function snapshot(): Record<string, string> {
+/** Keys the server has already confirmed for this session. */
+let syncedKeys = new Set<string>();
+
+/** Only the records that changed locally (or the server has never seen). */
+function delta(dirty: Set<string>): Record<string, string> {
   const out: Record<string, string> = {};
   for (const k of lsStore.keys()) {
     if (!k.startsWith(PREFIX)) continue;
+    if (!dirty.has(k) && syncedKeys.has(k)) continue;
     const v = lsStore.getItem(k);
     if (v != null) out[k] = v;
   }
   return out;
 }
+
 
 function isOffline() {
   return isDefinitelyOffline();
