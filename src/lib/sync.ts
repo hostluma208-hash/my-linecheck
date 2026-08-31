@@ -30,15 +30,8 @@ let unsubWrite: (() => void) | null = null;
 let lastRemoteKeys = new Set<string>();
 let pollTimer: ReturnType<typeof setInterval> | null = null;
 
-function collectSnapshot(): Record<string, string> {
-  const out: Record<string, string> = {};
-  for (const k of lsStore.keys()) {
-    if (!k.startsWith(PREFIX)) continue;
-    const v = lsStore.getItem(k);
-    if (v != null) out[k] = v;
-  }
-  return out;
-}
+
+
 
 function isOffline() {
   return isDefinitelyOffline();
@@ -82,25 +75,38 @@ async function pushNow() {
     return;
   }
   const userAtStart = currentUserId;
-  const data = collectSnapshot();
   // Snapshot the dirty keys we're about to deliver; writes landing during the
   // request stay queued for the next push.
   const pushedKeys = getDirty(userAtStart);
-  const pushedRevisions = new Map(
-    [...pushedKeys].map((key) => [key, getKeyRevision(key)]),
+  const localKeys = lsStore.keys().filter((k) => k.startsWith(PREFIX));
+  const localSet = new Set(localKeys);
+  // Delta push: only records that actually changed locally, plus anything the
+  // server has never seen. Re-uploading the whole snapshot on every keystroke
+  // is what made saving feel slow on large accounts.
+  const keysToPush = localKeys.filter(
+    (k) => pushedKeys.has(k) || !lastRemoteKeys.has(k),
   );
+  const pushedRevisions = new Map(
+    keysToPush.map((key) => [key, getKeyRevision(key)]),
+  );
+  const removed = [...lastRemoteKeys].filter((k) => !localSet.has(k));
+  if (!keysToPush.length && !removed.length) {
+    clearDirty(userAtStart, pushedKeys);
+    refreshStatus();
+    return;
+  }
   pushing = true;
   refreshStatus();
   try {
     // One database row per record. Keys the server already knows about but
     // that no longer exist locally are deleted; the rest are upserted.
-    const rows = Object.entries(data).map(([key, value]) => ({
+    const now = new Date().toISOString();
+    const rows = keysToPush.map((key) => ({
       owner_id: userAtStart,
       key,
-      value,
-      updated_at: new Date().toISOString(),
+      value: lsStore.getItem(key) ?? "",
+      updated_at: now,
     }));
-    const removed = [...lastRemoteKeys].filter((k) => !(k in data));
     if (rows.length) {
       const { error } = await supabase
         .from("app_records")
@@ -119,11 +125,13 @@ async function pushNow() {
     // A key may be written again with the exact same JSON while this request is
     // in flight (rapid repeated Mark All). Value comparison cannot distinguish
     // that newer action, so only acknowledge the exact per-key revision sent.
-    const confirmedKeys = [...pushedKeys].filter(
+    const confirmedKeys = keysToPush.filter(
       (key) => getKeyRevision(key) === pushedRevisions.get(key),
     );
     clearDirty(userAtStart, confirmedKeys);
-    lastRemoteKeys = new Set(Object.keys(data));
+    for (const k of keysToPush) lastRemoteKeys.add(k);
+    for (const k of removed) lastRemoteKeys.delete(k);
+
 
     clearRetry();
   } catch (e) {

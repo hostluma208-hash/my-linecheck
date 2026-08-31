@@ -33,15 +33,21 @@ function scope() {
   return session ? `staff:${session.id}` : null;
 }
 
-function snapshot(): Record<string, string> {
+/** Keys the server has already confirmed for this session. */
+let syncedKeys = new Set<string>();
+
+/** Only the records that changed locally (or the server has never seen). */
+function delta(dirty: Set<string>): Record<string, string> {
   const out: Record<string, string> = {};
   for (const k of lsStore.keys()) {
     if (!k.startsWith(PREFIX)) continue;
+    if (!dirty.has(k) && syncedKeys.has(k)) continue;
     const v = lsStore.getItem(k);
     if (v != null) out[k] = v;
   }
   return out;
 }
+
 
 function isOffline() {
   return isDefinitelyOffline();
@@ -86,10 +92,16 @@ async function pushNow() {
   }
   const sessionAtStart = session;
   const pushedKeys = getDirty(s);
-  const data = snapshot();
+  const data = delta(pushedKeys);
+  const sentKeys = Object.keys(data);
   const pushedRevisions = new Map(
-    [...pushedKeys].map((key) => [key, getKeyRevision(key)]),
+    sentKeys.map((key) => [key, getKeyRevision(key)]),
   );
+  if (!sentKeys.length) {
+    clearDirty(s, pushedKeys);
+    refreshStatus();
+    return;
+  }
   pushing = true;
   refreshStatus();
   try {
@@ -102,10 +114,12 @@ async function pushNow() {
     if (session?.id !== sessionAtStart.id) return;
     // Same-value repeated writes still represent newer Mark All actions. Only
     // acknowledge the exact per-key revision included in this request.
-    const confirmedKeys = [...pushedKeys].filter(
+    const confirmedKeys = sentKeys.filter(
       (key) => getKeyRevision(key) === pushedRevisions.get(key),
     );
     clearDirty(s, confirmedKeys);
+    for (const k of sentKeys) syncedKeys.add(k);
+
     clearRetry();
   } catch (e) {
     console.warn("[staff-sync] push failed", e);
@@ -175,6 +189,8 @@ async function pullNow() {
     const dirty = getDirty(s);
     let changed = false;
     if (remote) {
+      for (const k of Object.keys(remote)) syncedKeys.add(k);
+
       suppress = true;
       try {
         for (const [k, v] of Object.entries(remote)) {
@@ -219,6 +235,7 @@ export async function startStaffSync(s: StaffSession) {
   if (session && session.id === s.id) return;
   stopStaffSync();
   session = s;
+  syncedKeys = new Set();
   refreshStatus();
   if (typeof window !== "undefined" && !unsub) {
     window.addEventListener("linecheck:local-write", onWrite);
@@ -250,6 +267,7 @@ export async function startStaffSync(s: StaffSession) {
 
 export function stopStaffSync() {
   session = null;
+  syncedKeys = new Set();
   if (timer) {
     clearTimeout(timer);
     timer = null;
