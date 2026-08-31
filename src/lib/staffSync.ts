@@ -92,10 +92,16 @@ async function pushNow() {
   }
   const sessionAtStart = session;
   const pushedKeys = getDirty(s);
-  const data = snapshot();
+  const data = delta(pushedKeys);
+  const sentKeys = Object.keys(data);
   const pushedRevisions = new Map(
-    [...pushedKeys].map((key) => [key, getKeyRevision(key)]),
+    sentKeys.map((key) => [key, getKeyRevision(key)]),
   );
+  if (!sentKeys.length) {
+    clearDirty(s, pushedKeys);
+    refreshStatus();
+    return;
+  }
   pushing = true;
   refreshStatus();
   try {
@@ -108,10 +114,12 @@ async function pushNow() {
     if (session?.id !== sessionAtStart.id) return;
     // Same-value repeated writes still represent newer Mark All actions. Only
     // acknowledge the exact per-key revision included in this request.
-    const confirmedKeys = [...pushedKeys].filter(
+    const confirmedKeys = sentKeys.filter(
       (key) => getKeyRevision(key) === pushedRevisions.get(key),
     );
     clearDirty(s, confirmedKeys);
+    for (const k of sentKeys) syncedKeys.add(k);
+
     clearRetry();
   } catch (e) {
     console.warn("[staff-sync] push failed", e);
