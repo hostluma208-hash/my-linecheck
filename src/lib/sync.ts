@@ -30,15 +30,8 @@ let unsubWrite: (() => void) | null = null;
 let lastRemoteKeys = new Set<string>();
 let pollTimer: ReturnType<typeof setInterval> | null = null;
 
-function collectSnapshot(): Record<string, string> {
-  const out: Record<string, string> = {};
-  for (const k of lsStore.keys()) {
-    if (!k.startsWith(PREFIX)) continue;
-    const v = lsStore.getItem(k);
-    if (v != null) out[k] = v;
-  }
-  return out;
-}
+
+
 
 function isOffline() {
   return isDefinitelyOffline();
