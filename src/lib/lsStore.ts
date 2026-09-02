@@ -94,6 +94,24 @@ function isoDaysAgo(days: number): string {
 const DATE_RE = /(\d{4}-\d{2}-\d{2})/;
 const PHOTO_KEY_RE = /photo|attachment|image/i;
 
+/**
+ * Configuration the user owns (stations, templates, team, brand, theme,
+ * ordering). It is small, irreplaceable, and must survive both storage
+ * housekeeping and a cleared browser cache, so it is never pruned locally
+ * and never deleted from the cloud copy.
+ */
+const PROTECTED_KEY_RE =
+  /^linecheck:(settings:|order:|theme|closing-template|section-items:)/;
+
+export function isProtectedKey(rawKey: string): boolean {
+  return PROTECTED_KEY_RE.test(rawKey);
+}
+
+function isProtectedStorageKey(fullKey: string): boolean {
+  const idx = fullKey.indexOf(":", 2);
+  return isProtectedKey(idx === -1 ? fullKey : fullKey.slice(idx + 1));
+}
+
 /** Replace every embedded base64 image inside a JSON blob with "". */
 function stripDataUrls(json: string): string | null {
   if (!json.includes("data:image")) return null;
@@ -135,6 +153,7 @@ function reclaimSpace(protectKey: string, aggressive: boolean): boolean {
     const raw = s.key(i);
     if (!raw || raw === protectKey) continue;
     if (!raw.startsWith("u:")) continue;
+    if (isProtectedStorageKey(raw)) continue;
     const m = raw.match(DATE_RE);
     const day = m ? m[1] : null;
     const isOld = day ? day < cutoff : false;
