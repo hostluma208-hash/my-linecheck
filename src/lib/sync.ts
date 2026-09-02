@@ -100,7 +100,13 @@ async function pushNow() {
       value,
       updated_at: new Date().toISOString(),
     }));
-    const removed = [...lastRemoteKeys].filter((k) => !(k in data));
+    // Only delete a cloud record when the key was intentionally removed on this
+    // device (a removal marks the key dirty). A key that merely went missing
+    // locally — cleared browser cache, storage housekeeping, a quiet write that
+    // failed — must never wipe the cloud copy. Settings are never deleted.
+    const removed = [...lastRemoteKeys].filter(
+      (k) => !(k in data) && pushedKeys.has(k) && !isProtectedKey(k),
+    );
     if (rows.length) {
       const { error } = await supabase
         .from("app_records")
