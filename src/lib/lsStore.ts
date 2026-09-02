@@ -153,6 +153,7 @@ function reclaimSpace(protectKey: string, aggressive: boolean): boolean {
     const raw = s.key(i);
     if (!raw || raw === protectKey) continue;
     if (!raw.startsWith("u:")) continue;
+    if (isProtectedStorageKey(raw)) continue;
     const m = raw.match(DATE_RE);
     const day = m ? m[1] : null;
     const isOld = day ? day < cutoff : false;
