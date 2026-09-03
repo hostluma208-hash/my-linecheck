@@ -714,11 +714,19 @@ function SectionPage() {
     setDraft(struct);
     setEditMode(false);
   };
-  const saveCategories = () => {
+  const persistCategories = (categories: EditCategory[]) => {
     try {
-      lsStore.setItem(sectionStructKey(name), JSON.stringify(draft));
-    } catch {}
-    setStruct(draft);
+      lsStore.setItem(sectionStructKey(name), JSON.stringify(categories));
+      window.dispatchEvent(new Event("linecheck:update"));
+    } catch {
+      return false;
+    }
+    setDraft(categories);
+    setStruct(categories);
+    return true;
+  };
+  const saveCategories = () => {
+    if (!persistCategories(draft)) return;
     setEditMode(false);
   };
 
@@ -842,7 +850,8 @@ function SectionPage() {
         const tempVal = iTemp >= 0 ? (row[iTemp] ?? "").trim().toLowerCase() : "";
         const temp = tempVal === "true" || tempVal === "1" || tempVal === "yes";
         if (!map.has(group)) map.set(group, { group, temp, items: [] });
-        const cat = map.get(group)!;
+        const cat = map.get(group);
+        if (!cat) continue;
         if (temp) cat.temp = true;
         const itemName = (row[iItem] ?? "").trim();
         if (!itemName) continue;
@@ -858,21 +867,32 @@ function SectionPage() {
       const replace = window.confirm(
         `Import ${next.reduce((a, c) => a + c.items.length, 0)} items into ${next.length} categor${next.length === 1 ? "y" : "ies"}?\n\nOK = Replace current categories\nCancel = Merge with existing`,
       );
-      if (replace) {
-        setDraft(next);
-      } else {
-        setDraft((d) => {
-          const merged: EditCategory[] = d.map((c) => ({ ...c, items: [...c.items] }));
-          for (const inc of next) {
-            const existing = merged.find((c) => c.group.toLowerCase() === inc.group.toLowerCase());
-            if (existing) {
-              if (inc.temp) existing.temp = true;
-              existing.items.push(...inc.items);
-            } else merged.push(inc);
-          }
-          return merged;
-        });
+      const imported = replace
+        ? next
+        : (() => {
+            const merged: EditCategory[] = draft.map((c) => ({
+              ...c,
+              items: [...c.items],
+            }));
+            for (const inc of next) {
+              const existing = merged.find(
+                (c) => c.group.toLowerCase() === inc.group.toLowerCase(),
+              );
+              if (existing) {
+                if (inc.temp) existing.temp = true;
+                existing.items.push(...inc.items);
+              } else {
+                merged.push(inc);
+              }
+            }
+            return merged;
+          })();
+      if (!persistCategories(imported)) {
+        alert("The CSV was read, but this device could not save it. Free some storage and try again.");
+        return;
       }
+      setSavedFlash(true);
+      window.setTimeout(() => setSavedFlash(false), 1400);
     } catch (e) {
       alert("Failed to parse CSV: " + (e instanceof Error ? e.message : String(e)));
     }
