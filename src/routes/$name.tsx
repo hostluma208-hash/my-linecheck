@@ -865,29 +865,12 @@ function SectionPage() {
       const next = [...map.values()];
       if (next.length === 0) { alert("No valid rows found in CSV."); return; }
       const replace = window.confirm(
-        `Import ${next.reduce((a, c) => a + c.items.length, 0)} items into ${next.length} categor${next.length === 1 ? "y" : "ies"}?\n\nOK = Replace current categories\nCancel = Merge with existing`,
+        `Import ${next.reduce((a, c) => a + c.items.length, 0)} items into ${next.length} categor${next.length === 1 ? "y" : "ies"}?\n\nThis will REPLACE the current template for this station.`,
       );
-      const imported = replace
-        ? next
-        : (() => {
-            const merged: EditCategory[] = draft.map((c) => ({
-              ...c,
-              items: [...c.items],
-            }));
-            for (const inc of next) {
-              const existing = merged.find(
-                (c) => c.group.toLowerCase() === inc.group.toLowerCase(),
-              );
-              if (existing) {
-                if (inc.temp) existing.temp = true;
-                existing.items.push(...inc.items);
-              } else {
-                merged.push(inc);
-              }
-            }
-            return merged;
-          })();
-      if (!persistCategories(imported)) {
+      if (!replace) return;
+      // Always fully override any existing template with the uploaded CSV to
+      // avoid conflicts between old and new data.
+      if (!persistCategories(next)) {
         alert("The CSV was read, but this device could not save it. Free some storage and try again.");
         return;
       }
