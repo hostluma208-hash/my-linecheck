@@ -26,7 +26,6 @@ import {
   Pencil,
   ShieldCheck,
   GripVertical,
-  KeyRound,
 } from "lucide-react";
 import {
   DndContext,
