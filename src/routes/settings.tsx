@@ -143,9 +143,6 @@ function SettingsPage() {
           <TabPill active={tab === "team"} onClick={() => setTab("team")} icon={<Users className="h-4 w-4" />}>
             Manager
           </TabPill>
-          <TabPill active={tab === "members"} onClick={() => setTab("members")} icon={<Users className="h-4 w-4" />}>
-            Team Members
-          </TabPill>
           <TabPill active={tab === "statuses"} onClick={() => setTab("statuses")} icon={<Tag className="h-4 w-4" />}>
             Status Options
           </TabPill>
@@ -157,9 +154,6 @@ function SettingsPage() {
           </TabPill>
           <TabPill active={tab === "containers"} onClick={() => setTab("containers")} icon={<Package className="h-4 w-4" />}>
             Container
-          </TabPill>
-          <TabPill active={tab === "pins"} onClick={() => setTab("pins")} icon={<KeyRound className="h-4 w-4" />}>
-            PIN Access
           </TabPill>
           {isAdmin && (
             <TabPill active={tab === "access"} onClick={() => setTab("access")} icon={<ShieldCheck className="h-4 w-4" />}>
@@ -176,28 +170,9 @@ function SettingsPage() {
         {tab === "branding" && <BrandingPanel />}
         {tab === "stations" && <StationsPanel />}
         {tab === "team" && <TeamPanel />}
-        {tab === "members" && <MembersPanel />}
         {tab === "statuses" && <StatusPanel />}
-        {tab === "shifts" && <ShiftsPanel />}
-        {tab === "shelves" && (
-          <SimpleListPanel
-            storageKey={SHELVES_KEY}
-            defaults={DEFAULT_SHELVES}
-            icon={<Clock className="h-4 w-4 text-muted-foreground" />}
-            placeholder="New shelf life (e.g. 3 Days)..."
-            eventName="linecheck:shelves-update"
-          />
+...
         )}
-        {tab === "containers" && (
-          <SimpleListPanel
-            storageKey={CONTAINERS_KEY}
-            defaults={DEFAULT_CONTAINERS}
-            icon={<Package className="h-4 w-4 text-muted-foreground" />}
-            placeholder="New container (e.g. 1/6 Pan)..."
-            eventName="linecheck:containers-update"
-          />
-        )}
-        {tab === "pins" && <PinAccessPanel />}
         {tab === "access" && isAdmin && <AccessPanel />}
         {tab === "admins" && isAdmin && <AdminsPanel />}
       </div>
