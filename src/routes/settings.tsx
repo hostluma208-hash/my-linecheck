@@ -760,17 +760,6 @@ function TeamPanel() {
   );
 }
 
-function MembersPanel() {
-  return (
-    <PeoplePanel
-      storageKey={MEMBERS_KEY}
-      updateEvent="linecheck:members-update"
-      defaults={[]}
-      placeholder="New team member..."
-    />
-  );
-}
-
 function PeoplePanel({
   storageKey,
   updateEvent,
