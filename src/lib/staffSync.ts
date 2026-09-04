@@ -198,7 +198,6 @@ async function pullNow() {
     if (changed && typeof window !== "undefined") {
       window.dispatchEvent(new Event("linecheck:update"));
       window.dispatchEvent(new Event("linecheck:staff-update"));
-      window.dispatchEvent(new Event("linecheck:members-update"));
       window.dispatchEvent(new Event("linecheck:brand-update"));
     }
     if (hasDirty(s)) void pushNow();
