@@ -242,20 +242,17 @@ function Sidebar({
       </div>
 
       <nav className="px-3">
+        <NavItem to="/" icon={LayoutDashboard} label="Dashboard" active={loc.pathname === "/"} collapsed={collapsed} activeColor={activeDayColor} />
         {!isStaff && (
           <>
-            <NavItem to="/" icon={LayoutDashboard} label="Dashboard" active={loc.pathname === "/"} collapsed={collapsed} activeColor={activeDayColor} />
             <NavItem to="/history" icon={History} label="History" active={loc.pathname === "/history"} collapsed={collapsed} activeColor={activeDayColor} />
+            <NavItem to="/settings" icon={Settings} label="Settings" active={loc.pathname === "/settings"} collapsed={collapsed} activeColor={activeDayColor} />
           </>
-        )}
-        <NavItem to="/closing" icon={ClipboardCheck} label="Closing Report" active={loc.pathname === "/closing"} collapsed={collapsed} activeColor={activeDayColor} />
-        {!isStaff && (
-          <NavItem to="/settings" icon={Settings} label="Settings" active={loc.pathname === "/settings"} collapsed={collapsed} activeColor={activeDayColor} />
         )}
       </nav>
 
 
-      <div className={`mt-4 flex-1 overflow-y-auto px-3 pb-6 ${isStaff ? "hidden" : ""}`} data-tick={tick}>
+      <div className="mt-4 flex-1 overflow-y-auto px-3 pb-6" data-tick={tick}>
         {!collapsed && (
           <p className="px-3 pb-2 text-[10px] font-semibold uppercase tracking-[0.14em] text-sidebar-foreground/60">
             Stations
