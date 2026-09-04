@@ -7,7 +7,6 @@ import { supabase } from "@/integrations/supabase/client";
 import { ADMIN_EMAIL, isAdminEmail } from "@/lib/allowlist";
 
 
-import { hashPinBrowser } from "@/lib/staffSession";
 import { setAccountPin, listAllowedAccounts } from "@/lib/accountPin.functions";
 import {
   ArrowLeft,
@@ -59,7 +58,7 @@ export const Route = createFileRoute("/settings")({
   component: SettingsPage,
 });
 
-type Tab = "branding" | "stations" | "team" | "members" | "statuses" | "shifts" | "shelves" | "containers" | "access" | "admins" | "pins";
+type Tab = "branding" | "stations" | "team" | "statuses" | "shifts" | "shelves" | "containers" | "access" | "admins";
 
 const ICON_OPTIONS = Object.keys(SECTION_ICONS);
 
@@ -71,7 +70,6 @@ type LocalStation = {
 
 const STATIONS_KEY = "linecheck:settings:stations";
 const STAFF_KEY = "linecheck:settings:staff";
-const MEMBERS_KEY = "linecheck:settings:members";
 const STATUSES_KEY = "linecheck:settings:statuses";
 const SHELVES_KEY = "linecheck:settings:shelves";
 const CONTAINERS_KEY = "linecheck:settings:containers";
