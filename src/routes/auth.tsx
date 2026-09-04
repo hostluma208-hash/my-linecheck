@@ -82,7 +82,7 @@ function AuthPage() {
       }
       await requestPersistentStorage();
       setStaffSession(session);
-      window.location.href = "/closing";
+      window.location.href = "/";
     } catch (err: any) {
       setMsg(err?.message || "Sign in failed");
     } finally {

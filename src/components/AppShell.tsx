@@ -197,7 +197,7 @@ function Sidebar({
     setIsStaff(!!getStaffSession());
   }, []);
 
-  const RESERVED_PATHS = ["", "auth", "history", "closing", "settings", "s", "c", "section"];
+  const RESERVED_PATHS = ["", "auth", "history", "settings", "s", "c", "section"];
 
   const firstSeg = loc.pathname.split("/")[1] ?? "";
   const sectionMatch = RESERVED_PATHS.includes(firstSeg) ? null : ([null, firstSeg] as const);

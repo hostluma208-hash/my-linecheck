@@ -1,6 +1,6 @@
 // Simple "name + PIN" team-member session, stored in this browser only.
-// PIN users get read/write access to the Closing report of the account
-// (owner) that created their PIN login.
+// PIN users get read/write access to the stations of the account (owner)
+// that created their PIN login.
 
 export type StaffSession = {
   id: string;
@@ -34,11 +34,11 @@ export function clearStaffSession() {
   } catch {}
 }
 
-/** Routes a PIN user is allowed to open. */
-export const STAFF_PATHS = ["/closing"];
+/** Routes a PIN user may NOT open. */
+const STAFF_BLOCKED = ["/settings", "/history"];
 
 export function isStaffAllowedPath(pathname: string) {
-  return STAFF_PATHS.some((p) => pathname === p || pathname.startsWith(p + "/"));
+  return !STAFF_BLOCKED.some((p) => pathname === p || pathname.startsWith(p + "/"));
 }
 
 /** Browser-side SHA-256, matching the server's hashPin(). */

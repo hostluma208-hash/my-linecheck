@@ -94,7 +94,7 @@ export function AuthGate({ children }: { children: React.ReactNode }) {
       navigate({ to: "/auth", replace: true });
     }
     if (status === "staff" && !isPublic && !isStaffAllowedPath(pathname)) {
-      navigate({ to: "/closing", replace: true });
+      navigate({ to: "/", replace: true });
     }
   }, [status, isPublic, pathname, navigate]);
 
