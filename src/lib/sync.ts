@@ -244,7 +244,6 @@ async function pullFromServer() {
     if (changed && typeof window !== "undefined") {
       window.dispatchEvent(new Event("linecheck:update"));
       window.dispatchEvent(new Event("linecheck:staff-update"));
-      window.dispatchEvent(new Event("linecheck:members-update"));
       window.dispatchEvent(new Event("linecheck:brand-update"));
     }
     // Deliver queued offline edits, or local-only keys the server hasn't seen.
