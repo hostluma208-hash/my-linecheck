@@ -86,8 +86,7 @@ export function AuthGate({ children }: { children: React.ReactNode }) {
 
   const isPublic =
     pathname === "/auth" ||
-    pathname.startsWith("/s/") ||
-    pathname.startsWith("/c/");
+    pathname.startsWith("/s/");
 
   useEffect(() => {
     if (status === "signed-out" && !isPublic) {

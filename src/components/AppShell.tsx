@@ -16,7 +16,6 @@ import {
   LayoutDashboard,
   History,
   Settings,
-  ClipboardCheck,
   ChevronLeft,
   Calendar,
   Clock,
@@ -197,7 +196,7 @@ function Sidebar({
     setIsStaff(!!getStaffSession());
   }, []);
 
-  const RESERVED_PATHS = ["", "auth", "history", "settings", "s", "c", "section"];
+  const RESERVED_PATHS = ["", "auth", "history", "settings", "s", "section"];
 
   const firstSeg = loc.pathname.split("/")[1] ?? "";
   const sectionMatch = RESERVED_PATHS.includes(firstSeg) ? null : ([null, firstSeg] as const);
