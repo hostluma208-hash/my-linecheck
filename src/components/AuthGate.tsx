@@ -86,15 +86,14 @@ export function AuthGate({ children }: { children: React.ReactNode }) {
 
   const isPublic =
     pathname === "/auth" ||
-    pathname.startsWith("/s/") ||
-    pathname.startsWith("/c/");
+    pathname.startsWith("/s/");
 
   useEffect(() => {
     if (status === "signed-out" && !isPublic) {
       navigate({ to: "/auth", replace: true });
     }
     if (status === "staff" && !isPublic && !isStaffAllowedPath(pathname)) {
-      navigate({ to: "/closing", replace: true });
+      navigate({ to: "/", replace: true });
     }
   }, [status, isPublic, pathname, navigate]);
 
