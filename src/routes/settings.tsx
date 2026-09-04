@@ -171,7 +171,24 @@ function SettingsPage() {
         {tab === "stations" && <StationsPanel />}
         {tab === "team" && <TeamPanel />}
         {tab === "statuses" && <StatusPanel />}
-...
+        {tab === "shifts" && <ShiftsPanel />}
+        {tab === "shelves" && (
+          <SimpleListPanel
+            storageKey={SHELVES_KEY}
+            defaults={DEFAULT_SHELVES}
+            icon={<Clock className="h-4 w-4 text-muted-foreground" />}
+            placeholder="New shelf life (e.g. 3 Days)..."
+            eventName="linecheck:shelves-update"
+          />
+        )}
+        {tab === "containers" && (
+          <SimpleListPanel
+            storageKey={CONTAINERS_KEY}
+            defaults={DEFAULT_CONTAINERS}
+            icon={<Package className="h-4 w-4 text-muted-foreground" />}
+            placeholder="New container (e.g. 1/6 Pan)..."
+            eventName="linecheck:containers-update"
+          />
         )}
         {tab === "access" && isAdmin && <AccessPanel />}
         {tab === "admins" && isAdmin && <AdminsPanel />}
