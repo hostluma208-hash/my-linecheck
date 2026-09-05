@@ -395,6 +395,12 @@ function StationsPanel() {
   const [expanded, setExpanded] = useState<string | null>(null);
   const [renamingIdx, setRenamingIdx] = useState<number | null>(null);
   const [renameValue, setRenameValue] = useState("");
+  const stationEdited = useRef(false);
+
+  const updateStations: React.Dispatch<React.SetStateAction<LocalStation[]>> = (next) => {
+    stationEdited.current = true;
+    setStations(next);
+  };
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
@@ -404,22 +410,38 @@ function StationsPanel() {
   const onDragEnd = (e: DragEndEvent) => {
     const { active, over } = e;
     if (!over || active.id === over.id) return;
-    setStations((s) => {
+    updateStations((s) => {
       const from = s.findIndex((x) => x.name === active.id);
       const to = s.findIndex((x) => x.name === over.id);
       if (from < 0 || to < 0) return s;
       const next = arrayMove(s, from, to);
-      setStationOrder(next.map((x) => x.name));
       return next;
     });
   };
 
-
   useEffect(() => {
+    if (!stationEdited.current) return;
+    stationEdited.current = false;
     lsStore.setItem(STATIONS_KEY, JSON.stringify(stations));
+    setStationOrder(stations.map((station) => station.name));
     if (typeof window !== "undefined")
       window.dispatchEvent(new Event("linecheck:update"));
   }, [stations]);
+
+  useEffect(() => {
+    const refresh = () => {
+      stationEdited.current = false;
+      setStations(loadJSON(STATIONS_KEY, initial));
+    };
+    window.addEventListener("linecheck:update", refresh);
+    window.addEventListener("linecheck:scope-change", refresh);
+    window.addEventListener("storage", refresh);
+    return () => {
+      window.removeEventListener("linecheck:update", refresh);
+      window.removeEventListener("linecheck:scope-change", refresh);
+      window.removeEventListener("storage", refresh);
+    };
+  }, [initial]);
 
   const add = () => {
     const n = name.trim().toUpperCase();
@@ -436,7 +458,7 @@ function StationsPanel() {
       ICON_OPTIONS.find((k) => !used.has(k)) ??
       ICON_OPTIONS[stations.length % ICON_OPTIONS.length] ??
       "Utensils";
-    setStations((s) => [{ name: n, icon: nextIcon, items: [] }, ...s]);
+    updateStations((s) => [{ name: n, icon: nextIcon, items: [] }, ...s]);
     setName("");
     setAddError(null);
   };
@@ -467,7 +489,7 @@ function StationsPanel() {
       return;
     }
     renameStationKeys(oldName, newName);
-    setStations((s) => s.map((x, i) => (i === idx ? { ...x, name: newName } : x)));
+    updateStations((s) => s.map((x, i) => (i === idx ? { ...x, name: newName } : x)));
     if (expanded === oldName) setExpanded(newName);
     cancelRename();
   };
@@ -526,7 +548,7 @@ function StationsPanel() {
                 cancelRename={cancelRename}
                 startRename={startRename}
                 setExpanded={setExpanded}
-                setStations={setStations}
+                setStations={updateStations}
               />
             ))}
           </ul>
