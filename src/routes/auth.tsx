@@ -275,7 +275,7 @@ function AuthPage() {
             />
           </div>
           <div>
-            <label className="mb-1 block text-xs font-semibold">Password</label>
+            <label className="mb-1 block text-xs font-semibold">Password or PIN</label>
             <input
               type="password"
               required
