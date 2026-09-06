@@ -9,8 +9,9 @@ import {
   type FlaggedRow,
   type Slot,
 } from "@/lib/lineCheck";
-import { ArrowRight, CheckCircle2, AlertTriangle, UserCog, FileDown } from "lucide-react";
+import { ArrowRight, CheckCircle2, AlertTriangle, UserCog, FileDown, Share2 } from "lucide-react";
 import { downloadStationsPdf } from "@/lib/stationsPdf";
+import { toast } from "sonner";
 import { z } from "zod";
 
 
@@ -114,14 +115,33 @@ function Dashboard() {
           <p className="text-sm text-muted-foreground">
             {greeting}, <span className="font-medium text-foreground">{name}</span>.
           </p>
-          <button
-            type="button"
-            onClick={() => downloadStationsPdf(shell.date)}
-            className="flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-xs font-bold text-primary-foreground hover:opacity-90"
-          >
-            <FileDown className="h-4 w-4" />
-            Download PDF
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={async () => {
+                try {
+                  const { publishStationsHub } = await import("@/lib/shareStation");
+                  const url = await publishStationsHub(shell.date);
+                  await navigator.clipboard.writeText(url);
+                  toast.success("Public stations link copied");
+                } catch (e) {
+                  toast.error(e instanceof Error ? e.message : "Share failed");
+                }
+              }}
+              className="flex items-center gap-2 rounded-full border border-border bg-card px-4 py-2 text-xs font-bold hover:bg-muted/40"
+            >
+              <Share2 className="h-4 w-4" />
+              Share stations
+            </button>
+            <button
+              type="button"
+              onClick={() => downloadStationsPdf(shell.date)}
+              className="flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-xs font-bold text-primary-foreground hover:opacity-90"
+            >
+              <FileDown className="h-4 w-4" />
+              Download PDF
+            </button>
+          </div>
         </div>
         <p className="mt-1 text-sm">
           You have{" "}
