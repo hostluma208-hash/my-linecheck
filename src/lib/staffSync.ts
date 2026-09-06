@@ -218,9 +218,13 @@ async function pullNow() {
     const priorityRows = await fetchRemoteRows(sessionAtStart.token, true);
     if (session?.id !== sessionAtStart.id) return;
     let dirty = getDirty(s);
+    let changed = false;
     suppress = true;
-    let changed = restoreRows(priorityRows, dirtyAtStart, dirty, revisionsAtStart);
-    suppress = false;
+    try {
+      changed = restoreRows(priorityRows, dirtyAtStart, dirty, revisionsAtStart);
+    } finally {
+      suppress = false;
+    }
     if (changed && typeof window !== "undefined") {
       window.dispatchEvent(new Event("linecheck:update"));
       window.dispatchEvent(new Event("linecheck:staff-update"));
