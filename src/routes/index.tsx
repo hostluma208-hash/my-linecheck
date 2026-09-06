@@ -9,8 +9,7 @@ import {
   type FlaggedRow,
   type Slot,
 } from "@/lib/lineCheck";
-import { ArrowRight, CheckCircle2, AlertTriangle, UserCog, FileDown } from "lucide-react";
-import { downloadStationsPdf } from "@/lib/stationsPdf";
+import { ArrowRight, CheckCircle2, AlertTriangle, UserCog } from "lucide-react";
 import { z } from "zod";
 
 
@@ -110,19 +109,9 @@ function Dashboard() {
       )}
       {/* Hero readiness card */}
       <section className="rounded-3xl border border-border bg-card p-6 lg:p-8">
-        <div className="flex items-start justify-between gap-4">
-          <p className="text-sm text-muted-foreground">
-            {greeting}, <span className="font-medium text-foreground">{name}</span>.
-          </p>
-          <button
-            type="button"
-            onClick={() => downloadStationsPdf(shell.date)}
-            className="flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-xs font-bold text-primary-foreground hover:opacity-90"
-          >
-            <FileDown className="h-4 w-4" />
-            Download PDF
-          </button>
-        </div>
+        <p className="text-sm text-muted-foreground">
+          {greeting}, <span className="font-medium text-foreground">{name}</span>.
+        </p>
         <p className="mt-1 text-sm">
           You have{" "}
           <span className="font-semibold text-success">{stats.stationsComplete}</span>{" "}
