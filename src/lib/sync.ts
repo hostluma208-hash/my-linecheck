@@ -7,7 +7,12 @@
 // and are pushed as soon as connectivity returns — including after a reload
 // or an app restart that happened while still offline.
 import { supabase } from "@/integrations/supabase/client";
-import { getKeyRevision, isProtectedKey, lsStore } from "@/lib/lsStore";
+import {
+  getKeyRevision,
+  isProtectedKey,
+  lsStore,
+  shrinkForRestore,
+} from "@/lib/lsStore";
 import {
   backoffDelay,
   clearDirty,
@@ -244,7 +249,9 @@ async function pullFromServer() {
           getKeyRevision(row.key) === (revisionsAtStart.get(row.key) ?? 0) &&
           lsStore.getItem(row.key) !== row.value
         ) {
-          if (lsStore.setItem(row.key, row.value, { quiet: true })) priorityChanged = true;
+          const v = shrinkForRestore(row.key, row.value);
+          if (v != null && lsStore.setItem(row.key, v, { quiet: true }))
+            priorityChanged = true;
         }
       }
     } finally {
@@ -285,7 +292,8 @@ async function pullFromServer() {
              unchangedSinceRequest &&
              lsStore.getItem(k) !== v
            ) {
-            if (lsStore.setItem(k, v, { quiet: true })) changed = true;
+            const fit = shrinkForRestore(k, v);
+            if (fit != null && lsStore.setItem(k, fit, { quiet: true })) changed = true;
           }
           localKeys.delete(k);
         }
