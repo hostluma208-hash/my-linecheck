@@ -141,7 +141,22 @@ function AuthPage() {
         else setMsg("Check your email to confirm your account, then sign in.");
       } else {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
-        if (error) setMsg(error.message);
+        if (error) {
+          // If it looks like a PIN, fall back to account PIN sign-in.
+          if (/^\d{4,8}$/.test(password)) {
+            const res = await accountPinLogin({ data: { email: email.trim(), pin: password } });
+            if (res?.ok) {
+              const { error: otpErr } = await supabase.auth.verifyOtp({
+                type: "email",
+                token_hash: res.tokenHash,
+              });
+              if (otpErr) setMsg(otpErr.message);
+              else window.location.href = "/";
+              return;
+            }
+          }
+          setMsg(error.message);
+        }
       }
     } finally {
       setBusy(false);
@@ -260,7 +275,7 @@ function AuthPage() {
             />
           </div>
           <div>
-            <label className="mb-1 block text-xs font-semibold">Password</label>
+            <label className="mb-1 block text-xs font-semibold">Password or PIN</label>
             <input
               type="password"
               required
