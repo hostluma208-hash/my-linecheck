@@ -98,6 +98,39 @@ export type Database = {
         }
         Relationships: []
       }
+      shared_stations: {
+        Row: {
+          brand_name: string | null
+          created_at: string
+          date: string
+          id: string
+          owner_id: string
+          payload: Json
+          station: string
+          updated_at: string
+        }
+        Insert: {
+          brand_name?: string | null
+          created_at?: string
+          date: string
+          id?: string
+          owner_id: string
+          payload: Json
+          station: string
+          updated_at?: string
+        }
+        Update: {
+          brand_name?: string | null
+          created_at?: string
+          date?: string
+          id?: string
+          owner_id?: string
+          payload?: Json
+          station?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       staff_logins: {
         Row: {
           created_at: string
@@ -195,6 +228,17 @@ export type Database = {
           member: string
           payload: Json
           shift: string
+          updated_at: string
+        }[]
+      }
+      get_shared_station: {
+        Args: { _id: string }
+        Returns: {
+          brand_name: string
+          date: string
+          id: string
+          payload: Json
+          station: string
           updated_at: string
         }[]
       }
