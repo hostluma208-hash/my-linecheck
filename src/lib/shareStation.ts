@@ -12,6 +12,8 @@ import {
 import { lsStore } from "@/lib/lsStore";
 import { optimizePayload, getCachedShareUrl, setCachedShareUrl } from "@/lib/shareOptimize";
 
+const PUBLIC_APP_ORIGIN = "https://my-linecheck.lovable.app";
+
 const itemSchema = z.object({
   name: z.string().catch(""),
   status: z.string().catch(""),
@@ -132,7 +134,7 @@ export async function getStationsHubUrl(): Promise<string> {
     owner_id = getStaffSession()?.ownerId;
   }
   if (!owner_id) throw new Error("Sign in required to share");
-  return `${window.location.origin}/st?owner=${owner_id}`;
+  return `${PUBLIC_APP_ORIGIN}/st?owner=${owner_id}`;
 }
 
 /**
@@ -168,7 +170,7 @@ export async function publishSharedStation(
     .single();
   if (error || !data) throw error ?? new Error("Failed to publish share");
 
-  const url = `${window.location.origin}/st/${data.id}`;
+  const url = `${PUBLIC_APP_ORIGIN}/st/${data.id}`;
   setCachedShareUrl("station", `${date}:${station}`, payload, url);
   return url;
 }

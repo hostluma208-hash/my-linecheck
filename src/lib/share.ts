@@ -11,6 +11,8 @@ import {
 import { lsStore } from "@/lib/lsStore";
 import { optimizePayload, getCachedShareUrl, setCachedShareUrl } from "@/lib/shareOptimize";
 
+const PUBLIC_APP_ORIGIN = "https://my-linecheck.lovable.app";
+
 const slotSchema = z.string();
 
 const entrySchema = z.object({
@@ -141,6 +143,7 @@ export async function publishSharedShift(date: string, slot: Slot): Promise<stri
     .select("id")
     .single();
   if (error || !data) throw error ?? new Error("Failed to publish share");
-  setCachedShareUrl("shift", `${date}:${slot}`, payload, `${window.location.origin}/s/${data.id}`);
-  return `${window.location.origin}/s/${data.id}`;
+  const url = `${PUBLIC_APP_ORIGIN}/s/${data.id}`;
+  setCachedShareUrl("shift", `${date}:${slot}`, payload, url);
+  return url;
 }
