@@ -86,6 +86,7 @@ export function AuthGate({ children }: { children: React.ReactNode }) {
 
   const isPublic =
     pathname === "/auth" ||
+    pathname === "/st" ||
     pathname.startsWith("/s/") ||
     pathname.startsWith("/st/");
 
