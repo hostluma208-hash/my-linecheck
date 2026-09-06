@@ -12,6 +12,13 @@ import {
 import { lsStore } from "@/lib/lsStore";
 import { optimizePayload, getCachedShareUrl, setCachedShareUrl } from "@/lib/shareOptimize";
 
+const PUBLIC_APP_ORIGIN = "https://my-linecheck.lovable.app";
+
+function publicShareUrl(url: string): string {
+  const parsed = new URL(url, PUBLIC_APP_ORIGIN);
+  return `${PUBLIC_APP_ORIGIN}${parsed.pathname}${parsed.search}`;
+}
+
 const itemSchema = z.object({
   name: z.string().catch(""),
   status: z.string().catch(""),
@@ -132,7 +139,7 @@ export async function getStationsHubUrl(): Promise<string> {
     owner_id = getStaffSession()?.ownerId;
   }
   if (!owner_id) throw new Error("Sign in required to share");
-  return `${window.location.origin}/st?owner=${owner_id}`;
+  return `${PUBLIC_APP_ORIGIN}/st?owner=${owner_id}`;
 }
 
 /**
@@ -145,7 +152,7 @@ export async function publishSharedStation(
 ): Promise<string> {
   const payload = await optimizePayload(buildPayload(station, date));
   const cached = getCachedShareUrl("station", `${date}:${station}`, payload);
-  if (cached) return cached;
+  if (cached) return publicShareUrl(cached);
 
   const { data: sessionData } = await supabase.auth.getSession();
   const owner_id = sessionData.session?.user?.id;
@@ -168,7 +175,7 @@ export async function publishSharedStation(
     .single();
   if (error || !data) throw error ?? new Error("Failed to publish share");
 
-  const url = `${window.location.origin}/st/${data.id}`;
+  const url = `${PUBLIC_APP_ORIGIN}/st/${data.id}`;
   setCachedShareUrl("station", `${date}:${station}`, payload, url);
   return url;
 }

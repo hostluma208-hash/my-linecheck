@@ -11,6 +11,13 @@ import {
 import { lsStore } from "@/lib/lsStore";
 import { optimizePayload, getCachedShareUrl, setCachedShareUrl } from "@/lib/shareOptimize";
 
+const PUBLIC_APP_ORIGIN = "https://my-linecheck.lovable.app";
+
+function publicShareUrl(url: string): string {
+  const parsed = new URL(url, PUBLIC_APP_ORIGIN);
+  return `${PUBLIC_APP_ORIGIN}${parsed.pathname}${parsed.search}`;
+}
+
 const slotSchema = z.string();
 
 const entrySchema = z.object({
@@ -117,7 +124,7 @@ function buildPayload(date: string, slot: Slot): SharedShiftPayload {
 export async function publishSharedShift(date: string, slot: Slot): Promise<string> {
   const payload = await optimizePayload(buildPayload(date, slot));
   const cached = getCachedShareUrl("shift", `${date}:${slot}`, payload);
-  if (cached) return cached;
+  if (cached) return publicShareUrl(cached);
 
   // getSession() reads the cached session locally; getUser() would add a network round-trip.
   const { data: sessionData } = await supabase.auth.getSession();
@@ -141,6 +148,7 @@ export async function publishSharedShift(date: string, slot: Slot): Promise<stri
     .select("id")
     .single();
   if (error || !data) throw error ?? new Error("Failed to publish share");
-  setCachedShareUrl("shift", `${date}:${slot}`, payload, `${window.location.origin}/s/${data.id}`);
-  return `${window.location.origin}/s/${data.id}`;
+  const url = `${PUBLIC_APP_ORIGIN}/s/${data.id}`;
+  setCachedShareUrl("shift", `${date}:${slot}`, payload, url);
+  return url;
 }
