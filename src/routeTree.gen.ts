@@ -16,6 +16,7 @@ import { Route as HistoryRouteImport } from './routes/history'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as HistoryShiftRouteImport } from './routes/history.shift'
 import { Route as SIdRouteImport } from './routes/s.$id'
+import { Route as StIndexRouteImport } from './routes/st.index'
 import { Route as StIdRouteImport } from './routes/st.$id'
 
 const IndexRoute = IndexRouteImport.update({
@@ -53,6 +54,11 @@ const SIdRoute = SIdRouteImport.update({
   path: '/s/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const StIndexRoute = StIndexRouteImport.update({
+  id: '/st/',
+  path: '/st/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const StIdRoute = StIdRouteImport.update({
   id: '/st/$id',
   path: '/st/$id',
@@ -68,6 +74,7 @@ export interface FileRoutesByFullPath {
   '/history/shift': typeof HistoryShiftRoute
   '/s/$id': typeof SIdRoute
   '/st/$id': typeof StIdRoute
+  '/st/': typeof StIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -78,6 +85,7 @@ export interface FileRoutesByTo {
   '/history/shift': typeof HistoryShiftRoute
   '/s/$id': typeof SIdRoute
   '/st/$id': typeof StIdRoute
+  '/st': typeof StIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -89,6 +97,7 @@ export interface FileRoutesById {
   '/history/shift': typeof HistoryShiftRoute
   '/s/$id': typeof SIdRoute
   '/st/$id': typeof StIdRoute
+  '/st/': typeof StIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -101,6 +110,7 @@ export interface FileRouteTypes {
     | '/history/shift'
     | '/s/$id'
     | '/st/$id'
+    | '/st/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -111,6 +121,7 @@ export interface FileRouteTypes {
     | '/history/shift'
     | '/s/$id'
     | '/st/$id'
+    | '/st'
   id:
     | '__root__'
     | '/'
@@ -121,6 +132,7 @@ export interface FileRouteTypes {
     | '/history/shift'
     | '/s/$id'
     | '/st/$id'
+    | '/st/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -131,6 +143,7 @@ export interface RootRouteChildren {
   SettingsRoute: typeof SettingsRoute
   SIdRoute: typeof SIdRoute
   StIdRoute: typeof StIdRoute
+  StIndexRoute: typeof StIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -184,6 +197,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/st/': {
+      id: '/st/'
+      path: '/st'
+      fullPath: '/st/'
+      preLoaderRoute: typeof StIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/st/$id': {
       id: '/st/$id'
       path: '/st/$id'
@@ -213,6 +233,7 @@ const rootRouteChildren: RootRouteChildren = {
   SettingsRoute: SettingsRoute,
   SIdRoute: SIdRoute,
   StIdRoute: StIdRoute,
+  StIndexRoute: StIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

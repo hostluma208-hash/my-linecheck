@@ -243,6 +243,16 @@ export type Database = {
         }[]
       }
       is_admin: { Args: never; Returns: boolean }
+      list_shared_stations: {
+        Args: { _owner: string }
+        Returns: {
+          brand_name: string
+          date: string
+          id: string
+          station: string
+          updated_at: string
+        }[]
+      }
     }
     Enums: {
       [_ in never]: never
