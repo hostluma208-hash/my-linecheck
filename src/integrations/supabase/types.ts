@@ -244,7 +244,7 @@ export type Database = {
       }
       is_admin: { Args: never; Returns: boolean }
       list_shared_stations: {
-        Args: never
+        Args: { _owner: string }
         Returns: {
           brand_name: string
           date: string
