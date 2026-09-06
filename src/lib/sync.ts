@@ -20,6 +20,15 @@ import {
 } from "@/lib/pendingSync";
 
 const PREFIX = "linecheck:";
+const REMOTE_PAGE_SIZE = 250;
+const REMOTE_PRIORITY_FILTER = [
+  "key.like.linecheck:settings:%",
+  "key.like.linecheck:order:%",
+  "key.like.linecheck:theme%",
+  "key.eq.linecheck:closing-template",
+  "key.like.linecheck:section-items:%",
+].join(",");
+type RemoteRow = { key: string; value: string; updated_at: string };
 let suppressPush = false;
 let pushTimer: ReturnType<typeof setTimeout> | null = null;
 let retryTimer: ReturnType<typeof setTimeout> | null = null;
@@ -42,6 +51,36 @@ function collectSnapshot(): Record<string, string> {
 
 function isOffline() {
   return isDefinitelyOffline();
+}
+
+function remotePriority(row: RemoteRow) {
+  if (isProtectedKey(row.key)) return 0;
+  // New Android installs have a smaller local quota than the cloud snapshot.
+  // Restore recent operational records before old history if the device fills.
+  return 1;
+}
+
+function newestFirst(a: RemoteRow, b: RemoteRow) {
+  const priority = remotePriority(a) - remotePriority(b);
+  if (priority !== 0) return priority;
+  return b.updated_at.localeCompare(a.updated_at);
+}
+
+async function fetchAllRemoteRows(userId: string): Promise<RemoteRow[]> {
+  const rows: RemoteRow[] = [];
+  for (let from = 0; ; from += REMOTE_PAGE_SIZE) {
+    const { data, error } = await supabase
+      .from("app_records")
+      .select("key, value, updated_at")
+      .eq("owner_id", userId)
+      .order("key", { ascending: true })
+      .range(from, from + REMOTE_PAGE_SIZE - 1);
+    if (error) throw error;
+    const page = (data ?? []) as RemoteRow[];
+    rows.push(...page);
+    if (page.length < REMOTE_PAGE_SIZE) break;
+  }
+  return rows;
 }
 
 function refreshStatus() {
@@ -183,14 +222,43 @@ async function pullFromServer() {
       .map((key) => [key, getKeyRevision(key)]),
   );
   try {
-    const { data, error } = await supabase
+    // Restore the small, irreplaceable configuration first. On Android the
+    // complete account history may be larger than the browser storage quota,
+    // but stations, uploaded templates, ordering and settings must still load.
+    const { data: priorityData, error: priorityError } = await supabase
       .from("app_records")
-      .select("key, value")
-      .eq("owner_id", currentUserId);
-    if (error) throw error;
+      .select("key, value, updated_at")
+      .eq("owner_id", userAtStart)
+      .or(REMOTE_PRIORITY_FILTER)
+      .order("updated_at", { ascending: false });
+    if (priorityError) throw priorityError;
+    if (currentUserId !== userAtStart) return;
+
+    let priorityChanged = false;
+    suppressPush = true;
+    try {
+      for (const row of (priorityData ?? []) as RemoteRow[]) {
+        if (
+          row.key.startsWith(PREFIX) &&
+          !dirtyAtStart.has(row.key) &&
+          getKeyRevision(row.key) === (revisionsAtStart.get(row.key) ?? 0) &&
+          lsStore.getItem(row.key) !== row.value
+        ) {
+          if (lsStore.setItem(row.key, row.value, { quiet: true })) priorityChanged = true;
+        }
+      }
+    } finally {
+      suppressPush = false;
+    }
+    if (priorityChanged && typeof window !== "undefined") {
+      window.dispatchEvent(new Event("linecheck:update"));
+      window.dispatchEvent(new Event("linecheck:staff-update"));
+      window.dispatchEvent(new Event("linecheck:brand-update"));
+    }
+
+    const rows = await fetchAllRemoteRows(userAtStart);
     // Account switched while the request was in flight — discard.
     if (currentUserId !== userAtStart) return;
-    const rows = (data ?? []) as { key: string; value: string }[];
     const remote: Record<string, string> | null = rows.length
       ? Object.fromEntries(rows.map((r) => [r.key, r.value]))
       : null;
@@ -206,7 +274,8 @@ async function pullFromServer() {
     suppressPush = true;
     try {
       const localKeys = new Set(lsStore.keys().filter((k) => k.startsWith(PREFIX)));
-      for (const [k, v] of Object.entries(remote)) {
+      for (const row of rows.sort(newestFirst)) {
+        const { key: k, value: v } = row;
         if (typeof v === "string" && k.startsWith(PREFIX)) {
            const unchangedSinceRequest =
              getKeyRevision(k) === (revisionsAtStart.get(k) ?? 0);
