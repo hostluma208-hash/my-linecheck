@@ -32,25 +32,40 @@ export const staffLogout = createServerFn({ method: "POST" })
     return { ok: true as const };
   });
 
-/** Read the owner's stored records on behalf of a token-authenticated PIN user. */
+type StaffPullInput = {
+  token: string;
+  from?: number;
+  limit?: number;
+  priorityOnly?: boolean;
+};
+
+/** Read one ordered page of the owner's records for a PIN user. */
 export const staffPullState = createServerFn({ method: "POST" })
-  .inputValidator((input: { token: string }) => input)
+  .inputValidator((input: StaffPullInput) => input)
   .handler(async ({ data }) => {
     const { validToken, verifyStaffToken } = await import("@/lib/staffAuth.server");
     const row = await verifyStaffToken(validToken(data));
-    if (!row) return { ok: false as const, state: null };
+    if (!row) return { ok: false as const, rows: [] };
+    const from = Math.max(0, Math.floor(Number(data.from) || 0));
+    const limit = Math.min(250, Math.max(1, Math.floor(Number(data.limit) || 250)));
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const { data: rows, error } = await supabaseAdmin
+    let query = supabaseAdmin
       .from("app_records")
-      .select("key, value")
+      .select("key, value, updated_at")
       .eq("owner_id", row.owner_id);
+    if (data.priorityOnly) {
+      query = query.or(
+        "key.like.linecheck:settings:%,key.like.linecheck:order:%,key.like.linecheck:theme%,key.eq.linecheck:closing-template,key.like.linecheck:section-items:%",
+      );
+    }
+    const { data: rows, error } = await query
+      .order("key", { ascending: true })
+      .range(from, from + limit - 1);
     if (error) throw error;
-    const state = (rows ?? []).length
-      ? Object.fromEntries(
-          (rows as { key: string; value: string }[]).map((r) => [r.key, r.value]),
-        )
-      : null;
-    return { ok: true as const, state: state as Record<string, string> | null };
+    return {
+      ok: true as const,
+      rows: (rows ?? []) as { key: string; value: string; updated_at: string }[],
+    };
   });
 
 /** Write records back into the owner's account for a token-authenticated user. */
