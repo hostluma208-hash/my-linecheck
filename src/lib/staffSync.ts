@@ -5,7 +5,7 @@
 // Offline behaviour mirrors `sync.ts`: local writes are queued durably, win
 // over remote values on the next pull, and are retried with backoff until the
 // server confirms them.
-import { getKeyRevision, lsStore } from "@/lib/lsStore";
+import { getKeyRevision, isProtectedKey, lsStore } from "@/lib/lsStore";
 import type { StaffSession } from "@/lib/staffSession";
 import { staffPullState, staffPushState } from "@/lib/staffAuth.functions";
 import {
@@ -20,6 +20,8 @@ import {
 } from "@/lib/pendingSync";
 
 const PREFIX = "linecheck:";
+const REMOTE_PAGE_SIZE = 250;
+type RemoteRow = { key: string; value: string; updated_at: string };
 let session: StaffSession | null = null;
 let suppress = false;
 let timer: ReturnType<typeof setTimeout> | null = null;
@@ -45,6 +47,50 @@ function snapshot(): Record<string, string> {
 
 function isOffline() {
   return isDefinitelyOffline();
+}
+
+function newestFirst(a: RemoteRow, b: RemoteRow) {
+  const priority = Number(isProtectedKey(b.key)) - Number(isProtectedKey(a.key));
+  if (priority !== 0) return priority;
+  return b.updated_at.localeCompare(a.updated_at);
+}
+
+async function fetchRemoteRows(token: string, priorityOnly = false) {
+  const rows: RemoteRow[] = [];
+  for (let from = 0; ; from += REMOTE_PAGE_SIZE) {
+    const res = await staffPullState({
+      data: { token, from, limit: REMOTE_PAGE_SIZE, priorityOnly },
+    });
+    if (!res?.ok) throw new Error("PIN session expired");
+    const page = res.rows as RemoteRow[];
+    rows.push(...page);
+    if (page.length < REMOTE_PAGE_SIZE) break;
+  }
+  return rows;
+}
+
+function restoreRows(
+  rows: RemoteRow[],
+  dirtyAtStart: Set<string>,
+  dirty: Set<string>,
+  revisionsAtStart: Map<string, number>,
+) {
+  let changed = false;
+  for (const { key, value } of rows.sort(newestFirst)) {
+    const unchangedSinceRequest =
+      getKeyRevision(key) === (revisionsAtStart.get(key) ?? 0);
+    if (
+      typeof value === "string" &&
+      key.startsWith(PREFIX) &&
+      !dirtyAtStart.has(key) &&
+      !dirty.has(key) &&
+      unchangedSinceRequest &&
+      lsStore.getItem(key) !== value
+    ) {
+      if (lsStore.setItem(key, value, { quiet: true })) changed = true;
+    }
+  }
+  return changed;
 }
 
 function refreshStatus() {
@@ -166,34 +212,29 @@ async function pullNow() {
       .map((key) => [key, getKeyRevision(key)]),
   );
   try {
-    const res = await staffPullState({
-      data: { token: sessionAtStart.token },
-    });
+    // Restore station names, uploaded templates and settings before loading
+    // large historical records. This keeps a fresh Android device usable even
+    // when the owner's complete cloud snapshot exceeds its browser quota.
+    const priorityRows = await fetchRemoteRows(sessionAtStart.token, true);
     if (session?.id !== sessionAtStart.id) return;
-    const remote = res?.ok ? res.state : null;
-    // Unsynced local edits always win over the remote snapshot.
-    const dirty = getDirty(s);
-    let changed = false;
-    if (remote) {
-      suppress = true;
-      try {
-        for (const [k, v] of Object.entries(remote)) {
-          const unchangedSinceRequest =
-            getKeyRevision(k) === (revisionsAtStart.get(k) ?? 0);
-          if (
-            typeof v === "string" &&
-            k.startsWith(PREFIX) &&
-            !dirtyAtStart.has(k) &&
-            !dirty.has(k) &&
-            unchangedSinceRequest &&
-            lsStore.getItem(k) !== v
-          ) {
-            if (lsStore.setItem(k, v, { quiet: true })) changed = true;
-          }
-        }
-      } finally {
-        suppress = false;
-      }
+    let dirty = getDirty(s);
+    suppress = true;
+    let changed = restoreRows(priorityRows, dirtyAtStart, dirty, revisionsAtStart);
+    suppress = false;
+    if (changed && typeof window !== "undefined") {
+      window.dispatchEvent(new Event("linecheck:update"));
+      window.dispatchEvent(new Event("linecheck:staff-update"));
+      window.dispatchEvent(new Event("linecheck:brand-update"));
+    }
+
+    const rows = await fetchRemoteRows(sessionAtStart.token);
+    if (session?.id !== sessionAtStart.id) return;
+    dirty = getDirty(s);
+    suppress = true;
+    try {
+      changed = restoreRows(rows, dirtyAtStart, dirty, revisionsAtStart) || changed;
+    } finally {
+      suppress = false;
     }
     if (changed && typeof window !== "undefined") {
       window.dispatchEvent(new Event("linecheck:update"));
