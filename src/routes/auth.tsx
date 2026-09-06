@@ -280,6 +280,19 @@ function AuthPage() {
             {busy && <Loader2 className="h-4 w-4 animate-spin" />}
             {mode === "signin" ? "Sign in" : "Create account"}
           </button>
+
+          <button
+            type="button"
+            disabled={busy}
+            className="flex w-full items-center justify-center gap-2 rounded-lg border border-border bg-background px-4 py-2.5 text-sm font-semibold hover:bg-muted disabled:opacity-50"
+            onClick={() => {
+              setPinMode(true);
+              setMsg(null);
+            }}
+          >
+            <KeyRound className="h-4 w-4" />
+            Sign in with a PIN instead
+          </button>
         </form>
 
         <p className="mt-4 text-center text-xs text-muted-foreground">
@@ -293,19 +306,6 @@ function AuthPage() {
           </button>
         </p>
 
-        <p className="mt-3 text-center text-xs text-muted-foreground">
-          <button
-            type="button"
-            className="inline-flex items-center gap-1.5 font-semibold text-foreground underline-offset-2 hover:underline"
-            onClick={() => {
-              setPinMode(true);
-              setMsg(null);
-            }}
-          >
-            <KeyRound className="h-3.5 w-3.5" />
-            Sign in with a PIN instead
-          </button>
-        </p>
 
       </div>
     </div>
