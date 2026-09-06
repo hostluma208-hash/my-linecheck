@@ -121,6 +121,21 @@ function buildPayload(station: string, date: string): SharedStationPayload {
 }
 
 /**
+ * Public URL of the station-picker page listing every station this account
+ * has shared. Works for manager accounts and PIN staff sessions.
+ */
+export async function getStationsHubUrl(): Promise<string> {
+  const { data: sessionData } = await supabase.auth.getSession();
+  let owner_id = sessionData.session?.user?.id;
+  if (!owner_id) {
+    const { getStaffSession } = await import("@/lib/staffSession");
+    owner_id = getStaffSession()?.ownerId;
+  }
+  if (!owner_id) throw new Error("Sign in required to share");
+  return `${window.location.origin}/st?owner=${owner_id}`;
+}
+
+/**
  * Publish a station's whole-day dashboard (every shift) and return a public URL.
  * Upserts on (owner_id, date, station) so re-sharing keeps the same link.
  */
