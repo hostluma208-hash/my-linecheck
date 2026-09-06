@@ -5,7 +5,12 @@
 // Offline behaviour mirrors `sync.ts`: local writes are queued durably, win
 // over remote values on the next pull, and are retried with backoff until the
 // server confirms them.
-import { getKeyRevision, isProtectedKey, lsStore } from "@/lib/lsStore";
+import {
+  getKeyRevision,
+  isProtectedKey,
+  lsStore,
+  shrinkForRestore,
+} from "@/lib/lsStore";
 import type { StaffSession } from "@/lib/staffSession";
 import { staffPullState, staffPushState } from "@/lib/staffAuth.functions";
 import {
@@ -87,7 +92,8 @@ function restoreRows(
       unchangedSinceRequest &&
       lsStore.getItem(key) !== value
     ) {
-      if (lsStore.setItem(key, value, { quiet: true })) changed = true;
+      const fit = shrinkForRestore(key, value);
+      if (fit != null && lsStore.setItem(key, fit, { quiet: true })) changed = true;
     }
   }
   return changed;
