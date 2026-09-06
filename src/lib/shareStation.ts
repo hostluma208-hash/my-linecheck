@@ -168,7 +168,19 @@ export async function publishSharedStation(
     .single();
   if (error || !data) throw error ?? new Error("Failed to publish share");
 
-  const url = `${window.location.origin}/st/${data.id}`;
-  setCachedShareUrl("station", `${date}:${station}`, payload, url);
-  return url;
+/**
+ * Publish every station's board, then return the public station-picker URL.
+ * Individual station failures are skipped so one bad station can't block the rest.
+ */
+export async function publishStationsHub(date: string): Promise<string> {
+  const { getEffectiveSections } = await import("@/lib/lineCheck");
+  for (const s of getEffectiveSections()) {
+    try {
+      await publishSharedStation(s.name, date);
+    } catch {
+      // skip stations that fail to publish
+    }
+  }
+  return getStationsHubUrl();
 }
+
