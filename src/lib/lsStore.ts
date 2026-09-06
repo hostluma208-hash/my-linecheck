@@ -197,23 +197,6 @@ export function pruneOldAttachments(): void {
   } catch {}
 }
 
-/** Values above this size are trimmed before being restored onto a device. */
-const MAX_RESTORE_BYTES = 512 * 1024;
-
-/**
- * Shape a cloud value so it fits a phone's storage on first sign-in.
- * Settings/templates are always kept verbatim; oversized historical records
- * have their embedded photos stripped, and pure photo records that are still
- * too big are skipped (they stay safely in the cloud).
- */
-export function shrinkForRestore(key: string, value: string): string | null {
-  if (isProtectedKey(key)) return value;
-  if (value.length <= MAX_RESTORE_BYTES) return value;
-  const stripped = stripDataUrls(value);
-  if (stripped != null && stripped.length <= MAX_RESTORE_BYTES) return stripped;
-  return null;
-}
-
 /** Rough share (0..1) of the storage quota already used, when measurable. */
 export async function storagePressure(): Promise<number | null> {
   try {
