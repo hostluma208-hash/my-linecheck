@@ -241,7 +241,7 @@ export async function runStorageHousekeeping(): Promise<void> {
   const pressure = await storagePressure();
   if (pressure !== null && pressure > 0.8) {
     try {
-      reclaimSpace("", true);
+      reclaimSpace("", 1);
     } catch {}
   }
 }
@@ -266,8 +266,9 @@ export const lsStore = {
       } catch (e) {
         if (!isQuotaError(e)) throw e;
         let saved = false;
-        for (const aggressive of [false, true]) {
-          if (!reclaimSpace(full, aggressive)) continue;
+        for (const level of [0, 1, 2] as const) {
+          if (!reclaimSpace(full, level)) continue;
+
           try {
             s.setItem(full, value);
             saved = true;
