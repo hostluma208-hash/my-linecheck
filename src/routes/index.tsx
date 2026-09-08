@@ -224,7 +224,7 @@ function Dashboard() {
                   <Link
                     to="/$name"
                     params={{ name: stationSlug(row.section) }}
-                    className="flex items-center gap-3 px-6 py-3.5 hover:bg-accent"
+                    className="flex items-center gap-2 px-4 py-3 hover:bg-accent sm:gap-3 sm:px-6 sm:py-3.5"
                   >
                     {rowInner}
                   </Link>
@@ -232,7 +232,7 @@ function Dashboard() {
                   <div
                     aria-disabled
                     title="Select a team member first"
-                    className="flex cursor-not-allowed items-center gap-3 px-6 py-3.5 opacity-60"
+                    className="flex cursor-not-allowed items-center gap-2 px-4 py-3 opacity-60 sm:gap-3 sm:px-6 sm:py-3.5"
                   >
                     {rowInner}
                   </div>
@@ -261,10 +261,11 @@ function StatCard({
   value: number;
 }) {
   return (
-    <div className="rounded-2xl border border-border bg-card p-5">
-      <span className={`grid h-9 w-9 place-items-center rounded-full ${iconBg}`}>{icon}</span>
-      <p className="mt-4 text-4xl font-black tracking-tight text-foreground">{value}</p>
-      <p className="mt-1 text-xs text-muted-foreground">{label}</p>
+    <div className="rounded-2xl border border-border bg-card p-4 sm:p-5">
+      <span className={`grid h-8 w-8 place-items-center rounded-full sm:h-9 sm:w-9 ${iconBg}`}>{icon}</span>
+      <p className="mt-3 text-3xl font-black tracking-tight text-foreground sm:mt-4 sm:text-4xl">{value}</p>
+      <p className="mt-1 text-[11px] text-muted-foreground sm:text-xs">{label}</p>
     </div>
   );
+
 }
