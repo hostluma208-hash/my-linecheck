@@ -7,7 +7,13 @@
 // and are pushed as soon as connectivity returns — including after a reload
 // or an app restart that happened while still offline.
 import { supabase } from "@/integrations/supabase/client";
-import { getKeyRevision, isProtectedKey, lsStore } from "@/lib/lsStore";
+import {
+  getKeyRevision,
+  isProtectedKey,
+  lsStore,
+  runStorageHousekeeping,
+} from "@/lib/lsStore";
+
 import {
   backoffDelay,
   clearDirty,
@@ -384,8 +390,11 @@ export async function startSync(userId: string) {
     };
   }
   if (isOffline()) return;
+  // Make room before restoring the cloud snapshot (small-quota Android devices).
+  await runStorageHousekeeping();
   // A queue left over from a previous offline session is merged, then flushed.
   await pullFromServer();
+
 }
 
 export function stopSync() {
