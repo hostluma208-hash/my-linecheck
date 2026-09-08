@@ -23,7 +23,7 @@ import {
   type SectionState,
   type Slot,
 } from "@/lib/lineCheck";
-import { Camera, Check, Share2, ChevronDown, FolderInput, ChevronUp, Download, Edit3, Filter, GripVertical, Image as ImageIcon, Save, Thermometer, Plus, Trash2, Upload, X } from "lucide-react";
+import { Camera, Check, ChevronDown, FolderInput, ChevronUp, Download, Edit3, Filter, GripVertical, Image as ImageIcon, Save, Thermometer, Plus, Trash2, Upload, X } from "lucide-react";
 import { z } from "zod";
 import {
   DndContext,
@@ -235,8 +235,6 @@ function SectionPage() {
 
   const [editMode, setEditMode] = useState(false);
   const [savedFlash, setSavedFlash] = useState(false);
-  const [sharing, setSharing] = useState(false);
-  const [shareFlash, setShareFlash] = useState(false);
   const [flaggedOnly, setFlaggedOnly] = useState(false);
   const [viewer, setViewer] = useState<{ group: string; name: string; occ: number; photo: string } | null>(null);
   const viewerFileRef = useRef<HTMLInputElement | null>(null);
@@ -708,27 +706,6 @@ function SectionPage() {
   };
 
 
-  const shareStation = async () => {
-    if (sharing) return;
-    setSharing(true);
-    try {
-      const { publishSharedStation } = await import("@/lib/shareStation");
-      const url = await publishSharedStation(name, shell.date);
-      try {
-        await navigator.clipboard.writeText(url);
-        setShareFlash(true);
-        window.setTimeout(() => setShareFlash(false), 1800);
-      } catch {
-        window.prompt("Copy public station link:", url);
-      }
-    } catch (e) {
-      console.error(e);
-      window.alert("Could not create the public link. Please try again.");
-    } finally {
-      setSharing(false);
-    }
-  };
-
   const enterEdit = () => {
     setDraft(JSON.parse(JSON.stringify(struct)));
     setEditMode(true);
@@ -1001,15 +978,6 @@ function SectionPage() {
                 </button>
 
 
-                <button
-                  onClick={shareStation}
-                  disabled={sharing}
-                  title="Create a public link to this station's shift board"
-                  className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-3.5 py-2 text-xs font-semibold hover:bg-accent disabled:opacity-50"
-                >
-                  <Share2 className="h-3.5 w-3.5" />
-                  {shareFlash ? "Link copied!" : sharing ? "Creating…" : "Public Link"}
-                </button>
                 <button
                   onClick={enterEdit}
                   className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-3.5 py-2 text-xs font-semibold hover:bg-accent"
