@@ -140,19 +140,33 @@ function stripDataUrls(json: string): string | null {
  * attachments, then base64 images embedded inside older daily records.
  * Text records (marks, temps, notes), templates and settings are preserved —
  * only the images inside old records are removed.
+ *
+ * level 0 = gentle (older than 14 days)
+ * level 1 = aggressive (everything but today)
+ * level 2 = last resort: drop data belonging to other accounts on this device
+ *           and the oldest daily records, so the current account's stations,
+ *           templates and settings can always be restored from the cloud.
  */
-function reclaimSpace(protectKey: string, aggressive: boolean): boolean {
+function reclaimSpace(protectKey: string, level: 0 | 1 | 2): boolean {
   const s = safe();
   if (!s) return false;
+  const aggressive = level >= 1;
   const cutoff = isoDaysAgo(aggressive ? 2 : 14);
   const today = isoDaysAgo(0);
   const victims: string[] = [];
   const strippable: string[] = [];
+  const dated: { key: string; day: string }[] = [];
+  const ownPrefix = `u:${currentUid}:`;
 
   for (let i = 0; i < s.length; i++) {
     const raw = s.key(i);
     if (!raw || raw === protectKey) continue;
     if (!raw.startsWith("u:")) continue;
+    if (level >= 2 && !raw.startsWith(ownPrefix)) {
+      // Another account's cached data on this shared device.
+      victims.push(raw);
+      continue;
+    }
     if (isProtectedStorageKey(raw)) continue;
     const m = raw.match(DATE_RE);
     const day = m ? m[1] : null;
@@ -164,6 +178,7 @@ function reclaimSpace(protectKey: string, aggressive: boolean): boolean {
     } else if (day && day !== today && (isOld || aggressive)) {
       strippable.push(raw);
     }
+    if (level >= 2 && day && day !== today) dated.push({ key: raw, day });
   }
 
   let freed = false;
@@ -183,6 +198,16 @@ function reclaimSpace(protectKey: string, aggressive: boolean): boolean {
       freed = true;
     } catch {}
   }
+  if (level >= 2) {
+    // Drop the oldest half of past daily records; they stay safe in the cloud.
+    dated.sort((a, b) => a.day.localeCompare(b.day));
+    for (const { key } of dated.slice(0, Math.ceil(dated.length / 2))) {
+      try {
+        s.removeItem(key);
+        freed = true;
+      } catch {}
+    }
+  }
   return freed;
 }
 
@@ -193,9 +218,10 @@ function reclaimSpace(protectKey: string, aggressive: boolean): boolean {
  */
 export function pruneOldAttachments(): void {
   try {
-    reclaimSpace("", false);
+    reclaimSpace("", 0);
   } catch {}
 }
+
 
 /** Rough share (0..1) of the storage quota already used, when measurable. */
 export async function storagePressure(): Promise<number | null> {
@@ -215,7 +241,7 @@ export async function runStorageHousekeeping(): Promise<void> {
   const pressure = await storagePressure();
   if (pressure !== null && pressure > 0.8) {
     try {
-      reclaimSpace("", true);
+      reclaimSpace("", 1);
     } catch {}
   }
 }
@@ -240,8 +266,9 @@ export const lsStore = {
       } catch (e) {
         if (!isQuotaError(e)) throw e;
         let saved = false;
-        for (const aggressive of [false, true]) {
-          if (!reclaimSpace(full, aggressive)) continue;
+        for (const level of [0, 1, 2] as const) {
+          if (!reclaimSpace(full, level)) continue;
+
           try {
             s.setItem(full, value);
             saved = true;

@@ -5,7 +5,13 @@
 // Offline behaviour mirrors `sync.ts`: local writes are queued durably, win
 // over remote values on the next pull, and are retried with backoff until the
 // server confirms them.
-import { getKeyRevision, isProtectedKey, lsStore } from "@/lib/lsStore";
+import {
+  getKeyRevision,
+  isProtectedKey,
+  lsStore,
+  runStorageHousekeeping,
+} from "@/lib/lsStore";
+
 import type { StaffSession } from "@/lib/staffSession";
 import { staffPullState, staffPushState } from "@/lib/staffAuth.functions";
 import {
@@ -289,7 +295,10 @@ export async function startStaffSync(s: StaffSession) {
     };
   }
   if (isOffline()) return; // keep working from local data
+  // Make room before restoring the cloud snapshot (small-quota Android devices).
+  await runStorageHousekeeping();
   await pullNow();
+
 }
 
 export function stopStaffSync() {
