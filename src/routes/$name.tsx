@@ -929,9 +929,10 @@ function SectionPage() {
 
   return (
     <AppShell {...shell}>
-      <div className="mb-3 flex items-center justify-between">
+      <div className="mb-3 hidden items-center justify-between sm:flex">
         <h1 className="text-base font-bold tracking-tight">{section.name}</h1>
       </div>
+
 
       {/* Hero card */}
       <section className="rounded-2xl border border-border bg-card px-3 py-3 shadow-sm sm:px-6 sm:py-5">
