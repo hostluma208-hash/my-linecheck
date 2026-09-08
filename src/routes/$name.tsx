@@ -929,22 +929,34 @@ function SectionPage() {
 
   return (
     <AppShell {...shell}>
-      <div className="mb-3 flex items-center justify-between">
+      <div className="mb-3 hidden items-center justify-between sm:flex">
         <h1 className="text-base font-bold tracking-tight">{section.name}</h1>
       </div>
 
+
       {/* Hero card */}
-      <section className="rounded-2xl border border-border bg-card px-4 py-4 shadow-sm sm:px-6 sm:py-5">
-        <div className="flex flex-wrap items-center justify-between gap-4">
-          <div className="min-w-0 flex-1">
-            <h2 className="text-2xl font-extrabold tracking-tight">{section.name}</h2>
-            <p className="mt-0.5 text-xs text-muted-foreground">
-              {done} of {total} items checked{!editMode && ` · ${shiftLabel}`}
-            </p>
-          </div>
-          <div className="flex w-full flex-wrap items-center gap-2 sm:w-auto sm:gap-3">
+      <section className="rounded-2xl border border-border bg-card px-3 py-3 shadow-sm sm:px-6 sm:py-5">
+        <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between sm:gap-4">
+          <div className="flex items-center gap-3 sm:min-w-0 sm:flex-1">
             <div
-              className="grid h-14 w-14 shrink-0 place-items-center rounded-full"
+              className="grid h-12 w-12 shrink-0 place-items-center rounded-full sm:hidden"
+              style={ringStyle}
+              aria-label={`${pct} percent complete`}
+            >
+              <div className="grid h-[40px] w-[40px] place-items-center rounded-full bg-card text-xs font-bold tabular-nums">
+                {editMode ? done : pct}
+              </div>
+            </div>
+            <div className="min-w-0 flex-1">
+              <h2 className="truncate text-xl font-extrabold tracking-tight sm:text-2xl">{section.name}</h2>
+              <p className="mt-0.5 truncate text-xs text-muted-foreground">
+                {done} of {total} items checked{!editMode && ` · ${shiftLabel}`}
+              </p>
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-2 sm:flex sm:w-auto sm:flex-wrap sm:items-center sm:gap-3">
+            <div
+              className="hidden h-14 w-14 shrink-0 place-items-center rounded-full sm:grid"
               style={ringStyle}
               aria-label={`${pct} percent complete`}
             >
@@ -956,7 +968,7 @@ function SectionPage() {
               <>
                 <button
                   onClick={() => setFlaggedOnly((v) => !v)}
-                  className={`inline-flex items-center gap-1.5 rounded-full border px-3.5 py-2 text-xs font-semibold transition ${
+                  className={`inline-flex items-center justify-center gap-1.5 rounded-full border px-3.5 py-2.5 text-xs font-semibold transition sm:py-2 ${
                     flaggedOnly
                       ? "border-rose-300 bg-rose-50 text-rose-700"
                       : "border-border bg-card hover:bg-accent"
@@ -966,13 +978,13 @@ function SectionPage() {
                 </button>
                 <button
                   onClick={markAllOK}
-                  className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-3.5 py-2 text-xs font-semibold hover:bg-accent"
+                  className="inline-flex items-center justify-center gap-1.5 rounded-full border border-border bg-card px-3.5 py-2.5 text-xs font-semibold hover:bg-accent sm:py-2"
                 >
                   <Check className="h-3.5 w-3.5" /> Mark All OK
                 </button>
                 <button
                   onClick={unmarkAll}
-                  className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-3.5 py-2 text-xs font-semibold hover:bg-accent"
+                  className="inline-flex items-center justify-center gap-1.5 rounded-full border border-border bg-card px-3.5 py-2.5 text-xs font-semibold hover:bg-accent sm:py-2"
                 >
                   <X className="h-3.5 w-3.5" /> Unmark All
                 </button>
@@ -980,7 +992,7 @@ function SectionPage() {
 
                 <button
                   onClick={enterEdit}
-                  className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-3.5 py-2 text-xs font-semibold hover:bg-accent"
+                  className="inline-flex items-center justify-center gap-1.5 rounded-full border border-border bg-card px-3.5 py-2.5 text-xs font-semibold hover:bg-accent sm:py-2"
                 >
                   <Edit3 className="h-3.5 w-3.5" /> Edit
                 </button>
@@ -988,7 +1000,7 @@ function SectionPage() {
                   onClick={saveCheck}
                   disabled={!canSave}
                   title={!canSave ? `Add notes for ${missingNotes.length} flagged item(s)` : undefined}
-                  className="inline-flex items-center gap-1.5 rounded-full bg-foreground px-3.5 py-2 text-xs font-semibold text-background hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
+                  className="col-span-2 inline-flex items-center justify-center gap-1.5 rounded-full bg-foreground px-3.5 py-2.5 text-xs font-semibold text-background hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50 sm:col-span-1 sm:py-2"
                 >
                   <Save className="h-3.5 w-3.5" /> {savedFlash ? "Saved!" : "Save Check"}
                 </button>
@@ -1000,13 +1012,13 @@ function SectionPage() {
               <>
                 <button
                   onClick={saveCategories}
-                  className="inline-flex items-center gap-1.5 rounded-full bg-foreground px-4 py-2 text-xs font-semibold text-background hover:opacity-90"
+                  className="inline-flex items-center justify-center gap-1.5 rounded-full bg-foreground px-4 py-2.5 text-xs font-semibold text-background hover:opacity-90 sm:py-2"
                 >
                   <Save className="h-3.5 w-3.5" /> Save Categories
                 </button>
                 <button
                   onClick={cancelEdit}
-                  className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-4 py-2 text-xs font-semibold hover:bg-accent"
+                  className="inline-flex items-center justify-center gap-1.5 rounded-full border border-border bg-card px-4 py-2.5 text-xs font-semibold hover:bg-accent sm:py-2"
                 >
                   <X className="h-3.5 w-3.5" /> Cancel
                 </button>
@@ -1014,6 +1026,7 @@ function SectionPage() {
             )}
           </div>
         </div>
+
         <div className="mt-4 h-1.5 w-full overflow-hidden rounded-full bg-muted">
           <div
             className="h-full rounded-full transition-all"
