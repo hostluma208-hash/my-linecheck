@@ -110,8 +110,8 @@ function Dashboard() {
         </div>
       )}
       {/* Hero readiness card */}
-      <section className="rounded-3xl border border-border bg-card p-6 lg:p-8">
-        <div className="flex items-start justify-between gap-4">
+      <section className="rounded-3xl border border-border bg-card p-4 sm:p-6 lg:p-8">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
           <p className="text-sm text-muted-foreground">
             {greeting}, <span className="font-medium text-foreground">{name}</span>.
           </p>
@@ -119,7 +119,7 @@ function Dashboard() {
             <button
               type="button"
               onClick={() => downloadStationsPdf(shell.date)}
-              className="flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-xs font-bold text-primary-foreground hover:opacity-90"
+              className="flex w-full items-center justify-center gap-2 rounded-full bg-primary px-4 py-2.5 text-xs font-bold text-primary-foreground hover:opacity-90 sm:w-auto sm:py-2"
             >
               <FileDown className="h-4 w-4" />
               Download PDF
@@ -134,13 +134,14 @@ function Dashboard() {
           flagged.
         </p>
 
-        <div className="mt-6 flex flex-col gap-6 sm:flex-row sm:items-end">
+        <div className="mt-5 flex flex-col gap-4 sm:mt-6 sm:flex-row sm:items-end sm:gap-6">
           <div className="flex items-end gap-1">
-            <span className="text-7xl font-black leading-none tracking-tight text-foreground lg:text-8xl">
+            <span className="text-6xl font-black leading-none tracking-tight text-foreground sm:text-7xl lg:text-8xl">
               {stats.readiness}
             </span>
-            <span className="pb-3 text-2xl font-medium text-muted-foreground">%</span>
+            <span className="pb-2 text-xl font-medium text-muted-foreground sm:pb-3 sm:text-2xl">%</span>
           </div>
+
           <div className="flex-1">
             <p className="mb-2 text-[11px] font-bold uppercase tracking-[0.18em] text-muted-foreground">
               Shift Readiness
@@ -162,7 +163,7 @@ function Dashboard() {
       </section>
 
       {/* Stat cards */}
-      <section className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
+      <section className="mt-4 grid grid-cols-2 gap-3 sm:mt-6 sm:gap-4">
         <StatCard
           icon={<CheckCircle2 className="h-5 w-5 text-success" />}
           iconBg="bg-success-soft"
@@ -178,8 +179,9 @@ function Dashboard() {
       </section>
 
       {/* Flagged details */}
-      <section className="mt-6 rounded-3xl border border-border bg-card">
-        <header className="flex items-center justify-between px-6 py-4">
+      <section className="mt-4 rounded-3xl border border-border bg-card sm:mt-6">
+        <header className="flex items-center justify-between px-4 py-3 sm:px-6 sm:py-4">
+
           <h2 className="text-[11px] font-bold uppercase tracking-[0.18em] text-muted-foreground">
             Flagged Details
           </h2>
