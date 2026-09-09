@@ -27,7 +27,7 @@ import { Camera, Check, ChevronDown, FolderInput, ChevronUp, Download, Edit3, Fi
 import { z } from "zod";
 import {
   DndContext,
-  PointerSensor,
+  MouseSensor,
   TouchSensor,
   KeyboardSensor,
   useSensor,
