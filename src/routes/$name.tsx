@@ -1728,8 +1728,8 @@ type EditDraftDndProps = {
 function EditDraftDnd(props: EditDraftDndProps) {
   const { draft, setDraft } = props;
   const sensors = useSensors(
-    useSensor(PointerSensor, { activationConstraint: { distance: 6 } }),
-    useSensor(TouchSensor, { activationConstraint: { delay: 180, tolerance: 8 } }),
+    useSensor(MouseSensor, { activationConstraint: { distance: 6 } }),
+    useSensor(TouchSensor, { activationConstraint: { delay: 120, tolerance: 12 } }),
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }),
   );
   const catIds = draft.map((_, i) => `cat-${i}`);
