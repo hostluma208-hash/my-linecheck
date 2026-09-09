@@ -2050,7 +2050,8 @@ function SortableCategoryBlock({
       {...listeners}
       aria-label="Drag to reorder category"
       title="Drag to reorder category"
-      className="grid h-8 w-7 shrink-0 cursor-grab touch-none select-none place-items-center rounded text-muted-foreground hover:bg-accent active:cursor-grabbing"
+      style={{ touchAction: "none", WebkitUserSelect: "none", WebkitTouchCallout: "none" }}
+      className="grid h-10 w-9 shrink-0 cursor-grab touch-none select-none place-items-center rounded text-muted-foreground hover:bg-accent active:cursor-grabbing sm:h-8 sm:w-7"
     >
       <GripVertical className="h-4 w-4" />
     </button>
