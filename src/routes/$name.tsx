@@ -27,7 +27,7 @@ import { Camera, Check, ChevronDown, FolderInput, ChevronUp, Download, Edit3, Fi
 import { z } from "zod";
 import {
   DndContext,
-  PointerSensor,
+  MouseSensor,
   TouchSensor,
   KeyboardSensor,
   useSensor,
@@ -367,8 +367,8 @@ function SectionPage() {
   );
   const [draft, setDraft] = useState<EditCategory[]>(struct);
   const viewSensors = useSensors(
-    useSensor(PointerSensor, { activationConstraint: { distance: 6 } }),
-    useSensor(TouchSensor, { activationConstraint: { delay: 180, tolerance: 8 } }),
+    useSensor(MouseSensor, { activationConstraint: { distance: 6 } }),
+    useSensor(TouchSensor, { activationConstraint: { delay: 120, tolerance: 12 } }),
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }),
   );
   const persistStruct = (next: EditCategory[]) => {
@@ -1728,8 +1728,8 @@ type EditDraftDndProps = {
 function EditDraftDnd(props: EditDraftDndProps) {
   const { draft, setDraft } = props;
   const sensors = useSensors(
-    useSensor(PointerSensor, { activationConstraint: { distance: 6 } }),
-    useSensor(TouchSensor, { activationConstraint: { delay: 180, tolerance: 8 } }),
+    useSensor(MouseSensor, { activationConstraint: { distance: 6 } }),
+    useSensor(TouchSensor, { activationConstraint: { delay: 120, tolerance: 12 } }),
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }),
   );
   const catIds = draft.map((_, i) => `cat-${i}`);
@@ -2005,7 +2005,8 @@ function SortableCheckRow({
       {...listeners}
       aria-label="Drag to reorder item"
       title="Drag to reorder"
-      className="grid h-7 w-5 shrink-0 cursor-grab touch-none place-items-center rounded text-muted-foreground hover:bg-accent active:cursor-grabbing"
+      style={{ touchAction: "none", WebkitUserSelect: "none", WebkitTouchCallout: "none" }}
+      className="grid h-9 w-7 shrink-0 cursor-grab touch-none select-none place-items-center rounded text-muted-foreground hover:bg-accent active:cursor-grabbing sm:h-7 sm:w-5"
     >
       <GripVertical className="h-4 w-4" />
     </button>
@@ -2050,7 +2051,8 @@ function SortableCategoryBlock({
       {...listeners}
       aria-label="Drag to reorder category"
       title="Drag to reorder category"
-      className="grid h-8 w-7 shrink-0 cursor-grab touch-none select-none place-items-center rounded text-muted-foreground hover:bg-accent active:cursor-grabbing"
+      style={{ touchAction: "none", WebkitUserSelect: "none", WebkitTouchCallout: "none" }}
+      className="grid h-10 w-9 shrink-0 cursor-grab touch-none select-none place-items-center rounded text-muted-foreground hover:bg-accent active:cursor-grabbing sm:h-8 sm:w-7"
     >
       <GripVertical className="h-4 w-4" />
     </button>
