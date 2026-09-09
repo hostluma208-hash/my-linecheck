@@ -2005,7 +2005,8 @@ function SortableCheckRow({
       {...listeners}
       aria-label="Drag to reorder item"
       title="Drag to reorder"
-      className="grid h-7 w-5 shrink-0 cursor-grab touch-none place-items-center rounded text-muted-foreground hover:bg-accent active:cursor-grabbing"
+      style={{ touchAction: "none", WebkitUserSelect: "none", WebkitTouchCallout: "none" }}
+      className="grid h-9 w-7 shrink-0 cursor-grab touch-none select-none place-items-center rounded text-muted-foreground hover:bg-accent active:cursor-grabbing sm:h-7 sm:w-5"
     >
       <GripVertical className="h-4 w-4" />
     </button>
