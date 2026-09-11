@@ -310,9 +310,12 @@ function SharedView() {
                         isOpen ? "rotate-0" : "-rotate-90"
                       }`}
                     />
-                    <h3 className="min-w-0 flex-1 truncate text-sm font-black uppercase tracking-wider">
+                    <h2 className="min-w-0 flex-1 truncate text-sm font-black uppercase tracking-wider">
                       {r.section}
-                    </h3>
+                    </h2>
+                    <span className="shrink-0 text-[10px] font-bold tabular-nums text-muted-foreground">
+                      {r.itemCount}/{r.totalItems}
+                    </span>
                     {r.temps.length > 0 && (
                       <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-info-soft px-2 py-0.5 text-[10px] font-bold text-info">
                         <Thermometer className="h-3 w-3" /> {r.temps.length}
