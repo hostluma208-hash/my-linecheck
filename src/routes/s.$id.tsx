@@ -94,6 +94,7 @@ function SharedView() {
       section: string;
       categories: CategoryBlock[];
       itemCount: number;
+      totalItems: number;
       flaggedCount: number;
       okCount: number;
       photoCount: number;
