@@ -119,19 +119,19 @@ function SharedView() {
           const key = entryKey(cat.group, it.name);
           const legacy = entries[it.name]?.[slot];
           const e = entries[key]?.[slot] ?? legacy;
-          if (!e?.status) continue;
           seen.add(key);
           if (legacy && !entries[key]) seen.add(it.name);
           items.push({
             item: it.name,
-            status: e.status,
-            note: e.note || "",
-            photo: e.photo,
-            flagged: FLAG_STATUSES.has(e.status),
+            status: e?.status || "",
+            note: e?.note || "",
+            photo: e?.photo,
+            flagged: !!e?.status && FLAG_STATUSES.has(e.status),
           });
         }
         if (items.length) categories.push({ group: cat.group, items });
       }
+
 
       // Fallback: surface any recorded entries that weren't matched above
       // (e.g. old shares without category info, or items since removed).
