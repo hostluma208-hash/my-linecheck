@@ -159,8 +159,9 @@ function SharedView() {
       }
 
       const allItems = categories.flatMap((c) => c.items);
-      const flaggedCount = allItems.filter((i) => i.flagged).length;
-      const okCount = allItems.length - flaggedCount;
+      const checkedItems = allItems.filter((i) => i.status);
+      const flaggedCount = checkedItems.filter((i) => i.flagged).length;
+      const okCount = checkedItems.length - flaggedCount;
       const photoCount = allItems.filter((i) => i.photo).length;
       const temps = Object.entries(s.temps ?? {})
         .filter(([, v]) => v && String(v).trim().length > 0)
@@ -169,11 +170,12 @@ function SharedView() {
       const commentPhotos = Array.isArray(s.commentPhotos)
         ? s.commentPhotos.filter((p) => typeof p === "string" && p.length > 0)
         : [];
-      if (allItems.length || temps.length || comment || commentPhotos.length) {
+      if (checkedItems.length || temps.length || comment || commentPhotos.length) {
         out.push({
           section: s.name,
           categories,
-          itemCount: allItems.length,
+          itemCount: checkedItems.length,
+          totalItems: allItems.length,
           flaggedCount,
           okCount,
           photoCount,
