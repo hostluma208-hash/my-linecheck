@@ -190,6 +190,12 @@ function SharedView() {
     return out;
   }, [data]);
 
+  useEffect(() => {
+    setOpenStations(
+      Object.fromEntries(grouped.map((r, i) => [r.section, i === 0])),
+    );
+  }, [grouped]);
+
 
   const displayTemp = (rawF: string, unit: "F" | "C") => {
     const n = Number(rawF);
