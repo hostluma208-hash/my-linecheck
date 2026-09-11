@@ -372,12 +372,12 @@ function SharedView() {
                                 </p>
                               )}
                               <ul className="space-y-2">
-                                {cat.items.map((it) => (
+                                {cat.items.map((it, i) => (
                                   <li
-                                    key={`${cat.group}::${it.item}`}
+                                    key={`${cat.group}::${it.item}::${i}`}
                                     className={`rounded-xl border p-2.5 ${
                                       it.flagged
-                                        ? "border-rose-200 bg-rose-50/40"
+                                        ? "border-danger/40 bg-danger-soft/40"
                                         : "border-border bg-background/40"
                                     }`}
                                   >
@@ -390,17 +390,21 @@ function SharedView() {
                                       </div>
                                       <span
                                         className={`inline-flex shrink-0 items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide ${
-                                          it.flagged
-                                            ? "bg-danger-soft text-danger"
-                                            : "bg-success-soft text-success"
+                                          !it.status
+                                            ? "bg-muted/60 text-muted-foreground"
+                                            : it.flagged
+                                              ? "bg-danger-soft text-danger"
+                                              : "bg-success-soft text-success"
                                         }`}
                                       >
-                                        {it.flagged ? (
-                                          <AlertTriangle className="h-3 w-3" />
-                                        ) : (
-                                          <CheckCircle2 className="h-3 w-3" />
-                                        )}
-                                        {it.status}
+                                        {it.status ? (
+                                          it.flagged ? (
+                                            <AlertTriangle className="h-3 w-3" />
+                                          ) : (
+                                            <CheckCircle2 className="h-3 w-3" />
+                                          )
+                                        ) : null}
+                                        {it.status || "Not checked"}
                                       </span>
                                     </div>
                                     {it.photo && (
