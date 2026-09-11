@@ -94,6 +94,7 @@ function SharedView() {
       section: string;
       categories: CategoryBlock[];
       itemCount: number;
+      totalItems: number;
       flaggedCount: number;
       okCount: number;
       photoCount: number;
@@ -118,19 +119,19 @@ function SharedView() {
           const key = entryKey(cat.group, it.name);
           const legacy = entries[it.name]?.[slot];
           const e = entries[key]?.[slot] ?? legacy;
-          if (!e?.status) continue;
           seen.add(key);
           if (legacy && !entries[key]) seen.add(it.name);
           items.push({
             item: it.name,
-            status: e.status,
-            note: e.note || "",
-            photo: e.photo,
-            flagged: FLAG_STATUSES.has(e.status),
+            status: e?.status || "",
+            note: e?.note || "",
+            photo: e?.photo,
+            flagged: !!e?.status && FLAG_STATUSES.has(e.status),
           });
         }
         if (items.length) categories.push({ group: cat.group, items });
       }
+
 
       // Fallback: surface any recorded entries that weren't matched above
       // (e.g. old shares without category info, or items since removed).
@@ -158,8 +159,9 @@ function SharedView() {
       }
 
       const allItems = categories.flatMap((c) => c.items);
-      const flaggedCount = allItems.filter((i) => i.flagged).length;
-      const okCount = allItems.length - flaggedCount;
+      const checkedItems = allItems.filter((i) => i.status);
+      const flaggedCount = checkedItems.filter((i) => i.flagged).length;
+      const okCount = checkedItems.length - flaggedCount;
       const photoCount = allItems.filter((i) => i.photo).length;
       const temps = Object.entries(s.temps ?? {})
         .filter(([, v]) => v && String(v).trim().length > 0)
@@ -168,11 +170,12 @@ function SharedView() {
       const commentPhotos = Array.isArray(s.commentPhotos)
         ? s.commentPhotos.filter((p) => typeof p === "string" && p.length > 0)
         : [];
-      if (allItems.length || temps.length || comment || commentPhotos.length) {
+      if (checkedItems.length || temps.length || comment || commentPhotos.length) {
         out.push({
           section: s.name,
           categories,
-          itemCount: allItems.length,
+          itemCount: checkedItems.length,
+          totalItems: allItems.length,
           flaggedCount,
           okCount,
           photoCount,
@@ -186,6 +189,12 @@ function SharedView() {
     }
     return out;
   }, [data]);
+
+  useEffect(() => {
+    setOpenStations(
+      Object.fromEntries(grouped.map((r, i) => [r.section, i === 0])),
+    );
+  }, [grouped]);
 
 
   const displayTemp = (rawF: string, unit: "F" | "C") => {
@@ -307,9 +316,12 @@ function SharedView() {
                         isOpen ? "rotate-0" : "-rotate-90"
                       }`}
                     />
-                    <h3 className="min-w-0 flex-1 truncate text-sm font-black uppercase tracking-wider">
+                    <h2 className="min-w-0 flex-1 truncate text-sm font-black uppercase tracking-wider">
                       {r.section}
-                    </h3>
+                    </h2>
+                    <span className="shrink-0 text-[10px] font-bold tabular-nums text-muted-foreground">
+                      {r.itemCount}/{r.totalItems}
+                    </span>
                     {r.temps.length > 0 && (
                       <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-info-soft px-2 py-0.5 text-[10px] font-bold text-info">
                         <Thermometer className="h-3 w-3" /> {r.temps.length}
@@ -366,12 +378,12 @@ function SharedView() {
                                 </p>
                               )}
                               <ul className="space-y-2">
-                                {cat.items.map((it) => (
+                                {cat.items.map((it, i) => (
                                   <li
-                                    key={`${cat.group}::${it.item}`}
+                                    key={`${cat.group}::${it.item}::${i}`}
                                     className={`rounded-xl border p-2.5 ${
                                       it.flagged
-                                        ? "border-rose-200 bg-rose-50/40"
+                                        ? "border-danger/40 bg-danger-soft/40"
                                         : "border-border bg-background/40"
                                     }`}
                                   >
@@ -384,17 +396,21 @@ function SharedView() {
                                       </div>
                                       <span
                                         className={`inline-flex shrink-0 items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide ${
-                                          it.flagged
-                                            ? "bg-danger-soft text-danger"
-                                            : "bg-success-soft text-success"
+                                          !it.status
+                                            ? "bg-muted/60 text-muted-foreground"
+                                            : it.flagged
+                                              ? "bg-danger-soft text-danger"
+                                              : "bg-success-soft text-success"
                                         }`}
                                       >
-                                        {it.flagged ? (
-                                          <AlertTriangle className="h-3 w-3" />
-                                        ) : (
-                                          <CheckCircle2 className="h-3 w-3" />
-                                        )}
-                                        {it.status}
+                                        {it.status ? (
+                                          it.flagged ? (
+                                            <AlertTriangle className="h-3 w-3" />
+                                          ) : (
+                                            <CheckCircle2 className="h-3 w-3" />
+                                          )
+                                        ) : null}
+                                        {it.status || "Not checked"}
                                       </span>
                                     </div>
                                     {it.photo && (
