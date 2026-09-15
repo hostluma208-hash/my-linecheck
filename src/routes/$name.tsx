@@ -1,8 +1,9 @@
 import { lsStore } from "@/lib/lsStore";
-import { stationFromSlug } from "@/lib/slug";
+import { stationFromSlug, stationSlug } from "@/lib/slug";
+import { isTypingTarget } from "@/lib/shortcuts";
 import { savePhoto } from "@/lib/photoStore";
 
-import { createFileRoute, useRouter } from "@tanstack/react-router";
+import { createFileRoute, useNavigate, useRouter } from "@tanstack/react-router";
 import type React from "react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { AppShell, useShellState } from "@/components/AppShell";
@@ -196,6 +197,7 @@ function buildDefaultStruct(section: { items: Array<{ name: string; group?: stri
 
 function SectionPage() {
   const { name: rawName } = Route.useParams();
+  const navigate = useNavigate();
   const name = useMemo(() => stationFromSlug(rawName), [rawName]);
   const search = Route.useSearch() as { date?: string; shift?: Slot };
   const section = useMemo(
