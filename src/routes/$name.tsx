@@ -714,7 +714,7 @@ function SectionPage() {
         e.preventDefault();
         const next =
           sections[(idx + (e.key === "ArrowRight" ? 1 : sections.length - 1)) % sections.length];
-        void router.navigate({ to: "/$name", params: { name: stationSlug(next.name) } });
+        void navigate({ to: "/$name", params: { name: stationSlug(next.name) } });
       }
     };
     window.addEventListener("keydown", onKey);
