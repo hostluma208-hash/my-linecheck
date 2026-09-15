@@ -1,8 +1,9 @@
 import { lsStore } from "@/lib/lsStore";
-import { stationFromSlug } from "@/lib/slug";
+import { stationFromSlug, stationSlug } from "@/lib/slug";
+import { isTypingTarget } from "@/lib/shortcuts";
 import { savePhoto } from "@/lib/photoStore";
 
-import { createFileRoute, useRouter } from "@tanstack/react-router";
+import { createFileRoute, useNavigate, useRouter } from "@tanstack/react-router";
 import type React from "react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { AppShell, useShellState } from "@/components/AppShell";
@@ -196,6 +197,7 @@ function buildDefaultStruct(section: { items: Array<{ name: string; group?: stri
 
 function SectionPage() {
   const { name: rawName } = Route.useParams();
+  const navigate = useNavigate();
   const name = useMemo(() => stationFromSlug(rawName), [rawName]);
   const search = Route.useSearch() as { date?: string; shift?: Slot };
   const section = useMemo(
@@ -691,6 +693,35 @@ function SectionPage() {
     setFlaggedOnly(false);
     bulkSet("");
   };
+
+  // Station keyboard shortcuts:
+  //  Ctrl/Cmd+Enter → mark all OK, Ctrl/Cmd+Shift+Enter → unmark all,
+  //  Ctrl/Cmd+ArrowLeft/Right → previous / next station.
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (!(e.ctrlKey || e.metaKey) || e.altKey) return;
+      if (isTypingTarget(e.target)) return;
+      if (e.key === "Enter") {
+        e.preventDefault();
+        if (e.shiftKey) unmarkAll();
+        else markAllOK();
+        return;
+      }
+      if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
+        const sections = getEffectiveSections();
+        const idx = sections.findIndex((s) => s.name === name);
+        if (idx === -1 || sections.length < 2) return;
+        e.preventDefault();
+        const next =
+          sections[(idx + (e.key === "ArrowRight" ? 1 : sections.length - 1)) % sections.length];
+        void navigate({ to: "/$name", params: { name: stationSlug(next.name) } });
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [name, shell.date, shell.shift]);
+
 
 
 
