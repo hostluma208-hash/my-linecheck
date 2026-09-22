@@ -21,6 +21,11 @@ export const staffLogin = createServerFn({ method: "POST" })
       name: row.name,
       ownerId: row.owner_id,
       token,
+      perms: {
+        stations: (row.allowed_stations as string[] | null) ?? null,
+        history: !!row.can_view_history,
+        settings: !!row.can_edit_settings,
+      },
     };
   });
 
