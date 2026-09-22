@@ -9,6 +9,11 @@ import { ADMIN_EMAIL, isAdminEmail } from "@/lib/allowlist";
 
 import { setAccountPin, listAllowedAccounts } from "@/lib/accountPin.functions";
 import {
+  listStaffLogins,
+  saveStaffLogin,
+  deleteStaffLogin,
+} from "@/lib/staffAuth.functions";
+import {
   ArrowLeft,
   Settings as SettingsIcon,
   Utensils,
