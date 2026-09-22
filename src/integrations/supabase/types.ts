@@ -133,6 +133,9 @@ export type Database = {
       }
       staff_logins: {
         Row: {
+          allowed_stations: string[] | null
+          can_edit_settings: boolean
+          can_view_history: boolean
           created_at: string
           id: string
           name: string
@@ -141,6 +144,9 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          allowed_stations?: string[] | null
+          can_edit_settings?: boolean
+          can_view_history?: boolean
           created_at?: string
           id?: string
           name: string
@@ -149,6 +155,9 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          allowed_stations?: string[] | null
+          can_edit_settings?: boolean
+          can_view_history?: boolean
           created_at?: string
           id?: string
           name?: string

@@ -1,6 +1,13 @@
 // Simple "name + PIN" team-member session, stored in this browser only.
 // PIN users get read/write access to the stations of the account (owner)
-// that created their PIN login.
+// that created their PIN login, limited by the permissions the owner set.
+
+export type StaffPermissions = {
+  /** Station names this manager may open. null/undefined = all stations. */
+  stations: string[] | null;
+  history: boolean;
+  settings: boolean;
+};
 
 export type StaffSession = {
   id: string;
@@ -8,9 +15,16 @@ export type StaffSession = {
   ownerId: string;
   /** Short-lived, revocable session token (never the PIN itself). */
   token: string;
+  perms?: StaffPermissions;
 };
 
 const KEY = "linecheck:staff-session";
+
+export const DEFAULT_STAFF_PERMS: StaffPermissions = {
+  stations: null,
+  history: false,
+  settings: false,
+};
 
 export function getStaffSession(): StaffSession | null {
   try {
@@ -34,11 +48,27 @@ export function clearStaffSession() {
   } catch {}
 }
 
-/** Routes a PIN user may NOT open. */
-const STAFF_BLOCKED = ["/settings", "/history"];
+/** Permissions of the signed-in PIN user (null when not a PIN user). */
+export function getStaffPermissions(): StaffPermissions | null {
+  const s = getStaffSession();
+  if (!s) return null;
+  return { ...DEFAULT_STAFF_PERMS, ...(s.perms ?? {}) };
+}
+
+/** Station names the signed-in PIN user may see, or null for "all". */
+export function staffStationFilter(): string[] | null {
+  const p = getStaffPermissions();
+  if (!p || !Array.isArray(p.stations)) return null;
+  return p.stations;
+}
 
 export function isStaffAllowedPath(pathname: string) {
-  return !STAFF_BLOCKED.some((p) => pathname === p || pathname.startsWith(p + "/"));
+  const p = getStaffPermissions();
+  if (!p) return true;
+  const blocked: string[] = [];
+  if (!p.history) blocked.push("/history");
+  if (!p.settings) blocked.push("/settings");
+  return !blocked.some((b) => pathname === b || pathname.startsWith(b + "/"));
 }
 
 /** Browser-side SHA-256, matching the server's hashPin(). */
