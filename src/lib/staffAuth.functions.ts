@@ -1,5 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import type { Creds } from "@/lib/staffAuth.server";
+import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
 /**
  * Public: exchange a team member's name + PIN for a short-lived, revocable
@@ -90,6 +91,73 @@ export const staffPushState = createServerFn({ method: "POST" })
     const { error } = await supabaseAdmin
       .from("app_records")
       .upsert(records, { onConflict: "owner_id,key" });
+    if (error) throw error;
+    return { ok: true as const };
+  });
+
+/* ===== Owner-managed manager PIN logins ===== */
+
+/** List the PIN logins the signed-in owner created (names only). */
+export const listStaffLogins = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator(() => null)
+  .handler(async ({ context }) => {
+    const { data, error } = await context.supabase
+      .from("staff_logins")
+      .select("id, name")
+      .eq("owner_id", context.userId)
+      .order("name");
+    if (error) throw error;
+    return (data ?? []) as { id: string; name: string }[];
+  });
+
+/** Create a manager PIN login, or change the PIN of one you already own. */
+export const saveStaffLogin = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((input: { name: string; pin: string }) => input)
+  .handler(async ({ data, context }) => {
+    const { validCreds, hashPin } = await import("@/lib/staffAuth.server");
+    const creds = validCreds(data);
+    const pin_hash = hashPin(creds.name, creds.pin);
+
+    const { data: existing, error: findErr } = await context.supabase
+      .from("staff_logins")
+      .select("id")
+      .eq("owner_id", context.userId)
+      .ilike("name", creds.name)
+      .maybeSingle();
+    if (findErr) throw findErr;
+
+    if (existing) {
+      const { error } = await context.supabase
+        .from("staff_logins")
+        .update({ name: creds.name, pin_hash })
+        .eq("id", existing.id);
+      if (error) throw error;
+      return { ok: true as const, created: false };
+    }
+
+    const { error } = await context.supabase
+      .from("staff_logins")
+      .insert({ owner_id: context.userId, name: creds.name, pin_hash });
+    if (error) {
+      if ((error as { code?: string }).code === "23505")
+        throw new Error("That name is already taken. Try another one.");
+      throw error;
+    }
+    return { ok: true as const, created: true };
+  });
+
+/** Delete one of your manager PIN logins (also ends its active sessions). */
+export const deleteStaffLogin = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((input: { id: string }) => ({ id: String(input?.id ?? "") }))
+  .handler(async ({ data, context }) => {
+    const { error } = await context.supabase
+      .from("staff_logins")
+      .delete()
+      .eq("id", data.id)
+      .eq("owner_id", context.userId);
     if (error) throw error;
     return { ok: true as const };
   });
