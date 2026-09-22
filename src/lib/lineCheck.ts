@@ -44,7 +44,7 @@ export type SectionDef = { name: string; items: { name: string }[] };
 /** Returns the effective list of stations, honoring user additions/renames
  *  stored under `linecheck:settings:stations`. Falls back to the shipped
  *  JSON structure when no override exists. */
-export function getEffectiveSections(): SectionDef[] {
+export function getAllSections(): SectionDef[] {
   try {
     const raw = lsStore.getItem("linecheck:settings:stations");
     if (raw) {
@@ -58,6 +58,15 @@ export function getEffectiveSections(): SectionDef[] {
     }
   } catch {}
   return SECTIONS;
+}
+
+/** Same list, limited to the stations a PIN manager is allowed to open. */
+export function getEffectiveSections(): SectionDef[] {
+  const all = getAllSections();
+  const allowed = staffStationFilter();
+  if (!allowed) return all;
+  const set = new Set(allowed.map((s) => s.trim().toLowerCase()));
+  return all.filter((s) => set.has(s.name.trim().toLowerCase()));
 }
 
 /** Returns the effective items for a section, honoring user category edits
