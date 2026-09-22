@@ -298,6 +298,22 @@ function AuthPage() {
 
         </form>
 
+        <div className="mt-4 flex items-center gap-3 text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
+          <span className="h-px flex-1 bg-border" /> or <span className="h-px flex-1 bg-border" />
+        </div>
+
+        <button
+          type="button"
+          onClick={() => {
+            setPinMode(true);
+            setMsg(null);
+          }}
+          className="mt-4 flex w-full items-center justify-center gap-2 rounded-lg border border-border bg-background px-4 py-2.5 text-sm font-medium hover:bg-muted"
+        >
+          <KeyRound className="h-4 w-4" />
+          Sign in with name & PIN
+        </button>
+
       </div>
     </div>
   );
