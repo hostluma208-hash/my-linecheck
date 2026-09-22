@@ -74,7 +74,9 @@ export async function verifyStaffToken(token: string) {
   }
   const { data: staff, error: staffErr } = await supabaseAdmin
     .from("staff_logins")
-    .select("id, owner_id, name")
+    .select(
+      "id, owner_id, name, can_view_history, can_edit_settings, allowed_stations",
+    )
     .eq("id", data.staff_id)
     .maybeSingle();
   if (staffErr) throw staffErr;
