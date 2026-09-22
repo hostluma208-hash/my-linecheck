@@ -9,6 +9,11 @@ import { ADMIN_EMAIL, isAdminEmail } from "@/lib/allowlist";
 
 import { setAccountPin, listAllowedAccounts } from "@/lib/accountPin.functions";
 import {
+  listStaffLogins,
+  saveStaffLogin,
+  deleteStaffLogin,
+} from "@/lib/staffAuth.functions";
+import {
   ArrowLeft,
   Settings as SettingsIcon,
   Utensils,
@@ -772,12 +777,156 @@ function IconPicker({ value, onChange }: { value: string; onChange: (v: string) 
 
 function TeamPanel() {
   return (
-    <PeoplePanel
-      storageKey={STAFF_KEY}
-      updateEvent="linecheck:staff-update"
-      defaults={STAFF}
-      placeholder="New manager..."
-    />
+    <div className="space-y-6">
+      <PeoplePanel
+        storageKey={STAFF_KEY}
+        updateEvent="linecheck:staff-update"
+        defaults={STAFF}
+        placeholder="New manager..."
+      />
+      <ManagerPinPanel />
+    </div>
+  );
+}
+
+/* ============= MANAGER PIN LOGINS ============= */
+
+function ManagerPinPanel() {
+  const [rows, setRows] = useState<{ id: string; name: string }[]>([]);
+  const [name, setName] = useState("");
+  const [pin, setPin] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [notice, setNotice] = useState<string | null>(null);
+
+  const load = async () => {
+    setLoading(true);
+    try {
+      setRows(await listStaffLogins({ data: null }));
+    } catch (e: any) {
+      setError(e?.message || "Could not load manager logins");
+    }
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    void load();
+  }, []);
+
+  const save = async () => {
+    setError(null);
+    setNotice(null);
+    const n = name.trim();
+    if (!n) return setError("Enter a manager name.");
+    if (!/^\d{4,8}$/.test(pin)) return setError("PIN must be 4-8 digits.");
+    setBusy(true);
+    try {
+      const res = await saveStaffLogin({ data: { name: n, pin } });
+      setName("");
+      setPin("");
+      setNotice(res.created ? `Access created for ${n}.` : `PIN updated for ${n}.`);
+      await load();
+    } catch (e: any) {
+      setError(e?.message || "Could not save this manager login");
+    }
+    setBusy(false);
+  };
+
+  const remove = async (id: string, who: string) => {
+    if (!confirm(`Remove PIN access for ${who}?`)) return;
+    setError(null);
+    setNotice(null);
+    try {
+      await deleteStaffLogin({ data: { id } });
+      await load();
+    } catch (e: any) {
+      setError(e?.message || "Could not remove this manager login");
+    }
+  };
+
+  return (
+    <section className="rounded-2xl border border-border bg-card p-5">
+      <div className="mb-3 flex items-center gap-2">
+        <ShieldCheck className="h-5 w-5 text-foreground" />
+        <h3 className="text-lg font-bold">Manager PIN Access</h3>
+      </div>
+      <p className="mb-4 text-sm text-muted-foreground">
+        Give a manager their own name and PIN. They sign in on the sign-in page
+        with that name and PIN, and work on your stations — no email needed.
+      </p>
+
+      <div className="mb-4 flex flex-wrap gap-2">
+        <input
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          placeholder="Manager name"
+          className="min-w-40 flex-1 rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-foreground"
+        />
+        <input
+          inputMode="numeric"
+          value={pin}
+          onChange={(e) => setPin(e.target.value.replace(/\D/g, "").slice(0, 8))}
+          placeholder="4-8 digit PIN"
+          className="w-36 rounded-lg border border-border bg-background px-3 py-2 text-sm tracking-widest outline-none focus:border-foreground"
+        />
+        <button
+          type="button"
+          onClick={() => void save()}
+          disabled={busy}
+          className="flex items-center gap-1 rounded-lg bg-foreground px-3 py-2 text-sm font-semibold text-background hover:opacity-90 disabled:opacity-50"
+        >
+          <Plus className="h-4 w-4" />
+          Save
+        </button>
+      </div>
+
+      {error && (
+        <p role="alert" className="mb-3 text-sm text-red-600">
+          {error}
+        </p>
+      )}
+      {notice && <p className="mb-3 text-sm text-muted-foreground">{notice}</p>}
+
+      {loading ? (
+        <p className="text-sm text-muted-foreground">Loading…</p>
+      ) : (
+        <ul className="divide-y divide-border rounded-lg border border-border">
+          {rows.length === 0 && (
+            <li className="p-3 text-sm text-muted-foreground">
+              No manager PIN access yet.
+            </li>
+          )}
+          {rows.map((r) => (
+            <li key={r.id} className="flex items-center justify-between gap-3 p-3">
+              <span className="text-sm font-semibold">{r.name}</span>
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setName(r.name);
+                    setPin("");
+                    setNotice(null);
+                    setError(null);
+                  }}
+                  className="rounded-md px-2 py-1 text-xs font-semibold text-muted-foreground hover:bg-muted hover:text-foreground"
+                >
+                  Change PIN
+                </button>
+                <button
+                  type="button"
+                  onClick={() => void remove(r.id, r.name)}
+                  className="rounded-md p-1.5 text-muted-foreground hover:bg-muted hover:text-foreground"
+                  aria-label={`Remove ${r.name}`}
+                >
+                  <Trash2 className="h-4 w-4" />
+                </button>
+              </div>
+            </li>
+          ))}
+        </ul>
+      )}
+    </section>
   );
 }
 
