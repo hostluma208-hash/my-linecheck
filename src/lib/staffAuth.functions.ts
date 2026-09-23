@@ -109,11 +109,49 @@ export const listStaffLogins = createServerFn({ method: "POST" })
   .handler(async ({ context }) => {
     const { data, error } = await context.supabase
       .from("staff_logins")
-      .select("id, name")
+      .select("id, name, allowed_stations, can_view_history, can_edit_settings")
       .eq("owner_id", context.userId)
       .order("name");
     if (error) throw error;
-    return (data ?? []) as { id: string; name: string }[];
+    return (data ?? []) as {
+      id: string;
+      name: string;
+      allowed_stations: string[] | null;
+      can_view_history: boolean;
+      can_edit_settings: boolean;
+    }[];
+  });
+
+/** Update which stations (and areas) one of your managers may open. */
+export const updateStaffAccess = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator(
+    (input: {
+      id: string;
+      stations: string[] | null;
+      history: boolean;
+      settings: boolean;
+    }) => ({
+      id: String(input?.id ?? ""),
+      stations: Array.isArray(input?.stations)
+        ? input.stations.map(String).slice(0, 200)
+        : null,
+      history: !!input?.history,
+      settings: !!input?.settings,
+    }),
+  )
+  .handler(async ({ data, context }) => {
+    const { error } = await context.supabase
+      .from("staff_logins")
+      .update({
+        allowed_stations: data.stations,
+        can_view_history: data.history,
+        can_edit_settings: data.settings,
+      })
+      .eq("id", data.id)
+      .eq("owner_id", context.userId);
+    if (error) throw error;
+    return { ok: true as const };
   });
 
 /** Create a manager PIN login, or change the PIN of one you already own. */
