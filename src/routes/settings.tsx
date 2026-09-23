@@ -12,7 +12,9 @@ import {
   listStaffLogins,
   saveStaffLogin,
   deleteStaffLogin,
+  updateStaffAccess,
 } from "@/lib/staffAuth.functions";
+import { getAllSections } from "@/lib/lineCheck";
 import {
   ArrowLeft,
   Settings as SettingsIcon,
@@ -791,8 +793,81 @@ function TeamPanel() {
 
 /* ============= MANAGER PIN LOGINS ============= */
 
+type StaffRow = Awaited<ReturnType<typeof listStaffLogins>>[number];
+
+function AccessEditor({
+  row,
+  onSaved,
+  onError,
+}: {
+  row: StaffRow;
+  onSaved: () => Promise<void>;
+  onError: (m: string) => void;
+}) {
+  const stations = useMemo(() => getAllSections().map((s) => s.name), []);
+  const [all, setAll] = useState(row.allowed_stations == null);
+  const [picked, setPicked] = useState<string[]>(row.allowed_stations ?? []);
+  const [history, setHistory] = useState(row.can_view_history);
+  const [settings, setSettings] = useState(row.can_edit_settings);
+  const [busy, setBusy] = useState(false);
+  const toggle = (n: string) =>
+    setPicked((p) => (p.includes(n) ? p.filter((x) => x !== n) : [...p, n]));
+  const save = async () => {
+    setBusy(true);
+    try {
+      await updateStaffAccess({
+        data: { id: row.id, stations: all ? null : picked, history, settings },
+      });
+      await onSaved();
+    } catch (e: any) {
+      onError(e?.message || "Could not update access");
+    }
+    setBusy(false);
+  };
+  return (
+    <div className="mt-3 space-y-3 rounded-lg bg-muted/50 p-3">
+      <label className="flex items-center gap-2 text-sm font-semibold">
+        <input type="checkbox" checked={all} onChange={(e) => setAll(e.target.checked)} className="h-5 w-5" />
+        All stations
+      </label>
+      {!all && (
+        <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+          {stations.length === 0 && (
+            <p className="text-sm text-muted-foreground">No stations yet.</p>
+          )}
+          {stations.map((n) => (
+            <label key={n} className="flex items-center gap-2 rounded-md border border-border bg-background px-3 py-2 text-sm">
+              <input type="checkbox" checked={picked.includes(n)} onChange={() => toggle(n)} className="h-5 w-5" />
+              {n}
+            </label>
+          ))}
+        </div>
+      )}
+      <div className="flex flex-wrap gap-4 border-t border-border pt-3 text-sm">
+        <label className="flex items-center gap-2">
+          <input type="checkbox" checked={history} onChange={(e) => setHistory(e.target.checked)} className="h-5 w-5" />
+          Can view history
+        </label>
+        <label className="flex items-center gap-2">
+          <input type="checkbox" checked={settings} onChange={(e) => setSettings(e.target.checked)} className="h-5 w-5" />
+          Can edit settings
+        </label>
+      </div>
+      <button
+        type="button"
+        onClick={() => void save()}
+        disabled={busy}
+        className="rounded-lg bg-foreground px-3 py-2 text-sm font-semibold text-background hover:opacity-90 disabled:opacity-50"
+      >
+        Save access
+      </button>
+    </div>
+  );
+}
+
 function ManagerPinPanel() {
-  const [rows, setRows] = useState<{ id: string; name: string }[]>([]);
+  const [rows, setRows] = useState<StaffRow[]>([]);
+  const [openId, setOpenId] = useState<string | null>(null);
   const [name, setName] = useState("");
   const [pin, setPin] = useState("");
   const [loading, setLoading] = useState(true);
@@ -898,9 +973,17 @@ function ManagerPinPanel() {
             </li>
           )}
           {rows.map((r) => (
-            <li key={r.id} className="flex items-center justify-between gap-3 p-3">
+            <li key={r.id} className="p-3">
+             <div className="flex items-center justify-between gap-3">
               <span className="text-sm font-semibold">{r.name}</span>
               <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => setOpenId(openId === r.id ? null : r.id)}
+                  className="rounded-md px-2 py-1 text-xs font-semibold text-muted-foreground hover:bg-muted hover:text-foreground"
+                >
+                  {r.allowed_stations ? `Stations (${r.allowed_stations.length})` : "All stations"}
+                </button>
                 <button
                   type="button"
                   onClick={() => {
@@ -922,6 +1005,18 @@ function ManagerPinPanel() {
                   <Trash2 className="h-4 w-4" />
                 </button>
               </div>
+             </div>
+              {openId === r.id && (
+                <AccessEditor
+                  row={r}
+                  onSaved={async () => {
+                    setNotice(`Access updated for ${r.name}.`);
+                    setOpenId(null);
+                    await load();
+                  }}
+                  onError={setError}
+                />
+              )}
             </li>
           ))}
         </ul>
