@@ -927,7 +927,7 @@ function ManagerPinPanel() {
         <h3 className="text-lg font-bold">Team Member PIN Access</h3>
       </div>
       <p className="mb-4 text-sm text-muted-foreground">
-        Give a manager their own name and PIN. They sign in on the sign-in page
+        Give each team member their own name and PIN. They sign in on the sign-in page
         with that name and PIN, and work on your stations — no email needed.
       </p>
 
