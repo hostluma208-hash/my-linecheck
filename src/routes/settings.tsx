@@ -924,7 +924,7 @@ function ManagerPinPanel() {
     <section className="rounded-2xl border border-border bg-card p-5">
       <div className="mb-3 flex items-center gap-2">
         <ShieldCheck className="h-5 w-5 text-foreground" />
-        <h3 className="text-lg font-bold">Manager PIN Access</h3>
+        <h3 className="text-lg font-bold">Team Member PIN Access</h3>
       </div>
       <p className="mb-4 text-sm text-muted-foreground">
         Give a manager their own name and PIN. They sign in on the sign-in page
