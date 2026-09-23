@@ -68,7 +68,22 @@ export function isStaffAllowedPath(pathname: string) {
   const blocked: string[] = [];
   if (!p.history) blocked.push("/history");
   if (!p.settings) blocked.push("/settings");
-  return !blocked.some((b) => pathname === b || pathname.startsWith(b + "/"));
+  if (blocked.some((b) => pathname === b || pathname.startsWith(b + "/"))) return false;
+  // Station pages: only the stations assigned to this team member.
+  if (Array.isArray(p.stations)) {
+    const known = ["/", "/history", "/settings", "/closing", "/auth", "/s", "/st", "/c"];
+    const first = "/" + (pathname.split("/")[1] ?? "");
+    if (!known.includes(first) && pathname.split("/").filter(Boolean).length === 1) {
+      let seg = pathname.slice(1);
+      try {
+        seg = decodeURIComponent(seg);
+      } catch {}
+      const norm = (s: string) => s.trim().replace(/[\s-]+/g, " ").toLowerCase();
+      const allowed = new Set(p.stations.map(norm));
+      if (!allowed.has(norm(seg))) return false;
+    }
+  }
+  return true;
 }
 
 /** Browser-side SHA-256, matching the server's hashPin(). */
