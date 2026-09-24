@@ -88,7 +88,12 @@ function SharedView() {
       note: string;
       photo?: string;
       flagged: boolean;
+      openingStatus?: string;
+      openingNote?: string;
     };
+    // When viewing a non-opening shift, also pull the opening-shift entry
+    // for each item so visitors can compare the two shifts.
+    const compareSlot: Slot | null = slot === "opening" ? null : "opening";
     type CategoryBlock = { group: string; items: Item[] };
     const out: {
       section: string;
