@@ -78,6 +78,11 @@ function SharedView() {
 
   const [openStations, setOpenStations] = useState<Record<string, boolean>>({});
 
+  // When viewing a non-opening shift, also show the opening-shift entry
+  // for each item so visitors can compare the two shifts.
+  const compareSlot: Slot | null =
+    data && data.payload.shift !== "opening" ? "opening" : null;
+
   const grouped = useMemo(() => {
     if (!data) return [];
     const slot: Slot = data.payload.shift;
@@ -88,6 +93,8 @@ function SharedView() {
       note: string;
       photo?: string;
       flagged: boolean;
+      openingStatus?: string;
+      openingNote?: string;
     };
     type CategoryBlock = { group: string; items: Item[] };
     const out: {
@@ -119,6 +126,9 @@ function SharedView() {
           const key = entryKey(cat.group, it.name);
           const legacy = entries[it.name]?.[slot];
           const e = entries[key]?.[slot] ?? legacy;
+          const o = compareSlot
+            ? (entries[key]?.[compareSlot] ?? entries[it.name]?.[compareSlot])
+            : undefined;
           seen.add(key);
           if (legacy && !entries[key]) seen.add(it.name);
           items.push({
@@ -127,6 +137,8 @@ function SharedView() {
             note: e?.note || "",
             photo: e?.photo,
             flagged: !!e?.status && FLAG_STATUSES.has(e.status),
+            openingStatus: o?.status || "",
+            openingNote: o?.note || "",
           });
         }
         if (items.length) categories.push({ group: cat.group, items });
@@ -144,12 +156,15 @@ function SharedView() {
         const itemName = key.includes("::")
           ? key.split("::").slice(1).join("::")
           : key;
+        const o = compareSlot ? byslot?.[compareSlot] : undefined;
         (leftover[group] ||= []).push({
           item: itemName,
           status: e.status,
           note: e.note || "",
           photo: e.photo,
           flagged: FLAG_STATUSES.has(e.status),
+          openingStatus: o?.status || "",
+          openingNote: o?.note || "",
         });
       }
       for (const [group, items] of Object.entries(leftover)) {
@@ -392,6 +407,27 @@ function SharedView() {
                                         <p className="truncate text-sm font-semibold">{it.item}</p>
                                         {it.note && (
                                           <p className="mt-1 text-xs text-muted-foreground">{it.note}</p>
+                                        )}
+                                        {compareSlot && it.openingStatus !== undefined && (
+                                          <p className="mt-1 flex flex-wrap items-center gap-1 text-[10px] font-semibold text-muted-foreground">
+                                            <span className="uppercase tracking-wider">
+                                              {SLOT_LABEL[compareSlot]}:
+                                            </span>
+                                            <span
+                                              className={`inline-flex items-center gap-1 rounded-full px-1.5 py-0.5 ${
+                                                !it.openingStatus
+                                                  ? "bg-muted/60"
+                                                  : FLAG_STATUSES.has(it.openingStatus)
+                                                    ? "bg-danger-soft text-danger"
+                                                    : "bg-success-soft text-success"
+                                              }`}
+                                            >
+                                              {it.openingStatus || "Not checked"}
+                                            </span>
+                                            {it.openingNote && (
+                                              <span className="font-normal">— {it.openingNote}</span>
+                                            )}
+                                          </p>
                                         )}
                                       </div>
                                       <span
