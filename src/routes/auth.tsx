@@ -65,11 +65,12 @@ function AuthPage() {
         name: string;
         ownerId: string;
         token: string;
+        perms?: { stations: string[] | null; history: boolean; settings: boolean };
       } | null = null;
       try {
         const res = await staffLogin({ data: { name: who, pin } });
         if (res?.ok) {
-          session = { id: res.id, name: res.name, ownerId: res.ownerId, token: res.token };
+          session = { id: res.id, name: res.name, ownerId: res.ownerId, token: res.token, perms: res.perms };
           await rememberDeviceStaffAccount(session, pin);
         }
       } catch {

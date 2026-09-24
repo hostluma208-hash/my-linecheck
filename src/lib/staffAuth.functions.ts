@@ -70,6 +70,11 @@ export const staffPullState = createServerFn({ method: "POST" })
     if (error) throw error;
     return {
       ok: true as const,
+      perms: {
+        stations: (row.allowed_stations as string[] | null) ?? null,
+        history: !!row.can_view_history,
+        settings: !!row.can_edit_settings,
+      },
       rows: (rows ?? []) as { key: string; value: string; updated_at: string }[],
     };
   });
