@@ -78,6 +78,11 @@ function SharedView() {
 
   const [openStations, setOpenStations] = useState<Record<string, boolean>>({});
 
+  // When viewing a non-opening shift, also show the opening-shift entry
+  // for each item so visitors can compare the two shifts.
+  const compareSlot: Slot | null =
+    data && data.payload.shift !== "opening" ? "opening" : null;
+
   const grouped = useMemo(() => {
     if (!data) return [];
     const slot: Slot = data.payload.shift;
@@ -237,9 +242,6 @@ function SharedView() {
 
   const p = data.payload;
   const slot = p.shift as Slot;
-  // When viewing a non-opening shift, also show the opening-shift entry
-  // for each item so visitors can compare the two shifts.
-  const compareSlot: Slot | null = slot === "opening" ? null : "opening";
   const pct = p.summary.totalItems
     ? Math.round((p.summary.checkedItems / p.summary.totalItems) * 100)
     : 0;
