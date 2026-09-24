@@ -81,7 +81,7 @@ function SharedView() {
   // When viewing a non-opening shift, also show the opening-shift entry
   // for each item so visitors can compare the two shifts.
   const compareSlot: Slot | null =
-    data && data.payload.shift !== "opening" ? "opening" : null;
+    data && !["op", "opening"].includes(data.payload.shift) ? "op" : null;
 
   const grouped = useMemo(() => {
     if (!data) return [];
@@ -122,12 +122,18 @@ function SharedView() {
       const cats = Array.isArray(s.categories) ? s.categories : [];
       for (const cat of cats) {
         const items: Item[] = [];
+        const occurrences = new Map<string, number>();
         for (const it of cat.items ?? []) {
-          const key = entryKey(cat.group, it.name);
+          const occurrence = occurrences.get(it.name) ?? 0;
+          occurrences.set(it.name, occurrence + 1);
+          const key = entryKey(cat.group, it.name, occurrence);
           const legacy = entries[it.name]?.[slot];
           const e = entries[key]?.[slot] ?? legacy;
           const o = compareSlot
-            ? (entries[key]?.[compareSlot] ?? entries[it.name]?.[compareSlot])
+            ? (entries[key]?.[compareSlot] ??
+              entries[key]?.opening ??
+              entries[it.name]?.[compareSlot] ??
+              entries[it.name]?.opening)
             : undefined;
           seen.add(key);
           if (legacy && !entries[key]) seen.add(it.name);
@@ -156,7 +162,7 @@ function SharedView() {
         const itemName = key.includes("::")
           ? key.split("::").slice(1).join("::")
           : key;
-        const o = compareSlot ? byslot?.[compareSlot] : undefined;
+        const o = compareSlot ? (byslot?.[compareSlot] ?? byslot?.opening) : undefined;
         (leftover[group] ||= []).push({
           item: itemName,
           status: e.status,
