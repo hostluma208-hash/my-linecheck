@@ -1,3 +1,4 @@
+import { getStaffSession, setStaffSession, type StaffPermissions } from "@/lib/staffSession";
 // Sync for PIN (name + PIN) team-member sessions. Uses public server
 // functions that verify the PIN server-side and read/write the owner's
 // synced state.
@@ -61,6 +62,15 @@ function newestFirst(a: RemoteRow, b: RemoteRow) {
   return b.updated_at.localeCompare(a.updated_at);
 }
 
+function applyFreshPerms(perms: StaffPermissions) {
+  const cur = getStaffSession();
+  if (!cur) return;
+  if (JSON.stringify(cur.perms ?? null) === JSON.stringify(perms)) return;
+  setStaffSession({ ...cur, perms });
+  // Reload so every page re-reads the new station limits.
+  window.location.reload();
+}
+
 async function fetchRemoteRows(token: string, priorityOnly = false) {
   const rows: RemoteRow[] = [];
   for (let from = 0; ; from += REMOTE_PAGE_SIZE) {
@@ -68,6 +78,7 @@ async function fetchRemoteRows(token: string, priorityOnly = false) {
       data: { token, from, limit: REMOTE_PAGE_SIZE, priorityOnly },
     });
     if (!res?.ok) throw new Error("PIN session expired");
+    if (from === 0 && "perms" in res && res.perms) applyFreshPerms(res.perms);
     const page = res.rows as RemoteRow[];
     rows.push(...page);
     if (page.length < REMOTE_PAGE_SIZE) break;
