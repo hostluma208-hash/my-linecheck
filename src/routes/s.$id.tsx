@@ -406,6 +406,27 @@ function SharedView() {
                                         {it.note && (
                                           <p className="mt-1 text-xs text-muted-foreground">{it.note}</p>
                                         )}
+                                        {compareSlot && it.openingStatus !== undefined && (
+                                          <p className="mt-1 flex flex-wrap items-center gap-1 text-[10px] font-semibold text-muted-foreground">
+                                            <span className="uppercase tracking-wider">
+                                              {SLOT_LABEL[compareSlot]}:
+                                            </span>
+                                            <span
+                                              className={`inline-flex items-center gap-1 rounded-full px-1.5 py-0.5 ${
+                                                !it.openingStatus
+                                                  ? "bg-muted/60"
+                                                  : FLAG_STATUSES.has(it.openingStatus)
+                                                    ? "bg-danger-soft text-danger"
+                                                    : "bg-success-soft text-success"
+                                              }`}
+                                            >
+                                              {it.openingStatus || "Not checked"}
+                                            </span>
+                                            {it.openingNote && (
+                                              <span className="font-normal">— {it.openingNote}</span>
+                                            )}
+                                          </p>
+                                        )}
                                       </div>
                                       <span
                                         className={`inline-flex shrink-0 items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide ${
