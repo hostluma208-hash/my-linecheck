@@ -124,6 +124,9 @@ function SharedView() {
           const key = entryKey(cat.group, it.name);
           const legacy = entries[it.name]?.[slot];
           const e = entries[key]?.[slot] ?? legacy;
+          const o = compareSlot
+            ? (entries[key]?.[compareSlot] ?? entries[it.name]?.[compareSlot])
+            : undefined;
           seen.add(key);
           if (legacy && !entries[key]) seen.add(it.name);
           items.push({
@@ -132,6 +135,8 @@ function SharedView() {
             note: e?.note || "",
             photo: e?.photo,
             flagged: !!e?.status && FLAG_STATUSES.has(e.status),
+            openingStatus: o?.status || "",
+            openingNote: o?.note || "",
           });
         }
         if (items.length) categories.push({ group: cat.group, items });
@@ -149,12 +154,15 @@ function SharedView() {
         const itemName = key.includes("::")
           ? key.split("::").slice(1).join("::")
           : key;
+        const o = compareSlot ? byslot?.[compareSlot] : undefined;
         (leftover[group] ||= []).push({
           item: itemName,
           status: e.status,
           note: e.note || "",
           photo: e.photo,
           flagged: FLAG_STATUSES.has(e.status),
+          openingStatus: o?.status || "",
+          openingNote: o?.note || "",
         });
       }
       for (const [group, items] of Object.entries(leftover)) {
