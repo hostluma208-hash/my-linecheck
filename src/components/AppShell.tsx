@@ -194,8 +194,11 @@ function Sidebar({
   }, [loc.pathname]);
 
   const [isStaff, setIsStaff] = useState(false);
+  const [staffPerms, setStaffPerms] = useState<{ history: boolean; settings: boolean }>({ history: false, settings: false });
   useEffect(() => {
     setIsStaff(!!getStaffSession());
+    const p = getStaffPermissions();
+    if (p) setStaffPerms({ history: p.history, settings: p.settings });
   }, []);
 
   const RESERVED_PATHS = ["", "auth", "history", "settings", "s", "section"];
@@ -244,11 +247,11 @@ function Sidebar({
 
       <nav className="px-3">
         <NavItem to="/" icon={LayoutDashboard} label="Dashboard" active={loc.pathname === "/"} collapsed={collapsed} activeColor={activeDayColor} />
-        {!isStaff && (
-          <>
-            <NavItem to="/history" icon={History} label="History" active={loc.pathname === "/history"} collapsed={collapsed} activeColor={activeDayColor} />
-            <NavItem to="/settings" icon={Settings} label="Settings" active={loc.pathname === "/settings"} collapsed={collapsed} activeColor={activeDayColor} />
-          </>
+        {(!isStaff || staffPerms.history) && (
+          <NavItem to="/history" icon={History} label="History" active={loc.pathname === "/history"} collapsed={collapsed} activeColor={activeDayColor} />
+        )}
+        {(!isStaff || staffPerms.settings) && (
+          <NavItem to="/settings" icon={Settings} label="Settings" active={loc.pathname === "/settings"} collapsed={collapsed} activeColor={activeDayColor} />
         )}
       </nav>
 
