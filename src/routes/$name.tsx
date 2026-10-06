@@ -154,7 +154,7 @@ export const Route = createFileRoute("/$name")({
     const router = useRouter();
     return (
       <div className="p-10">
-        <p className="text-destructive">{error.message}</p>
+        <p className="text-destructive">{error instanceof Error ? error.message : String(error)}</p>
         <button
           onClick={() => {
             router.invalidate();
