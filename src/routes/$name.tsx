@@ -3,7 +3,7 @@ import { stationFromSlug, stationSlug } from "@/lib/slug";
 import { isTypingTarget } from "@/lib/shortcuts";
 import { savePhoto } from "@/lib/photoStore";
 
-import { createFileRoute, useNavigate, useRouter } from "@tanstack/react-router";
+import { createFileRoute, useNavigate, useRouter, type ErrorComponentProps } from "@tanstack/react-router";
 import type React from "react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { AppShell, useShellState } from "@/components/AppShell";
@@ -150,11 +150,11 @@ export const Route = createFileRoute("/$name")({
   }),
   component: SectionPage,
   notFoundComponent: () => <div className="p-10">Section not found.</div>,
-  errorComponent: ({ error, reset }) => {
+  errorComponent: ({ error, reset }: ErrorComponentProps) => {
     const router = useRouter();
     return (
       <div className="p-10">
-        <p className="text-destructive">{error.message}</p>
+        <p className="text-destructive">{error instanceof Error ? error.message : String(error)}</p>
         <button
           onClick={() => {
             router.invalidate();
