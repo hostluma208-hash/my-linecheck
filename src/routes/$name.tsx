@@ -150,7 +150,7 @@ export const Route = createFileRoute("/$name")({
   }),
   component: SectionPage,
   notFoundComponent: () => <div className="p-10">Section not found.</div>,
-  errorComponent: ({ error, reset }) => {
+  errorComponent: ({ error, reset }: { error: Error; reset: () => void }) => {
     const router = useRouter();
     return (
       <div className="p-10">
