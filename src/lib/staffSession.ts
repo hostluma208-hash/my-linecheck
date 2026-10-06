@@ -67,7 +67,8 @@ export function isStaffAllowedPath(pathname: string) {
   if (!p) return true;
   const blocked: string[] = [];
   if (!p.history) blocked.push("/history");
-  if (!p.settings) blocked.push("/settings");
+  // Settings is never available to PIN team members.
+  blocked.push("/settings");
   if (blocked.some((b) => pathname === b || pathname.startsWith(b + "/"))) return false;
   // Station pages: only the stations assigned to this team member.
   if (Array.isArray(p.stations)) {

@@ -250,7 +250,7 @@ function Sidebar({
         {(!isStaff || staffPerms.history) && (
           <NavItem to="/history" icon={History} label="History" active={loc.pathname === "/history"} collapsed={collapsed} activeColor={activeDayColor} />
         )}
-        {(!isStaff || staffPerms.settings) && (
+        {!isStaff && (
           <NavItem to="/settings" icon={Settings} label="Settings" active={loc.pathname === "/settings"} collapsed={collapsed} activeColor={activeDayColor} />
         )}
       </nav>
