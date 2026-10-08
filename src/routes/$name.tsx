@@ -7,6 +7,7 @@ import { createFileRoute, useNavigate, useRouter, type ErrorComponentProps } fro
 import type React from "react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { AppShell, useShellState } from "@/components/AppShell";
+import { Button } from "@/components/ui/button";
 import {
   SECTIONS,
   getEffectiveStatuses,
@@ -967,10 +968,10 @@ function SectionPage() {
 
       {/* Hero card */}
       <section className="rounded-2xl border border-border bg-card px-3 py-3 shadow-sm sm:px-6 sm:py-5">
-        <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between sm:gap-4">
-          <div className="flex items-center gap-3 sm:min-w-0 sm:flex-1">
+        <div className="flex flex-col gap-3 sm:gap-4">
+          <div className="flex min-w-0 items-center gap-3">
             <div
-              className="grid h-12 w-12 shrink-0 place-items-center rounded-full sm:hidden"
+              className="grid h-12 w-12 shrink-0 place-items-center rounded-full"
               style={ringStyle}
               aria-label={`${pct} percent complete`}
             >
@@ -985,76 +986,35 @@ function SectionPage() {
               </p>
             </div>
           </div>
-          <div className="grid grid-cols-2 gap-2 sm:flex sm:w-auto sm:flex-wrap sm:items-center sm:gap-3">
-            <div
-              className="hidden h-14 w-14 shrink-0 place-items-center rounded-full sm:grid"
-              style={ringStyle}
-              aria-label={`${pct} percent complete`}
+          <div role="toolbar" aria-label="Station actions" className="grid w-full grid-cols-2 gap-2 sm:grid-cols-3 xl:grid-cols-5">
+            <Button
+              variant="outline"
+              onClick={() => setFlaggedOnly((v) => !v)}
+              disabled={editMode}
+              aria-hidden={editMode || undefined}
+              aria-pressed={flaggedOnly}
+              className={`h-11 min-w-0 gap-1.5 px-2 text-xs font-semibold ${editMode ? "invisible" : ""} ${flaggedOnly ? "border-danger/40 bg-danger-soft text-danger" : "bg-card"}`}
             >
-              <div className="grid h-[46px] w-[46px] place-items-center rounded-full bg-card text-sm font-bold tabular-nums">
-                {editMode ? done : pct}
-              </div>
-            </div>
-            {!editMode && (
-              <>
-                <button
-                  onClick={() => setFlaggedOnly((v) => !v)}
-                  className={`inline-flex items-center justify-center gap-1.5 rounded-full border px-3.5 py-2.5 text-xs font-semibold transition sm:py-2 ${
-                    flaggedOnly
-                      ? "border-rose-300 bg-rose-50 text-rose-700"
-                      : "border-border bg-card hover:bg-accent"
-                  }`}
-                >
-                  <Filter className="h-3.5 w-3.5" /> {flaggedOnly ? "Flagged Only" : "All Items"}
-                </button>
-                <button
-                  onClick={markAllOK}
-                  className="inline-flex items-center justify-center gap-1.5 rounded-full border border-border bg-card px-3.5 py-2.5 text-xs font-semibold hover:bg-accent sm:py-2"
-                >
-                  <Check className="h-3.5 w-3.5" /> Mark All OK
-                </button>
-                <button
-                  onClick={unmarkAll}
-                  className="inline-flex items-center justify-center gap-1.5 rounded-full border border-border bg-card px-3.5 py-2.5 text-xs font-semibold hover:bg-accent sm:py-2"
-                >
-                  <X className="h-3.5 w-3.5" /> Unmark All
-                </button>
-
-
-                <button
-                  onClick={enterEdit}
-                  className="inline-flex items-center justify-center gap-1.5 rounded-full border border-border bg-card px-3.5 py-2.5 text-xs font-semibold hover:bg-accent sm:py-2"
-                >
-                  <Edit3 className="h-3.5 w-3.5" /> Edit
-                </button>
-                <button
-                  onClick={saveCheck}
-                  disabled={!canSave}
-                  title={!canSave ? `Add notes for ${missingNotes.length} flagged item(s)` : undefined}
-                  className="col-span-2 inline-flex items-center justify-center gap-1.5 rounded-full bg-foreground px-3.5 py-2.5 text-xs font-semibold text-background hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50 sm:col-span-1 sm:py-2"
-                >
-                  <Save className="h-3.5 w-3.5" /> {savedFlash ? "Saved!" : "Save Check"}
-                </button>
-
-
-              </>
-            )}
-            {editMode && (
-              <>
-                <button
-                  onClick={saveCategories}
-                  className="inline-flex items-center justify-center gap-1.5 rounded-full bg-foreground px-4 py-2.5 text-xs font-semibold text-background hover:opacity-90 sm:py-2"
-                >
-                  <Save className="h-3.5 w-3.5" /> Save Categories
-                </button>
-                <button
-                  onClick={cancelEdit}
-                  className="inline-flex items-center justify-center gap-1.5 rounded-full border border-border bg-card px-4 py-2.5 text-xs font-semibold hover:bg-accent sm:py-2"
-                >
-                  <X className="h-3.5 w-3.5" /> Cancel
-                </button>
-              </>
-            )}
+              <Filter /> {flaggedOnly ? "Flagged Only" : "All Items"}
+            </Button>
+            <Button variant="outline" onClick={markAllOK} disabled={editMode} aria-hidden={editMode || undefined}
+              className={`h-11 min-w-0 gap-1.5 bg-card px-2 text-xs font-semibold ${editMode ? "invisible" : ""}`}>
+              <Check /> Mark All OK
+            </Button>
+            <Button variant="outline" onClick={unmarkAll} disabled={editMode} aria-hidden={editMode || undefined}
+              className={`h-11 min-w-0 gap-1.5 bg-card px-2 text-xs font-semibold ${editMode ? "invisible" : ""}`}>
+              <X /> Unmark All
+            </Button>
+            <Button variant="outline" onClick={editMode ? cancelEdit : enterEdit}
+              className="h-11 min-w-0 gap-1.5 bg-card px-2 text-xs font-semibold">
+              {editMode ? <X /> : <Edit3 />} {editMode ? "Cancel" : "Edit"}
+            </Button>
+            <Button onClick={editMode ? saveCategories : saveCheck}
+              disabled={!editMode && !canSave}
+              title={!editMode && !canSave ? `Add notes for ${missingNotes.length} flagged item(s)` : undefined}
+              className="col-span-2 h-11 min-w-0 gap-1.5 whitespace-normal bg-foreground px-2 text-xs font-semibold text-background hover:bg-foreground/90 sm:col-span-1">
+              <Save /> {editMode ? "Save Categories" : savedFlash ? "Saved!" : "Save Check"}
+            </Button>
           </div>
         </div>
 
