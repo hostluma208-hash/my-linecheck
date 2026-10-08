@@ -8,3 +8,5 @@
 > Commits you push to the connected branch sync back to Lovable and show up in
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
+
+- Build restaurant-labelled history URLs with `src/lib/shareUrl.ts`, preserving the existing report-ID path so old public links remain valid.
