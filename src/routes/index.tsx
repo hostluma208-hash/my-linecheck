@@ -1,3 +1,4 @@
+import { coalesce } from "@/lib/coalesce";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { stationSlug } from "@/lib/slug";
 import { useEffect, useMemo, useState } from "react";
@@ -57,7 +58,7 @@ function Dashboard() {
   }, [search.date, search.shift]);
 
   useEffect(() => {
-    const fn = () => setTick((t) => t + 1);
+    const fn = coalesce(() => setTick((t) => t + 1), 150);
     window.addEventListener("storage", fn);
     window.addEventListener("linecheck:update", fn);
     return () => {
