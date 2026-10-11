@@ -1,3 +1,4 @@
+import { coalesce } from "@/lib/coalesce";
 import { lsStore } from "@/lib/lsStore";
 import { getStaffSession, clearStaffSession, getStaffPermissions } from "@/lib/staffSession";
 import { useGlobalShortcuts } from "@/lib/shortcuts";
@@ -85,7 +86,7 @@ const DAY_COLOR_SIDEBAR: Record<string, string> = {
 function useShifts() {
   const [shifts, setShifts] = useState(() => getShifts());
   useEffect(() => {
-    const refresh = () => setShifts(getShifts());
+    const refresh = coalesce(() => setShifts(getShifts()), 60);
     window.addEventListener("linecheck:shifts-update", refresh);
     window.addEventListener("linecheck:update", refresh);
     window.addEventListener("storage", refresh);
@@ -166,7 +167,7 @@ function Sidebar({
   // Recompute progress on date/shift change and on storage updates
   const [tick, setTick] = useState(0);
   useEffect(() => {
-    const fn = () => setTick((t) => t + 1);
+    const fn = coalesce(() => setTick((t) => t + 1), 200);
     window.addEventListener("storage", fn);
     // `storage` does not fire in the tab that performed the write. Listen to
     // the scoped store's same-tab signal as the authoritative immediate path,
