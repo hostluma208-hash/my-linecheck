@@ -987,34 +987,34 @@ function SectionPage() {
               </p>
             </div>
           </div>
-          <div role="toolbar" aria-label="Station actions" className="grid w-full grid-cols-2 gap-2 sm:grid-cols-3 xl:grid-cols-5">
+          <div role="toolbar" aria-label="Station actions" className="grid w-full grid-cols-2 gap-2 sm:grid-cols-3 sm:gap-2.5 xl:grid-cols-5">
             <Button
               variant="outline"
               onClick={() => setFlaggedOnly((v) => !v)}
               disabled={editMode}
               aria-hidden={editMode || undefined}
               aria-pressed={flaggedOnly}
-              className={`h-11 min-w-0 gap-1.5 px-2 text-xs font-semibold ${editMode ? "invisible" : ""} ${flaggedOnly ? "border-danger/40 bg-danger-soft text-danger" : "bg-card"}`}
+              className={`h-12 min-w-0 touch-manipulation select-none gap-1.5 px-2 text-xs font-semibold sm:h-11 ${editMode ? "invisible" : ""} ${flaggedOnly ? "border-danger/40 bg-danger-soft text-danger" : "bg-card"}`}
             >
-              <Filter /> {flaggedOnly ? "Flagged Only" : "All Items"}
+              <Filter className="shrink-0" /> <span className="truncate">{flaggedOnly ? "Flagged Only" : "All Items"}</span>
             </Button>
             <Button variant="outline" onClick={markAllOK} disabled={editMode} aria-hidden={editMode || undefined}
-              className={`h-11 min-w-0 gap-1.5 bg-card px-2 text-xs font-semibold ${editMode ? "invisible" : ""}`}>
-              <Check /> Mark All OK
+              className={`h-12 min-w-0 touch-manipulation select-none gap-1.5 bg-card px-2 text-xs font-semibold sm:h-11 ${editMode ? "invisible" : ""}`}>
+              <Check className="shrink-0" /> <span className="truncate">Mark All OK</span>
             </Button>
             <Button variant="outline" onClick={unmarkAll} disabled={editMode} aria-hidden={editMode || undefined}
-              className={`h-11 min-w-0 gap-1.5 bg-card px-2 text-xs font-semibold ${editMode ? "invisible" : ""}`}>
-              <X /> Unmark All
+              className={`h-12 min-w-0 touch-manipulation select-none gap-1.5 bg-card px-2 text-xs font-semibold sm:h-11 ${editMode ? "invisible" : ""}`}>
+              <X className="shrink-0" /> <span className="truncate">Unmark All</span>
             </Button>
             <Button variant="outline" onClick={editMode ? cancelEdit : enterEdit}
-              className="h-11 min-w-0 gap-1.5 bg-card px-2 text-xs font-semibold">
-              {editMode ? <X /> : <Edit3 />} {editMode ? "Cancel" : "Edit"}
+              className="h-12 min-w-0 touch-manipulation select-none gap-1.5 bg-card px-2 text-xs font-semibold sm:h-11">
+              {editMode ? <X className="shrink-0" /> : <Edit3 className="shrink-0" />} <span className="truncate">{editMode ? "Cancel" : "Edit"}</span>
             </Button>
             <Button onClick={editMode ? saveCategories : saveCheck}
               disabled={!editMode && !canSave}
               title={!editMode && !canSave ? `Add notes for ${missingNotes.length} flagged item(s)` : undefined}
-              className="col-span-2 h-11 min-w-0 gap-1.5 whitespace-normal bg-foreground px-2 text-xs font-semibold text-background hover:bg-foreground/90 sm:col-span-1">
-              <Save /> {editMode ? "Save Categories" : savedFlash ? "Saved!" : "Save Check"}
+              className="col-span-2 h-12 min-w-0 touch-manipulation select-none gap-1.5 whitespace-normal bg-foreground px-2 text-xs font-semibold text-background hover:bg-foreground/90 sm:col-span-1 sm:h-11">
+              <Save className="shrink-0" /> <span className="truncate">{editMode ? "Save Categories" : savedFlash ? "Saved!" : "Save Check"}</span>
             </Button>
           </div>
         </div>
