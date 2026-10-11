@@ -1,3 +1,4 @@
+import { coalesce } from "@/lib/coalesce";
 import { lsStore } from "@/lib/lsStore";
 import { stationFromSlug, stationSlug } from "@/lib/slug";
 import { isTypingTarget } from "@/lib/shortcuts";
@@ -557,7 +558,7 @@ function SectionPage() {
     const markedCount = (s: SectionState) =>
       Object.values(s.entries ?? {}).filter((e) => e?.[shell.shift]?.status).length;
 
-    const refresh = () => {
+    const refresh = coalesce(() => {
       const raw = lsStore.getItem(key);
       const json = raw ?? JSON.stringify(loadSection(name, shell.date));
       try {
@@ -587,7 +588,7 @@ function SectionPage() {
           JSON.stringify(current) === JSON.stringify(nextStruct) ? current : nextStruct,
         );
       } catch {}
-    };
+    }, 80);
     window.addEventListener("linecheck:update", refresh);
     window.addEventListener("linecheck:scope-change", refresh);
     window.addEventListener("storage", refresh);
