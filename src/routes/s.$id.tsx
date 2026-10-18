@@ -99,6 +99,7 @@ function SharedView() {
     type CategoryBlock = { group: string; items: Item[] };
     const out: {
       section: string;
+      member: string;
       categories: CategoryBlock[];
       itemCount: number;
       totalItems: number;
