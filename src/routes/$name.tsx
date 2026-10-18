@@ -25,7 +25,34 @@ import {
   type Entry,
   type SectionState,
   type Slot,
+  loadStationMember,
+  saveStationMember,
 } from "@/lib/lineCheck";
+
+function useTeamMembers(): string[] {
+  const [members, setMembers] = useState<string[]>([]);
+  useEffect(() => {
+    const refresh = () => {
+      try {
+        const raw = lsStore.getItem("linecheck:settings:staff");
+        const arr = raw ? JSON.parse(raw) : [];
+        setMembers(Array.isArray(arr) ? arr.filter((m) => typeof m === "string" && m.trim()) : []);
+      } catch {
+        setMembers([]);
+      }
+    };
+    refresh();
+    window.addEventListener("storage", refresh);
+    window.addEventListener("linecheck:staff-update", refresh);
+    window.addEventListener("linecheck:scope-change", refresh);
+    return () => {
+      window.removeEventListener("storage", refresh);
+      window.removeEventListener("linecheck:staff-update", refresh);
+      window.removeEventListener("linecheck:scope-change", refresh);
+    };
+  }, []);
+  return members;
+}
 import { Camera, Check, ChevronDown, FolderInput, ChevronUp, Download, Edit3, Filter, GripVertical, Image as ImageIcon, Save, Thermometer, Plus, Trash2, Upload, X } from "lucide-react";
 import { z } from "zod";
 import {
