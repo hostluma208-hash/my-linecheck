@@ -127,7 +127,7 @@ function ShiftDetail() {
         }
       } catch {}
       if (items.length || comment || commentPhotos.length)
-        out.push({ section: sec.name, items, comment, commentPhotos });
+        out.push({ section: sec.name, member: loadStationMember(sec.name, date, shift), items, comment, commentPhotos });
     }
     return out;
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -232,6 +232,11 @@ function ShiftDetail() {
                 <h3 className="text-[11px] font-bold uppercase tracking-[0.18em] text-muted-foreground">
                   {r.section}
                 </h3>
+                {r.member && (
+                  <span className="inline-flex items-center gap-1 rounded-full bg-info-soft px-2 py-0.5 text-[10px] font-bold text-info">
+                    <User className="h-3 w-3" /> {r.member}
+                  </span>
+                )}
                 <Link
                   to="/$name"
                   params={{ name: stationSlug(r.section) }}
