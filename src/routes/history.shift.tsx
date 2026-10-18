@@ -7,6 +7,7 @@ import {
   FLAG_STATUSES,
   loadSection,
   loadMember,
+  loadStationMember,
   SLOT_LABEL,
   shiftHistory,
   getEffectiveSections,
@@ -90,6 +91,7 @@ function ShiftDetail() {
     };
     const out: {
       section: string;
+      member: string;
       items: Row[];
       comment: string;
       commentPhotos: string[];
