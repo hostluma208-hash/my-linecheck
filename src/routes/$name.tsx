@@ -1021,6 +1021,20 @@ function SectionPage() {
               <p className="mt-0.5 truncate text-xs text-muted-foreground">
                 {done} of {total} items checked{!editMode && ` · ${shiftLabel}`}
               </p>
+              <label className="mt-1.5 flex items-center gap-1.5 text-xs text-muted-foreground">
+                <span className="shrink-0 font-semibold">Done by</span>
+                <select
+                  value={stationMember}
+                  onChange={(e) => onStationMember(e.target.value)}
+                  aria-label="Team member for this station"
+                  className="min-w-0 max-w-[12rem] rounded-lg border border-border bg-card px-2 py-1 text-xs font-semibold text-foreground outline-none"
+                >
+                  <option value="">Select…</option>
+                  {teamMembers.map((m) => (
+                    <option key={m} value={m}>{m}</option>
+                  ))}
+                </select>
+              </label>
             </div>
           </div>
           <div role="toolbar" aria-label="Station actions" className="grid w-full grid-cols-2 gap-2 sm:grid-cols-3 sm:gap-2.5 xl:grid-cols-5">
