@@ -234,6 +234,15 @@ function SectionPage() {
     [name],
   );
   const shell = useShellState(name);
+  const teamMembers = useTeamMembers();
+  const [stationMember, setStationMember] = useState("");
+  useEffect(() => {
+    setStationMember(loadStationMember(name, shell.date, shell.shift) || shell.member);
+  }, [name, shell.date, shell.shift, shell.member]);
+  const onStationMember = (v: string) => {
+    setStationMember(v);
+    saveStationMember(name, shell.date, shell.shift, v);
+  };
 
   // Sync shell to search params when reopening a past shift from history.
   useEffect(() => {
