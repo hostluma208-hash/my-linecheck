@@ -25,7 +25,34 @@ import {
   type Entry,
   type SectionState,
   type Slot,
+  loadStationMember,
+  saveStationMember,
 } from "@/lib/lineCheck";
+
+function useTeamMembers(): string[] {
+  const [members, setMembers] = useState<string[]>([]);
+  useEffect(() => {
+    const refresh = () => {
+      try {
+        const raw = lsStore.getItem("linecheck:settings:staff");
+        const arr = raw ? JSON.parse(raw) : [];
+        setMembers(Array.isArray(arr) ? arr.filter((m) => typeof m === "string" && m.trim()) : []);
+      } catch {
+        setMembers([]);
+      }
+    };
+    refresh();
+    window.addEventListener("storage", refresh);
+    window.addEventListener("linecheck:staff-update", refresh);
+    window.addEventListener("linecheck:scope-change", refresh);
+    return () => {
+      window.removeEventListener("storage", refresh);
+      window.removeEventListener("linecheck:staff-update", refresh);
+      window.removeEventListener("linecheck:scope-change", refresh);
+    };
+  }, []);
+  return members;
+}
 import { Camera, Check, ChevronDown, FolderInput, ChevronUp, Download, Edit3, Filter, GripVertical, Image as ImageIcon, Save, Thermometer, Plus, Trash2, Upload, X } from "lucide-react";
 import { z } from "zod";
 import {
@@ -207,6 +234,15 @@ function SectionPage() {
     [name],
   );
   const shell = useShellState(name);
+  const teamMembers = useTeamMembers();
+  const [stationMember, setStationMember] = useState("");
+  useEffect(() => {
+    setStationMember(loadStationMember(name, shell.date, shell.shift) || shell.member);
+  }, [name, shell.date, shell.shift, shell.member]);
+  const onStationMember = (v: string) => {
+    setStationMember(v);
+    saveStationMember(name, shell.date, shell.shift, v);
+  };
 
   // Sync shell to search params when reopening a past shift from history.
   useEffect(() => {
@@ -985,6 +1021,20 @@ function SectionPage() {
               <p className="mt-0.5 truncate text-xs text-muted-foreground">
                 {done} of {total} items checked{!editMode && ` · ${shiftLabel}`}
               </p>
+              <label className="mt-1.5 flex items-center gap-1.5 text-xs text-muted-foreground">
+                <span className="shrink-0 font-semibold">Done by</span>
+                <select
+                  value={stationMember}
+                  onChange={(e) => onStationMember(e.target.value)}
+                  aria-label="Team member for this station"
+                  className="min-w-0 max-w-[12rem] rounded-lg border border-border bg-card px-2 py-1 text-xs font-semibold text-foreground outline-none"
+                >
+                  <option value="">Select…</option>
+                  {teamMembers.map((m) => (
+                    <option key={m} value={m}>{m}</option>
+                  ))}
+                </select>
+              </label>
             </div>
           </div>
           <div role="toolbar" aria-label="Station actions" className="grid w-full grid-cols-2 gap-2 sm:grid-cols-3 sm:gap-2.5 xl:grid-cols-5">

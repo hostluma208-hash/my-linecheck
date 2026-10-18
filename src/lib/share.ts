@@ -5,6 +5,7 @@ import {
   getEffectiveSections,
   loadSection,
   loadMember,
+  loadStationMember,
   shiftHistory,
   type Slot,
 } from "@/lib/lineCheck";
@@ -60,6 +61,7 @@ export const sharedShiftPayloadSchema = z.object({
         categories: z.array(categorySchema).catch([]),
         temps: z.record(z.string(), z.string()).catch({}),
         tempUnit: z.enum(["F", "C"]).catch("F"),
+        member: z.string().catch(""),
         comment: z.string().catch(""),
         commentPhotos: z.array(z.string()).catch([]),
       }),
@@ -93,6 +95,7 @@ function buildPayload(date: string, slot: Slot): SharedShiftPayload {
     } catch {}
     return {
       name: s.name,
+      member: loadStationMember(s.name, date, slot),
       state: loadSection(s.name, date),
       categories: effectiveCategorizedItems(s.name),
       temps,

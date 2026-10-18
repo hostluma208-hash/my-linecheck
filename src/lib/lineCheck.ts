@@ -228,6 +228,25 @@ export function saveMember(date: string, slot: Slot, name: string) {
   } catch {}
 }
 
+export function stationMemberKey(station: string, date: string, slot: Slot) {
+  return `linecheck:station-member:${station}:${slot}:${date}`;
+}
+export function loadStationMember(station: string, date: string, slot: Slot): string {
+  try {
+    return lsStore.getItem(stationMemberKey(station, date, slot)) || "";
+  } catch {
+    return "";
+  }
+}
+export function saveStationMember(station: string, date: string, slot: Slot, name: string) {
+  try {
+    if (name) lsStore.setItem(stationMemberKey(station, date, slot), name);
+    else lsStore.removeItem(stationMemberKey(station, date, slot));
+    if (typeof window !== "undefined")
+      window.dispatchEvent(new Event("linecheck:update"));
+  } catch {}
+}
+
 export type ShiftHistoryItem = {
   group: string;
   name: string;
