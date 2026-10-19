@@ -3,7 +3,7 @@ import { lsStore } from "@/lib/lsStore";
 import { getStaffSession, clearStaffSession, getStaffPermissions } from "@/lib/staffSession";
 import { useGlobalShortcuts } from "@/lib/shortcuts";
 import { stationSlug } from "@/lib/slug";
-import { Link, useLocation } from "@tanstack/react-router";
+import { Link, useLocation, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import {
   STAFF,
@@ -417,6 +417,22 @@ function TopBar({
   onOpenMenu,
 }: Ctx & { onOpenMenu: () => void }) {
   const shifts = useShifts();
+  const navigate = useNavigate();
+  const loc = useLocation();
+
+  // Picking a name from the top bar drops the user straight into the first
+  // station so they can start checking without hunting through the sidebar.
+  // Already inside a station? Stay put — changing the name must not move them.
+  const onMember = (v: string) => {
+    setMember(v);
+    if (!v) return;
+    const here = (decodeURIComponent(loc.pathname).replace(/\/+$/, "") || "/").toLowerCase();
+    const sections = getEffectiveSections();
+    if (sections.some((s) => here === `/${stationSlug(s.name)}`.toLowerCase())) return;
+    const first = sections[0];
+    if (first) navigate({ to: "/$name", params: { name: stationSlug(first.name) } });
+  };
+
 
   const dayName = new Date(date + "T00:00:00").toLocaleDateString(undefined, {
     weekday: "long",
@@ -474,7 +490,7 @@ function TopBar({
         </Pill>
 
         <Pill icon={<User className="h-3.5 w-3.5" />}>
-          <TeamMemberSelect value={member} onChange={setMember} />
+          <TeamMemberSelect value={member} onChange={onMember} />
         </Pill>
         <ThemeToggle />
       </div>
