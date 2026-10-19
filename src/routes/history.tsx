@@ -7,6 +7,7 @@ import {
   listHistoryDates,
   shiftHistory,
   clearAllHistory,
+  pruneOldHistory,
   SLOT_LABEL,
   getShifts,
   type ShiftHistory,
@@ -62,6 +63,10 @@ function HistoryPage() {
   const [showClear, setShowClear] = useState(false);
   const [expandedShifts, setExpandedShifts] = useState<Record<string, boolean>>({});
   const [expandedStations, setExpandedStations] = useState<Record<string, boolean>>({});
+
+  useEffect(() => {
+    pruneOldHistory(3);
+  }, []);
 
   useEffect(() => {
     const fn = () => setTick((t) => t + 1);
