@@ -237,8 +237,11 @@ function SectionPage() {
   const teamMembers = useTeamMembers();
   const [stationMember, setStationMember] = useState("");
   useEffect(() => {
-    setStationMember(loadStationMember(name, shell.date, shell.shift) || shell.member);
-  }, [name, shell.date, shell.shift, shell.member]);
+    const refresh = () => setStationMember(loadStationMember(name, shell.date, shell.shift));
+    refresh();
+    window.addEventListener("linecheck:scope-change", refresh);
+    return () => window.removeEventListener("linecheck:scope-change", refresh);
+  }, [name, shell.date, shell.shift]);
   const onStationMember = (v: string) => {
     setStationMember(v);
     saveStationMember(name, shell.date, shell.shift, v);
@@ -975,26 +978,6 @@ function SectionPage() {
   const ringStyle = {
     background: `conic-gradient(var(--ring-color, hsl(258 90% 66%)) ${pct * 3.6}deg, hsl(var(--muted)) 0deg)`,
   } as React.CSSProperties;
-
-  if (!shell.member) {
-    return (
-      <AppShell {...shell}>
-        <div className="mx-auto max-w-md rounded-2xl border border-danger/40 bg-danger-soft p-6 text-center">
-          <h1 className="text-lg font-bold text-danger">Select a team member first</h1>
-          <p className="mt-2 text-sm text-danger/90">
-            You must pick your name from the Team Member picker in the top bar
-            before opening a station.
-          </p>
-          <button
-            onClick={() => { window.location.href = "/"; }}
-            className="mt-4 inline-flex items-center rounded-full border border-danger/40 bg-card px-4 py-2 text-sm font-semibold text-foreground hover:bg-accent"
-          >
-            Back to Overview
-          </button>
-        </div>
-      </AppShell>
-    );
-  }
 
   return (
     <AppShell {...shell}>
