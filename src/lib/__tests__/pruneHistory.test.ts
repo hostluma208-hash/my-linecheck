@@ -23,14 +23,14 @@ describe("pruneOldHistory", () => {
     old.setMonth(old.getMonth() - 4);
     const oldDate = old.toISOString().slice(0, 10);
     const recent = new Date().toISOString().slice(0, 10);
-    store.set(`linecheck:section:NIKK:${oldDate}`, "{}");
-    store.set(`linecheck:section:NIKK:${recent}`, "{}");
-    store.set("linecheck:settings:staff", "[]");
+    store.set(`u:guest:linecheck:section:NIKK:${oldDate}`, "{}");
+    store.set(`u:guest:linecheck:section:NIKK:${recent}`, "{}");
+    store.set("u:guest:linecheck:settings:staff", "[]");
     const removed = pruneOldHistory(3);
     expect(removed).toBe(1);
-    expect(store.has(`linecheck:section:NIKK:${oldDate}`)).toBe(false);
-    expect(store.has(`linecheck:section:NIKK:${recent}`)).toBe(true);
-    expect(store.has("linecheck:settings:staff")).toBe(true);
+    expect(store.has(`u:guest:linecheck:section:NIKK:${oldDate}`)).toBe(false);
+    expect(store.has(`u:guest:linecheck:section:NIKK:${recent}`)).toBe(true);
+    expect(store.has("u:guest:linecheck:settings:staff")).toBe(true);
   });
 
   it("keeps records from exactly 3 months ago", async () => {
@@ -38,8 +38,8 @@ describe("pruneOldHistory", () => {
     const edge = new Date();
     edge.setMonth(edge.getMonth() - 3);
     const d = edge.toISOString().slice(0, 10);
-    store.set(`linecheck:section:NIKK:${d}`, "{}");
+    store.set(`u:guest:linecheck:section:NIKK:${d}`, "{}");
     expect(pruneOldHistory(3)).toBe(0);
-    expect(store.has(`linecheck:section:NIKK:${d}`)).toBe(true);
+    expect(store.has(`u:guest:linecheck:section:NIKK:${d}`)).toBe(true);
   });
 });
