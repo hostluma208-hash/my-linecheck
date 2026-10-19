@@ -542,6 +542,30 @@ export function clearAllHistory(): number {
   return removed;
 }
 
+/** Delete recorded line-check data older than 3 months, keeping settings. */
+export function pruneOldHistory(months = 3): number {
+  let removed = 0;
+  const cutoff = new Date();
+  cutoff.setHours(0, 0, 0, 0);
+  cutoff.setMonth(cutoff.getMonth() - months);
+  try {
+    for (const k of lsStore.keys()) {
+      if (!k.startsWith("linecheck:") || k.startsWith("linecheck:settings:")) continue;
+      const parts = k.split(":");
+      const d = parts[parts.length - 1];
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(d)) continue;
+      const dt = new Date(d + "T00:00:00");
+      if (!isNaN(dt.getTime()) && dt < cutoff) {
+        lsStore.removeItem(k);
+        removed++;
+      }
+    }
+    if (removed > 0 && typeof window !== "undefined")
+      window.dispatchEvent(new Event("linecheck:update"));
+  } catch {}
+  return removed;
+}
+
 export function dayHistory(date: string): DayHistory {
   let stationsTouched = 0;
   let stationsComplete = 0;

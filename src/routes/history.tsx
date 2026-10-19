@@ -7,6 +7,7 @@ import {
   listHistoryDates,
   shiftHistory,
   clearAllHistory,
+  pruneOldHistory,
   SLOT_LABEL,
   getShifts,
   type ShiftHistory,
