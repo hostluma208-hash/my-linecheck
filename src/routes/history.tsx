@@ -65,6 +65,10 @@ function HistoryPage() {
   const [expandedStations, setExpandedStations] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
+    pruneOldHistory(3);
+  }, []);
+
+  useEffect(() => {
     const fn = () => setTick((t) => t + 1);
     window.addEventListener("storage", fn);
     window.addEventListener("linecheck:update", fn);
