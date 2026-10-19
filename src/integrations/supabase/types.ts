@@ -262,6 +262,7 @@ export type Database = {
           updated_at: string
         }[]
       }
+      prune_old_shared_shifts: { Args: never; Returns: undefined }
     }
     Enums: {
       [_ in never]: never
