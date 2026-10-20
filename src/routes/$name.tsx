@@ -1201,6 +1201,12 @@ function SectionPage() {
             const accent = palette[catIdx % palette.length];
             const bg = `color-mix(in oklch, ${accent} 10%, var(--card))`;
             const headingColor = `color-mix(in oklch, ${accent} 65%, var(--foreground))`;
+            const seenOcc = new Map<string, number>();
+            const catAllDone = cat.items.every((it) => {
+              const occ = seenOcc.get(it.name) ?? 0;
+              seenOcc.set(it.name, occ + 1);
+              return !!readEntry(state, cat.group, it.name, slot, occ)?.status;
+            });
             return (
             <SortableCategoryBlock
               key={cat.group}
