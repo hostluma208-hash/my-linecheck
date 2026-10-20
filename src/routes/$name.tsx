@@ -735,6 +735,39 @@ function SectionPage() {
     bulkSet("");
   };
 
+  /** Mark / unmark every item in a single category. Uses the freshest stored
+   *  state (like bulkSet) so progress counts and the sync queue stay consistent. */
+  const bulkSetCategory = (group: string, status: string) => {
+    const fresh = loadSection(name, shell.date);
+    const freshStruct = loadSectionStruct(name, defaultStruct);
+    const cat = freshStruct.find((c) => c.group === group);
+    if (!cat) return;
+    const entries: SectionState["entries"] = { ...fresh.entries };
+    const seen = new Map<string, number>();
+    for (const item of cat.items) {
+      const occ = seen.get(item.name) ?? 0;
+      seen.set(item.name, occ + 1);
+      const k = entryKey(group, item.name, occ);
+      const previous = entries[k] ?? {};
+      entries[k] = {
+        ...previous,
+        [slot]: { ...(previous[slot] ?? emptyEntry()), status },
+      } as SectionState["entries"][string];
+    }
+    const next = { ...fresh, entries };
+    const json = JSON.stringify(next);
+    setState(next);
+    try {
+      // A per-category action takes control back from the station-wide lock.
+      lsStore.removeItem(markAllLockKey);
+      lastSavedRef.current = { key, json };
+      lsStore.setItem(key, json);
+      window.dispatchEvent(new Event("linecheck:update"));
+    } catch {}
+    setSavedFlash(true);
+    setTimeout(() => setSavedFlash(false), 1400);
+  };
+
   // Station keyboard shortcuts:
   //  Ctrl/Cmd+Enter → mark all OK, Ctrl/Cmd+Shift+Enter → unmark all,
   //  Ctrl/Cmd+ArrowLeft/Right → previous / next station.
@@ -1168,6 +1201,12 @@ function SectionPage() {
             const accent = palette[catIdx % palette.length];
             const bg = `color-mix(in oklch, ${accent} 10%, var(--card))`;
             const headingColor = `color-mix(in oklch, ${accent} 65%, var(--foreground))`;
+            const seenOcc = new Map<string, number>();
+            const catAllDone = cat.items.every((it) => {
+              const occ = seenOcc.get(it.name) ?? 0;
+              seenOcc.set(it.name, occ + 1);
+              return !!readEntry(state, cat.group, it.name, slot, occ)?.status;
+            });
             return (
             <SortableCategoryBlock
               key={cat.group}
@@ -1188,30 +1227,42 @@ function SectionPage() {
                   </h3>
                 </div>
 
-                {cat.temp && (
-                  <div className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-2 py-0.5 text-[10px] font-medium text-muted-foreground">
-                    <Thermometer className="h-3 w-3 text-sky-500" />
-                    <label className="uppercase tracking-wide">Temp</label>
-                    <input
-                      type="number"
-                      inputMode="decimal"
-                      step="0.1"
-                      value={displayTemp(temps[cat.group])}
-                      onChange={(ev) => onTempInput(cat.group, ev.target.value)}
-                      placeholder="—"
-                      aria-label={`${cat.group} temperature reading`}
-                      className="w-14 rounded-md border border-input bg-background px-1.5 py-0.5 text-[11px] font-semibold text-foreground outline-none focus:border-foreground/40"
-                    />
-                    <button
-                      type="button"
-                      onClick={toggleTempUnit}
-                      aria-label={`Switch temperature unit (currently ${tempUnit === "F" ? "Fahrenheit" : "Celsius"})`}
-                      className="rounded px-1 py-0.5 text-[11px] font-semibold text-foreground hover:bg-accent"
-                    >
-                      °{tempUnit}
-                    </button>
-                  </div>
-                )}
+                <div className="flex shrink-0 items-center gap-1.5">
+                  {cat.temp && (
+                    <div className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-2 py-0.5 text-[10px] font-medium text-muted-foreground">
+                      <Thermometer className="h-3 w-3 text-sky-500" />
+                      <label className="uppercase tracking-wide">Temp</label>
+                      <input
+                        type="number"
+                        inputMode="decimal"
+                        step="0.1"
+                        value={displayTemp(temps[cat.group])}
+                        onChange={(ev) => onTempInput(cat.group, ev.target.value)}
+                        placeholder="—"
+                        aria-label={`${cat.group} temperature reading`}
+                        className="w-14 rounded-md border border-input bg-background px-1.5 py-0.5 text-[11px] font-semibold text-foreground outline-none focus:border-foreground/40"
+                      />
+                      <button
+                        type="button"
+                        onClick={toggleTempUnit}
+                        aria-label={`Switch temperature unit (currently ${tempUnit === "F" ? "Fahrenheit" : "Celsius"})`}
+                        className="rounded px-1 py-0.5 text-[11px] font-semibold text-foreground hover:bg-accent"
+                      >
+                        °{tempUnit}
+                      </button>
+                    </div>
+                  )}
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    disabled={editMode}
+                    onClick={() => bulkSetCategory(cat.group, catAllDone ? "" : "OK")}
+                    className="h-7 min-w-[88px] shrink-0 rounded-full px-2.5 text-[10px] font-bold uppercase tracking-wide"
+                  >
+                    {catAllDone ? "Unmark all" : "Mark all"}
+                  </Button>
+                </div>
               </div>
 
               <DndContext
