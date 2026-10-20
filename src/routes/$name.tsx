@@ -735,6 +735,39 @@ function SectionPage() {
     bulkSet("");
   };
 
+  /** Mark / unmark every item in a single category. Uses the freshest stored
+   *  state (like bulkSet) so progress counts and the sync queue stay consistent. */
+  const bulkSetCategory = (group: string, status: string) => {
+    const fresh = loadSection(name, shell.date);
+    const freshStruct = loadSectionStruct(name, defaultStruct);
+    const cat = freshStruct.find((c) => c.group === group);
+    if (!cat) return;
+    const entries: SectionState["entries"] = { ...fresh.entries };
+    const seen = new Map<string, number>();
+    for (const item of cat.items) {
+      const occ = seen.get(item.name) ?? 0;
+      seen.set(item.name, occ + 1);
+      const k = entryKey(group, item.name, occ);
+      const previous = entries[k] ?? {};
+      entries[k] = {
+        ...previous,
+        [slot]: { ...(previous[slot] ?? emptyEntry()), status },
+      } as SectionState["entries"][string];
+    }
+    const next = { ...fresh, entries };
+    const json = JSON.stringify(next);
+    setState(next);
+    try {
+      // A per-category action takes control back from the station-wide lock.
+      lsStore.removeItem(markAllLockKey);
+      lastSavedRef.current = { key, json };
+      lsStore.setItem(key, json);
+      window.dispatchEvent(new Event("linecheck:update"));
+    } catch {}
+    setSavedFlash(true);
+    setTimeout(() => setSavedFlash(false), 1400);
+  };
+
   // Station keyboard shortcuts:
   //  Ctrl/Cmd+Enter → mark all OK, Ctrl/Cmd+Shift+Enter → unmark all,
   //  Ctrl/Cmd+ArrowLeft/Right → previous / next station.
