@@ -1227,30 +1227,42 @@ function SectionPage() {
                   </h3>
                 </div>
 
-                {cat.temp && (
-                  <div className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-2 py-0.5 text-[10px] font-medium text-muted-foreground">
-                    <Thermometer className="h-3 w-3 text-sky-500" />
-                    <label className="uppercase tracking-wide">Temp</label>
-                    <input
-                      type="number"
-                      inputMode="decimal"
-                      step="0.1"
-                      value={displayTemp(temps[cat.group])}
-                      onChange={(ev) => onTempInput(cat.group, ev.target.value)}
-                      placeholder="—"
-                      aria-label={`${cat.group} temperature reading`}
-                      className="w-14 rounded-md border border-input bg-background px-1.5 py-0.5 text-[11px] font-semibold text-foreground outline-none focus:border-foreground/40"
-                    />
-                    <button
-                      type="button"
-                      onClick={toggleTempUnit}
-                      aria-label={`Switch temperature unit (currently ${tempUnit === "F" ? "Fahrenheit" : "Celsius"})`}
-                      className="rounded px-1 py-0.5 text-[11px] font-semibold text-foreground hover:bg-accent"
-                    >
-                      °{tempUnit}
-                    </button>
-                  </div>
-                )}
+                <div className="flex shrink-0 items-center gap-1.5">
+                  {cat.temp && (
+                    <div className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-2 py-0.5 text-[10px] font-medium text-muted-foreground">
+                      <Thermometer className="h-3 w-3 text-sky-500" />
+                      <label className="uppercase tracking-wide">Temp</label>
+                      <input
+                        type="number"
+                        inputMode="decimal"
+                        step="0.1"
+                        value={displayTemp(temps[cat.group])}
+                        onChange={(ev) => onTempInput(cat.group, ev.target.value)}
+                        placeholder="—"
+                        aria-label={`${cat.group} temperature reading`}
+                        className="w-14 rounded-md border border-input bg-background px-1.5 py-0.5 text-[11px] font-semibold text-foreground outline-none focus:border-foreground/40"
+                      />
+                      <button
+                        type="button"
+                        onClick={toggleTempUnit}
+                        aria-label={`Switch temperature unit (currently ${tempUnit === "F" ? "Fahrenheit" : "Celsius"})`}
+                        className="rounded px-1 py-0.5 text-[11px] font-semibold text-foreground hover:bg-accent"
+                      >
+                        °{tempUnit}
+                      </button>
+                    </div>
+                  )}
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    disabled={editMode}
+                    onClick={() => bulkSetCategory(cat.group, catAllDone ? "" : "OK")}
+                    className="h-7 min-w-[88px] shrink-0 rounded-full px-2.5 text-[10px] font-bold uppercase tracking-wide"
+                  >
+                    {catAllDone ? "Unmark all" : "Mark all"}
+                  </Button>
+                </div>
               </div>
 
               <DndContext
