@@ -27,6 +27,8 @@ import {
   type Slot,
   loadStationMember,
   saveStationMember,
+  loadLastStatus,
+  saveLastStatus,
 } from "@/lib/lineCheck";
 
 function useTeamMembers(): string[] {
@@ -670,6 +672,9 @@ function SectionPage() {
   const setEntry = (group: string, item: string, occ: number, patch: Partial<Entry>) => {
     // A deliberate item edit takes control back from the bulk-complete lock.
     lsStore.removeItem(markAllLockKey);
+    // Remember the status the user last chose here so the category mark button
+    // keeps applying their own selection, whatever colour it is tagged.
+    if (patch.status) saveLastStatus(name, shell.date, slot, patch.status);
     const k = entryKey(group, item, occ);
     // Commit the mark before updating the view. This keeps the progress ring,
     // overview, reloads, and sync queue on one authoritative stored snapshot.
@@ -766,6 +771,29 @@ function SectionPage() {
     } catch {}
     setSavedFlash(true);
     setTimeout(() => setSavedFlash(false), 1400);
+  };
+
+  /** The status the category mark button applies: the one the user last chose
+   *  in an item dropdown on this station, then any status already selected in
+   *  this category, then anywhere on the station, then the first in the list.
+   *  A green or red tag never overrides the user's own selection. */
+  const markStatusFor = (group: string): string => {
+    const usable = (s: string) => !!s && STATUSES.includes(s);
+    const last = loadLastStatus(name, shell.date, slot);
+    if (usable(last)) return last;
+    const cat = struct.find((c) => c.group === group);
+    const seen = new Map<string, number>();
+    for (const item of cat?.items ?? []) {
+      const occ = seen.get(item.name) ?? 0;
+      seen.set(item.name, occ + 1);
+      const s = readEntry(state, group, item.name, slot, occ)?.status ?? "";
+      if (usable(s)) return s;
+    }
+    for (const ci of allCatItems) {
+      const s = readEntry(state, ci.group, ci.name, slot, ci.occ)?.status ?? "";
+      if (usable(s)) return s;
+    }
+    return STATUSES[0] ?? "OK";
   };
 
   // Station keyboard shortcuts:
@@ -1207,6 +1235,7 @@ function SectionPage() {
               seenOcc.set(it.name, occ + 1);
               return !!readEntry(state, cat.group, it.name, slot, occ)?.status;
             });
+            const markStatus = markStatusFor(cat.group);
             return (
             <SortableCategoryBlock
               key={cat.group}
@@ -1257,21 +1286,15 @@ function SectionPage() {
                     variant="outline"
                     size="sm"
                     disabled={editMode}
-                    onClick={() => {
-                      const markStatus =
-                        STATUSES.find((s: string) => OK_STATUSES.has(s)) ?? STATUSES[0] ?? "OK";
-                      bulkSetCategory(cat.group, catAllDone ? "" : markStatus);
-                    }}
+                    onClick={() => bulkSetCategory(cat.group, catAllDone ? "" : markStatus)}
                     title={
                       catAllDone
                         ? "Clear all statuses in this category"
-                        : `Mark all as ${STATUSES.find((s: string) => OK_STATUSES.has(s)) ?? STATUSES[0] ?? "OK"}`
+                        : `Mark all as ${markStatus}`
                     }
                     className="h-7 min-w-[88px] max-w-[120px] shrink-0 truncate rounded-full px-2.5 text-[10px] font-bold uppercase tracking-wide"
                   >
-                    {catAllDone
-                      ? "Unmark all"
-                      : `Mark ${STATUSES.find((s: string) => OK_STATUSES.has(s)) ?? STATUSES[0] ?? "OK"}`}
+                    {catAllDone ? "Unmark all" : `Mark ${markStatus}`}
                   </Button>
                 </div>
               </div>
