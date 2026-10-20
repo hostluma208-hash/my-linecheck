@@ -247,6 +247,25 @@ export function saveStationMember(station: string, date: string, slot: Slot, nam
   } catch {}
 }
 
+/** Remembers the status a user last chose on a station, so bulk actions keep
+ *  using their selection regardless of the colour it is tagged. */
+export function lastStatusKey(station: string, date: string, slot: Slot) {
+  return `linecheck:last-status:${station}:${slot}:${date}`;
+}
+export function loadLastStatus(station: string, date: string, slot: Slot): string {
+  try {
+    return lsStore.getItem(lastStatusKey(station, date, slot)) || "";
+  } catch {
+    return "";
+  }
+}
+export function saveLastStatus(station: string, date: string, slot: Slot, status: string) {
+  try {
+    if (status) lsStore.setItem(lastStatusKey(station, date, slot), status);
+    else lsStore.removeItem(lastStatusKey(station, date, slot));
+  } catch {}
+}
+
 export type ShiftHistoryItem = {
   group: string;
   name: string;
