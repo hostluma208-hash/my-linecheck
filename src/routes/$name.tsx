@@ -773,6 +773,29 @@ function SectionPage() {
     setTimeout(() => setSavedFlash(false), 1400);
   };
 
+  /** The status the category mark button applies: the one the user last chose
+   *  in an item dropdown on this station, then any status already selected in
+   *  this category, then anywhere on the station, then the first in the list.
+   *  A green or red tag never overrides the user's own selection. */
+  const markStatusFor = (group: string): string => {
+    const usable = (s: string) => !!s && STATUSES.includes(s);
+    const last = loadLastStatus(name, shell.date, slot);
+    if (usable(last)) return last;
+    const cat = struct.find((c) => c.group === group);
+    const seen = new Map<string, number>();
+    for (const item of cat?.items ?? []) {
+      const occ = seen.get(item.name) ?? 0;
+      seen.set(item.name, occ + 1);
+      const s = readEntry(state, group, item.name, slot, occ)?.status ?? "";
+      if (usable(s)) return s;
+    }
+    for (const ci of allCatItems) {
+      const s = readEntry(state, ci.group, ci.name, slot, ci.occ)?.status ?? "";
+      if (usable(s)) return s;
+    }
+    return STATUSES[0] ?? "OK";
+  };
+
   // Station keyboard shortcuts:
   //  Ctrl/Cmd+Enter → mark all OK, Ctrl/Cmd+Shift+Enter → unmark all,
   //  Ctrl/Cmd+ArrowLeft/Right → previous / next station.
