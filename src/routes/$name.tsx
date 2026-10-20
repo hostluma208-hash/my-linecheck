@@ -1257,10 +1257,21 @@ function SectionPage() {
                     variant="outline"
                     size="sm"
                     disabled={editMode}
-                    onClick={() => bulkSetCategory(cat.group, catAllDone ? "" : "OK")}
-                    className="h-7 min-w-[88px] shrink-0 rounded-full px-2.5 text-[10px] font-bold uppercase tracking-wide"
+                    onClick={() => {
+                      const markStatus =
+                        STATUSES.find((s: string) => OK_STATUSES.has(s)) ?? STATUSES[0] ?? "OK";
+                      bulkSetCategory(cat.group, catAllDone ? "" : markStatus);
+                    }}
+                    title={
+                      catAllDone
+                        ? "Clear all statuses in this category"
+                        : `Mark all as ${STATUSES.find((s: string) => OK_STATUSES.has(s)) ?? STATUSES[0] ?? "OK"}`
+                    }
+                    className="h-7 min-w-[88px] max-w-[120px] shrink-0 truncate rounded-full px-2.5 text-[10px] font-bold uppercase tracking-wide"
                   >
-                    {catAllDone ? "Unmark all" : "Mark all"}
+                    {catAllDone
+                      ? "Unmark all"
+                      : `Mark ${STATUSES.find((s: string) => OK_STATUSES.has(s)) ?? STATUSES[0] ?? "OK"}`}
                   </Button>
                 </div>
               </div>
