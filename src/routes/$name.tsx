@@ -281,6 +281,25 @@ function SectionPage() {
   const [editMode, setEditMode] = useState(false);
   const [savedFlash, setSavedFlash] = useState(false);
   const [flaggedOnly, setFlaggedOnly] = useState(false);
+  // Per-category status chosen for the category "Mark all" button. Overrides
+  // the automatic pick (last used status) so each category can mark with its
+  // own configured status regardless of its colour tag.
+  const [catMarkStatus, setCatMarkStatus] = useState<Record<string, string>>({});
+  const catMarkStatusKey = (group: string) => `linecheck:cat-mark-status:${name}:${group}`;
+  const loadCatMarkStatus = (group: string): string => {
+    try {
+      return lsStore.getItem(catMarkStatusKey(group)) || "";
+    } catch {
+      return "";
+    }
+  };
+  const saveCatMarkStatus = (group: string, status: string) => {
+    try {
+      if (status) lsStore.setItem(catMarkStatusKey(group), status);
+      else lsStore.removeItem(catMarkStatusKey(group));
+    } catch {}
+    setCatMarkStatus((m) => ({ ...m, [group]: status }));
+  };
   const [viewer, setViewer] = useState<{ group: string; name: string; occ: number; photo: string } | null>(null);
   const viewerFileRef = useRef<HTMLInputElement | null>(null);
   const viewerGalleryRef = useRef<HTMLInputElement | null>(null);
@@ -1235,7 +1254,11 @@ function SectionPage() {
               seenOcc.set(it.name, occ + 1);
               return !!readEntry(state, cat.group, it.name, slot, occ)?.status;
             });
-            const markStatus = markStatusFor(cat.group);
+            const catChosen = catMarkStatus[cat.group] ?? loadCatMarkStatus(cat.group);
+            const markStatus =
+              catChosen && STATUSES.includes(catChosen)
+                ? catChosen
+                : markStatusFor(cat.group);
             return (
             <SortableCategoryBlock
               key={cat.group}
@@ -1281,6 +1304,20 @@ function SectionPage() {
                       </button>
                     </div>
                   )}
+                  <select
+                    value={markStatus}
+                    disabled={editMode}
+                    onChange={(ev) => saveCatMarkStatus(cat.group, ev.target.value)}
+                    aria-label={`Status applied by Mark all in ${cat.group}`}
+                    title="Choose which status Mark all applies in this category"
+                    className="h-7 w-[92px] shrink-0 truncate rounded-full border border-input bg-card px-2 text-[10px] font-bold uppercase tracking-wide text-foreground outline-none focus:border-foreground/40 disabled:opacity-50"
+                  >
+                    {STATUSES.map((s: string) => (
+                      <option key={s} value={s}>
+                        {s}
+                      </option>
+                    ))}
+                  </select>
                   <Button
                     type="button"
                     variant="outline"
